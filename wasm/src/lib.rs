@@ -1,4 +1,7 @@
+pub mod grid;
+pub mod problem;
 mod utils;
+pub mod solver;
 
 use wasm_bindgen::prelude::*;
 
