@@ -15,17 +15,22 @@ pub fn calc_count(state: &GameState) -> u64 {
     // (row, col)に着目していて、残りのアイテムがそれぞれcnt0, cnt1, cnt2個残っていて、
     // (0, 1, ... 4)行目がこの先(w0, w1, ..., w4)列分埋まっているときの場合の数
     // dp[WIDTH][0][C0][C1][C2][0][0][0][0][0]が答え
-    let mut dp = mat![0;
+    let max_size = state
+        .remaining_items
+        .iter()
+        .filter(|item| item.count > 0)
+        .map(|item| item.item.height().max(item.item.width()))
+        .max()
+        .unwrap_or(1);
+    let dp_cell = [[[[[0; GameState::MAX_ITEM_SIZE]; GameState::MAX_ITEM_SIZE];
+        GameState::MAX_ITEM_SIZE]; GameState::MAX_ITEM_SIZE];
+        GameState::MAX_ITEM_SIZE];
+    let mut dp = mat![dp_cell;
         GameState::WIDTH + 1;
         GameState::HEIGHT + 1;
         state.remaining_items[0].count + 1;
         state.remaining_items[1].count + 1;
-        state.remaining_items[2].count + 1;
-        GameState::MAX_ITEM_SIZE + 1;
-        GameState::MAX_ITEM_SIZE + 1;
-        GameState::MAX_ITEM_SIZE + 1;
-        GameState::MAX_ITEM_SIZE + 1;
-        GameState::MAX_ITEM_SIZE + 1
+        state.remaining_items[2].count + 1
     ];
 
     dp[0][0][0][0][0][0][0][0][0][0] = 1;
@@ -37,11 +42,11 @@ pub fn calc_count(state: &GameState) -> u64 {
         0..=state.remaining_items[0].count,
         0..=state.remaining_items[1].count,
         0..=state.remaining_items[2].count,
-        0..=GameState::MAX_ITEM_SIZE,
-        0..=GameState::MAX_ITEM_SIZE,
-        0..=GameState::MAX_ITEM_SIZE,
-        0..=GameState::MAX_ITEM_SIZE,
-        0..=GameState::MAX_ITEM_SIZE
+        0..max_size,
+        0..max_size,
+        0..max_size,
+        0..max_size,
+        0..max_size
     );
 
     for (col, row, cnt0, cnt1, cnt2, w0, w1, w2, w3, w4) in product {
@@ -75,8 +80,14 @@ pub fn calc_count(state: &GameState) -> u64 {
                     return;
                 }
 
-                w[r] = item.width();
+                w[r] = item.width() - 1;
             }
+
+            let (row, col) = if row + item.height() == GameState::HEIGHT {
+                (0, col + 1)
+            } else {
+                (row + item.height(), col)
+            };
 
             dp[col][row][cnt[0]][cnt[1]][cnt[2]][w[0]][w[1]][w[2]][w[3]][w[4]] += current_dp;
         };
@@ -97,7 +108,7 @@ pub fn calc_count(state: &GameState) -> u64 {
             }
         }
 
-        // 着目するマスを次の位置に移動する遷移
+        // アイテムを置かずに着目するマスを次の位置に移動する遷移
         if row + 1 < GameState::HEIGHT {
             // 次の行に移動する
             let mut w = w.clone();
