@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import viteLogo from '../public/vite.svg';
 import reactLogo from './assets/react.svg';
+import Board from './components/Board';
 import './App.css';
 
 const App: FC = () => {
@@ -32,6 +33,7 @@ const App: FC = () => {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
+      <Board></Board>
     </>
   );
 };
