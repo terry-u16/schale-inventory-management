@@ -1,6 +1,6 @@
-use num_traits::NumAssign;
-
 use crate::grid::{Coord, Map2d};
+use num_traits::NumAssign;
+use std::fmt::Debug;
 
 /// 問題の状態。
 #[derive(Debug, Clone)]
@@ -16,7 +16,7 @@ impl GameState {
     pub const WIDTH: usize = 9;
     pub const HEIGHT: usize = 5;
 
-    /// アイテムグループの数。1周にアイテムは3つとする。
+    /// アイテムグループの数。アイテムは3種類とする。
     pub const ITEM_GROUP_COUNT: usize = 3;
 
     /// アイテムの最大サイズ。高さと幅がともに4以下である。
@@ -144,13 +144,13 @@ impl PlacedItem {
 
 /// 2次元累積和を計算する構造体。
 #[derive(Debug, Clone)]
-pub struct PrefixSumMap2d<T: NumAssign + Clone + Copy> {
+pub struct PrefixSumMap2d<T: NumAssign + Debug + Clone + Copy> {
     width: usize,
     height: usize,
     map: Map2d<T>,
 }
 
-impl<T: NumAssign + Clone + Copy> PrefixSumMap2d<T> {
+impl<T: NumAssign + Debug + Clone + Copy> PrefixSumMap2d<T> {
     fn new(map: &Map2d<T>) -> Self {
         let width = map.width();
         let height = map.height();
@@ -158,18 +158,26 @@ impl<T: NumAssign + Clone + Copy> PrefixSumMap2d<T> {
         let mut prefix_map = Map2d::new_with(T::zero(), width + 1, height + 1);
 
         for row in 0..height {
-            for col in 0..width - 1 {
-                let c0 = Coord::new(row, col);
-                let c1 = Coord::new(row, col + 1);
-                prefix_map[c1] += map[c0];
+            for col in 0..width {
+                prefix_map[Coord::new(row + 1, col + 1)] = map[Coord::new(row, col)];
             }
         }
 
-        for col in 0..width {
-            for row in 0..height - 1 {
+        for row in 0..=height {
+            for col in 0..width {
+                let c0 = Coord::new(row, col);
+                let c1 = Coord::new(row, col + 1);
+                let v = prefix_map[c0];
+                prefix_map[c1] += v;
+            }
+        }
+
+        for col in 0..=width {
+            for row in 0..height {
                 let c0 = Coord::new(row, col);
                 let c1 = Coord::new(row + 1, col);
-                prefix_map[c1] += map[c0];
+                let v = prefix_map[c0];
+                prefix_map[c1] += v;
             }
         }
 

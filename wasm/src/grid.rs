@@ -164,17 +164,14 @@ impl<T> std::ops::Index<Coord> for Map2d<T> {
 
     #[inline]
     fn index(&self, coordinate: Coord) -> &Self::Output {
-        unsafe { self.map.get_unchecked(coordinate.to_index(self.width).0) }
+        &self.map[coordinate.to_index(self.width).0]
     }
 }
 
 impl<T> std::ops::IndexMut<Coord> for Map2d<T> {
     #[inline]
     fn index_mut(&mut self, coordinate: Coord) -> &mut Self::Output {
-        unsafe {
-            self.map
-                .get_unchecked_mut(coordinate.to_index(self.width).0)
-        }
+        &mut self.map[coordinate.to_index(self.width).0]
     }
 }
 
@@ -182,13 +179,13 @@ impl<T> std::ops::Index<CoordIndex> for Map2d<T> {
     type Output = T;
 
     fn index(&self, index: CoordIndex) -> &Self::Output {
-        unsafe { self.map.get_unchecked(index.0) }
+        &self.map[index.0]
     }
 }
 
 impl<T> std::ops::IndexMut<CoordIndex> for Map2d<T> {
     #[inline]
     fn index_mut(&mut self, index: CoordIndex) -> &mut Self::Output {
-        unsafe { self.map.get_unchecked_mut(index.0) }
+        &mut self.map[index.0]
     }
 }

@@ -1,12 +1,9 @@
-use std::time::Instant;
-
-use itertools::iproduct;
-
 use crate::{
     grid::Coord,
     mat,
     problem::{GameState, Item},
 };
+use itertools::iproduct;
 
 pub fn calc_count(state: &GameState) -> u64 {
     // DPにより候補数を計算する
@@ -150,5 +147,22 @@ mod tests {
         let state = GameState::new(open_map, remaining_items, placed_items);
 
         assert_eq!(calc_count(&state), 93072764854);
+    }
+
+    #[test]
+    fn test_calc_count_with_vacant() {
+        let mut open_map = Map2d::new_with(false, GameState::WIDTH, GameState::HEIGHT);
+        open_map[Coord::new(2, 1)] = true;
+
+        let remaining_items = [
+            ItemGroup::new(Item::new(3, 2), 1),
+            ItemGroup::new(Item::new(1, 3), 3),
+            ItemGroup::new(Item::new(2, 1), 5),
+        ];
+        let placed_items = vec![];
+
+        let state = GameState::new(open_map, remaining_items, placed_items);
+
+        assert_eq!(calc_count(&state), 35318372443);
     }
 }
