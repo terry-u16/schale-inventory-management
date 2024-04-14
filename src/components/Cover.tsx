@@ -19,15 +19,15 @@ const styleGenerator = (opacity: number, row: number, col: number) => ({
   opacity,
   gridRow: row,
   gridColumn: col,
-  maxWidth: '50px',
-  maxHeight: '50px',
-  minWidth: '50px',
-  minHeight: '50px',
+  maxWidth: '65px',
+  maxHeight: '65px',
+  minWidth: '65px',
+  minHeight: '65px',
 });
 
 const CoverButton: FC<Props> = (props) => {
   const { row, col, open, colorMod } = props.cover;
-  const opacity = open ? 0.2 : 1;
+  const opacity = open ? 0.2 : 0.95;
 
   const color = [yellow, indigo, cyan, pink][colorMod];
 
