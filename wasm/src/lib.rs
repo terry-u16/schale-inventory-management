@@ -58,7 +58,7 @@ impl TryFrom<JsInput> for GameState {
             let mut item = Item::new(
                 placed_item.item.height as usize,
                 placed_item.item.width as usize,
-                placed_item.item.index as usize,
+                placed_item.item.index as usize - 1,
             );
 
             if placed_item.rotated {
@@ -82,10 +82,10 @@ impl TryFrom<JsInput> for GameState {
 
         for (i, placed) in placed_items.iter().enumerate() {
             counts[placed.item.item_index()] += 1;
-            labels.push((placed.item.item_index(), counts[placed.item.item_index()]));
+            labels.push((placed.item.item_index() + 1, counts[placed.item.item_index()]));
 
-            let row0 = placed.coord.row;
-            let col0 = placed.coord.col;
+            let row0 = placed.coord.row + 1;
+            let col0 = placed.coord.col + 1;
             let row1 = row0 + placed.item.height();
             let col1 = col0 + placed.item.width();
 
