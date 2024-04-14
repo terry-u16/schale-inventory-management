@@ -9,7 +9,7 @@ export interface Props {
 }
 
 const styleGenerator = (item: PlacedItem) => ({
-  opacity: 0.8,
+  opacity: 0.6,
   gridRow: `${item.row} / ${item.row + getRotatedHeight(item)}`,
   gridColumn: `${item.col} / ${item.col + getRotatedWidth(item)}`,
 });
@@ -23,14 +23,21 @@ const PlacedItemSquare: FC<Props> = (props) => {
         theme={{
           palette: {
             primary: {
-              main: getItemPalette(placedItem.item.index)[200],
+              main: getItemPalette(placedItem.item.index)[400],
+              light: getItemPalette(placedItem.item.index)[300],
+              dark: getItemPalette(placedItem.item.index)[800],
             },
           },
         }}
       >
         <Box
           style={styleGenerator(placedItem)}
-          sx={{ borderRadius: 1, bgcolor: 'primary.main' }}
+          sx={{
+            borderRadius: 1,
+            border: 1,
+            borderColor: 'primary.dark',
+            bgcolor: 'primary.light',
+          }}
         />
       </ThemeProvider>
     </>
