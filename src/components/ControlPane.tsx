@@ -92,40 +92,49 @@ const ControlPane: FC<Props> = (props) => {
           </Tooltip>
           <ToggleButtonGroup color="primary">
             <Tooltip title="アイテム1の確率表示ON/OFFを切り替え">
-              <ToggleButton
-                value="one"
-                selected={showProb[0] && probsAvailable}
-                onClick={() => {
-                  onToggleShowProb(0);
-                }}
-                disabled={!probsAvailable}
-              >
-                <LooksOneIcon />
-              </ToggleButton>
+              <span>
+                <ToggleButton
+                  value="one"
+                  selected={showProb[0] && probsAvailable}
+                  onClick={() => {
+                    onToggleShowProb(0);
+                  }}
+                  disabled={!probsAvailable}
+                  sx={{ height: '56px' }}
+                >
+                  <LooksOneIcon />
+                </ToggleButton>
+              </span>
             </Tooltip>
             <Tooltip title="アイテム2の確率表示ON/OFFを切り替え">
-              <ToggleButton
-                value="two"
-                selected={showProb[1] && probsAvailable}
-                onClick={() => {
-                  onToggleShowProb(1);
-                }}
-                disabled={!probsAvailable}
-              >
-                <LooksTwoIcon />
-              </ToggleButton>
+              <span>
+                <ToggleButton
+                  value="two"
+                  selected={showProb[1] && probsAvailable}
+                  onClick={() => {
+                    onToggleShowProb(1);
+                  }}
+                  disabled={!probsAvailable}
+                  sx={{ height: '56px' }}
+                >
+                  <LooksTwoIcon />
+                </ToggleButton>
+              </span>
             </Tooltip>
             <Tooltip title="アイテム3の確率表示ON/OFFを切り替え">
-              <ToggleButton
-                value="three"
-                selected={showProb[2] && probsAvailable}
-                onClick={() => {
-                  onToggleShowProb(2);
-                }}
-                disabled={!probsAvailable}
-              >
-                <Looks3Icon />
-              </ToggleButton>
+              <span>
+                <ToggleButton
+                  value="three"
+                  selected={showProb[2] && probsAvailable}
+                  onClick={() => {
+                    onToggleShowProb(2);
+                  }}
+                  disabled={!probsAvailable}
+                  sx={{ height: '56px' }}
+                >
+                  <Looks3Icon />
+                </ToggleButton>
+              </span>
             </Tooltip>
           </ToggleButtonGroup>
         </Box>
