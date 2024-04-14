@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { Box, Paper } from '@mui/material';
 import CoverButton from './Cover';
 import { type Cover } from './Cover';
 import './Board.css';
@@ -39,23 +40,27 @@ const Board: FC<Props> = (props) => {
 
   return (
     <>
-      <div id="board-container">
-        {placedItems.map((placedItem: PlacedItem) => (
-          <PlacedItemSquare
-            key={`placed-item-square-${placedItem.id}`}
-            placedItem={placedItem}
-          />
-        ))}
-        {covers.map((cover: Cover, idx: number) => (
-          <CoverButton
-            cover={cover}
-            key={`cover${cover.row}-${cover.col}`}
-            onClick={() => {
-              coverOnClick(idx);
-            }}
-          />
-        ))}
-      </div>
+      <Paper>
+        <Box py={5}>
+          <div id="board-container">
+            {placedItems.map((placedItem: PlacedItem) => (
+              <PlacedItemSquare
+                key={`placed-item-square-${placedItem.id}`}
+                placedItem={placedItem}
+              />
+            ))}
+            {covers.map((cover: Cover, idx: number) => (
+              <CoverButton
+                cover={cover}
+                key={`cover${cover.row}-${cover.col}`}
+                onClick={() => {
+                  coverOnClick(idx);
+                }}
+              />
+            ))}
+          </div>
+        </Box>
+      </Paper>
     </>
   );
 };

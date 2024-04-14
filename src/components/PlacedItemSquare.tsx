@@ -16,7 +16,6 @@ const styleGenerator = (item: PlacedItem) => ({
 
 const PlacedItemSquare: FC<Props> = (props) => {
   const { placedItem } = props;
-  console.log(placedItem);
 
   return (
     <>

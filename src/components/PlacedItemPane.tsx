@@ -86,6 +86,7 @@ const PlacedItemPane: FC<Props> = (props) => {
 
           <ToggleButton
             value="rotate"
+            color="primary"
             selected={placedItem.rotated}
             onClick={() => {
               const newPlacedItem = { ...placedItem };

@@ -31,7 +31,7 @@ const buttonStyleGenerator = (opacity: number) => ({
 
 const CoverButton: FC<Props> = (props) => {
   const { row, col, open, colorMod } = props.cover;
-  const opacity = open ? 0.2 : 0.95;
+  const opacity = open ? 0.2 : 1;
 
   const color = [yellow, indigo, cyan, pink][colorMod];
 

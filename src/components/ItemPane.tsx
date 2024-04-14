@@ -117,7 +117,7 @@ const ItemPane: FC<Props> = (props) => {
             </Avatar>
           }
           title={
-            <Typography variant="h4">{`Item ${itemSet.item.index}`}</Typography>
+            <Typography variant="h5">{`Item ${itemSet.item.index}`}</Typography>
           }
         />
         <CardContent>

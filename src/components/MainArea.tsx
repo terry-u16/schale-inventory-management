@@ -2,6 +2,7 @@ import { type FC, useState } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Board from './Board';
+import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 
@@ -34,6 +35,9 @@ const MainArea: FC = () => {
       [],
     ),
   ]);
+  const [probs, _setProbs] = useState<number[][] | null>(null);
+  const [showProbs, setShowProbs] = useState([false, false, false]);
+  const [isRunning, setIsRunning] = useState(false);
 
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
@@ -115,12 +119,31 @@ const MainArea: FC = () => {
     setItems(newItems);
   };
 
+  const onExecute = () => {
+    setIsRunning(true);
+  };
+
+  const onToggleShowProb = (index: number) => {
+    const newShowProbs = [...showProbs];
+    newShowProbs[index] = !newShowProbs[index];
+    setShowProbs(newShowProbs);
+  };
+
   return (
     <Box>
-      <Box margin={5}>
+      <Box my={2}>
         <Board
           placedItems={items.map((item) => item.placements).flat()}
         ></Board>
+      </Box>
+      <Box my={2}>
+        <ControlPane
+          isRunning={isRunning}
+          showProb={showProbs}
+          probsAvailable={probs !== null}
+          onExecute={onExecute}
+          onToggleShowProb={onToggleShowProb}
+        ></ControlPane>
       </Box>
       <Grid container spacing={2}>
         {items.map((item, index) => (
