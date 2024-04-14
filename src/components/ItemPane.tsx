@@ -183,7 +183,7 @@ const ItemPane: FC<Props> = (props) => {
             ))}
 
             <Box gridColumn="1 / 4">
-              <Tooltip title="アイテムを追加する">
+              <Tooltip title="アイテムを配置する">
                 <Button
                   variant="contained"
                   fullWidth

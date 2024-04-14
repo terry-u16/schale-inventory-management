@@ -46,7 +46,12 @@ const ControlPane: FC<Props> = (props) => {
   return (
     <>
       <Paper>
-        <Box p={3} display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2}>
+        <Box
+          p={3}
+          display="grid"
+          gridTemplateColumns="1fr 1fr 2.5fr 0.5fr"
+          gap={2}
+        >
           <FormControl>
             <InputLabel id="predefined-choice-label">
               アイテムプリセット

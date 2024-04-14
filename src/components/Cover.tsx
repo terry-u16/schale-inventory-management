@@ -41,7 +41,7 @@ const buttonStyleGenerator = (opacity: number) => ({
 
 const CoverButton: FC<Props> = (props) => {
   const { row, col, open, prob, probFlag } = props.cover;
-  const opacity = open ? 0.15 : 1;
+  const opacity = open ? 0.1 : 1;
 
   const probText = probFlag > 0 ? `${(prob * 100).toFixed(1)}%` : '';
   const colorPalette = [
