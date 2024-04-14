@@ -5,7 +5,6 @@ import {
   lightBlue,
   lightGreen,
   orange,
-  pink,
   purple,
   red,
   yellow,
@@ -45,14 +44,14 @@ const CoverButton: FC<Props> = (props) => {
 
   const probText = probFlag > 0 ? `${(prob * 100).toFixed(1)}%` : '';
   const colorPalette = [
-    blueGrey,
-    red,
-    yellow,
-    orange,
-    lightBlue,
-    purple,
-    lightGreen,
-    pink,
+    blueGrey[500],
+    red[500],
+    yellow[500],
+    orange[500],
+    lightBlue[500],
+    purple[500],
+    lightGreen[500],
+    '#f889da',
   ];
 
   const generateColor = (probFlag: number, prob: number) => {
@@ -61,7 +60,7 @@ const CoverButton: FC<Props> = (props) => {
     }
 
     let s = '#';
-    const baseColor = colorPalette[probFlag][500];
+    const baseColor = colorPalette[probFlag];
 
     for (let i = 0; i < 3; i++) {
       const v = parseInt(baseColor.substring(1 + i * 2, 3 + i * 2), 16);
