@@ -182,7 +182,7 @@ fn solve_inner(input: JsValue) -> anyhow::Result<Vec<Vec<f64>>> {
 
     let game_state = GameState::try_from(input)?;
 
-    let result = counter::calc_probabilities(&game_state, 10000)?;
+    let result = counter::calc_probabilities(&game_state, 20000)?;
     let result = result
         .iter()
         .map(|prob| prob.iter().copied().collect())

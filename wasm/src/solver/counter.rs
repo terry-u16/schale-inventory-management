@@ -240,7 +240,7 @@ fn calc_count_inner(state: &GameState, sample_count: usize) -> (u64, Vec<Vec<Pla
 
         all_items
     } else {
-        let mut rng = Pcg64Mcg::new(42);
+        let mut rng = Pcg64Mcg::from_entropy();
         restore_random(state, &dp, &from, sample_count, &mut rng)
     };
 
