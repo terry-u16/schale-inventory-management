@@ -39,7 +39,7 @@ const MainArea: FC = () => {
   const [probs, setProbs] = useState<number[][] | null>(null);
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
-  const [openMap, _setOpenMap] = useState(Array(45).fill(false));
+  const [openMap, setOpenMap] = useState(Array(45).fill(false) as boolean[]);
 
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
@@ -147,11 +147,21 @@ const MainArea: FC = () => {
     setShowProbs(newShowProbs);
   };
 
+  const onToggleOpen = (index: number) => {
+    const newOpenMap = [...openMap];
+    newOpenMap[index] = !newOpenMap[index];
+    setOpenMap(newOpenMap);
+  };
+
   return (
     <Box>
       <Box my={2}>
         <Board
           placedItems={items.map((item) => item.placements).flat()}
+          probs={probs}
+          openMap={openMap}
+          showProb={showProbs}
+          onToggleOpen={onToggleOpen}
         ></Board>
       </Box>
       <Box my={2}>

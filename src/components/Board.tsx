@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 import { Box, Paper } from '@mui/material';
 import CoverButton from './Cover';
 import { type Cover } from './Cover';
@@ -8,34 +8,36 @@ import PlacedItemSquare from './PlacedItemSquare';
 
 export interface Props {
   placedItems: PlacedItem[];
+  probs: number[][] | null;
+  openMap: boolean[];
+  showProb: boolean[];
+  onToggleOpen: (idx: number) => void;
 }
 
 const Board: FC<Props> = (props) => {
-  const { placedItems } = props;
+  const { placedItems, probs, openMap, showProb, onToggleOpen } = props;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const initCovers: Cover[] = [...Array(5)]
-    .map((_: undefined, row: number) =>
-      /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */ [
-        ...Array(9),
-      ].map((_: undefined, col: number) => ({
-        row: row + 1,
-        col: col + 1,
-        open: false,
-      })),
-    )
-    .flat();
+  let probFlag = 0;
 
-  const [covers, setCovers] = useState(initCovers);
+  for (let i = 0; i < showProb.length; i++) {
+    if (showProb[i]) {
+      probFlag |= 1 << i;
+    }
+  }
 
-  const coverOnClick = (idx: number) => {
-    setCovers((prevCovers) => {
-      const newCovers = [...prevCovers];
-      newCovers[idx].open = !newCovers[idx].open;
+  if (probs === null) {
+    probFlag = 0;
+  }
 
-      return newCovers;
-    });
-  };
+  const targetProbs = probs?.[probFlag] ?? Array(45).fill(0.0);
+
+  const covers: Cover[] = targetProbs.map((prob: number, index: number) => ({
+    row: Math.floor(index / 9) + 1,
+    col: (index % 9) + 1,
+    open: openMap[index],
+    prob,
+    probFlag,
+  }));
 
   return (
     <>
@@ -53,7 +55,7 @@ const Board: FC<Props> = (props) => {
                 cover={cover}
                 key={`cover${cover.row}-${cover.col}`}
                 onClick={() => {
-                  coverOnClick(idx);
+                  onToggleOpen(idx);
                 }}
               />
             ))}
