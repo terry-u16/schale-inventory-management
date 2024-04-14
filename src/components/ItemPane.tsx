@@ -1,5 +1,5 @@
-import { type FC, useState } from 'react';
-import { Divider } from '@mui/material';
+import { type FC } from 'react';
+import { Divider, Tooltip } from '@mui/material';
 import { red, lightBlue, yellow } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
@@ -66,12 +66,7 @@ const ItemPane: FC<Props> = (props) => {
     onModifyPlacedItem,
     onRemovePlacedItem,
   } = props;
-  const [widthStr, setWidthStr] = useState(itemSet.item.width.toString());
-  const [heightStr, setHeightStr] = useState(itemSet.item.height.toString());
-  const [countStr, setCountStr] = useState(itemSet.count.toString());
-
   const onWidthChange = (event: SelectChangeEvent) => {
-    setWidthStr(event.target.value);
     onModifyItem({
       item: {
         width: Number(event.target.value),
@@ -83,7 +78,6 @@ const ItemPane: FC<Props> = (props) => {
   };
 
   const onHeightChange = (event: SelectChangeEvent) => {
-    setHeightStr(event.target.value);
     onModifyItem({
       item: {
         width: itemSet.item.width,
@@ -95,7 +89,6 @@ const ItemPane: FC<Props> = (props) => {
   };
 
   const onCountChange = (event: SelectChangeEvent) => {
-    setCountStr(event.target.value);
     onModifyItem({
       item: {
         width: itemSet.item.width,
@@ -129,13 +122,14 @@ const ItemPane: FC<Props> = (props) => {
               <Select
                 labelId="item-height"
                 id="item-height"
-                value={heightStr}
+                value={itemSet.item.height.toString()}
                 label="高さ"
                 onChange={onHeightChange}
               >
                 <MenuItem value={1}>1</MenuItem>
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
               </Select>
             </FormControl>
 
@@ -144,7 +138,7 @@ const ItemPane: FC<Props> = (props) => {
               <Select
                 labelId="item-width"
                 id="item-width"
-                value={widthStr}
+                value={itemSet.item.width.toString()}
                 label="幅"
                 onChange={onWidthChange}
               >
@@ -160,7 +154,7 @@ const ItemPane: FC<Props> = (props) => {
               <Select
                 labelId="item-height"
                 id="item-height"
-                value={countStr}
+                value={itemSet.count.toString()}
                 label="個数"
                 onChange={onCountChange}
               >
@@ -189,24 +183,26 @@ const ItemPane: FC<Props> = (props) => {
             ))}
 
             <Box gridColumn="1 / 4">
-              <Button
-                variant="contained"
-                fullWidth
-                startIcon={<AddIcon />}
-                onClick={() => {
-                  const newPlacedItem: PlacedItem = {
-                    item: itemSet.item,
-                    rotated: false,
-                    row: 1,
-                    col: 1,
-                    id: crypto.randomUUID(),
-                  };
-                  onAddPlacedItem(newPlacedItem);
-                }}
-                disabled={placedItems.length >= itemSet.count}
-              >
-                追加
-              </Button>
+              <Tooltip title="アイテムを追加する">
+                <Button
+                  variant="contained"
+                  fullWidth
+                  startIcon={<AddIcon />}
+                  onClick={() => {
+                    const newPlacedItem: PlacedItem = {
+                      item: itemSet.item,
+                      rotated: false,
+                      row: 1,
+                      col: 1,
+                      id: crypto.randomUUID(),
+                    };
+                    onAddPlacedItem(newPlacedItem);
+                  }}
+                  disabled={placedItems.length >= itemSet.count}
+                >
+                  追加
+                </Button>
+              </Tooltip>
             </Box>
           </Box>
         </CardContent>

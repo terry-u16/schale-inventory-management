@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Rotate90DegreesCwIcon from '@mui/icons-material/Rotate90DegreesCw';
 import Box from '@mui/material/Box';
@@ -84,30 +85,34 @@ const PlacedItemPane: FC<Props> = (props) => {
             </Select>
           </FormControl>
 
-          <ToggleButton
-            value="rotate"
-            color="primary"
-            selected={placedItem.rotated}
-            onClick={() => {
-              const newPlacedItem = { ...placedItem };
-              newPlacedItem.rotated = !placedItem.rotated;
-              onModifyPlacedItem(newPlacedItem);
-            }}
-          >
-            <Rotate90DegreesCwIcon />
-          </ToggleButton>
+          <Tooltip title="回転">
+            <ToggleButton
+              value="rotate"
+              color="primary"
+              selected={placedItem.rotated}
+              onClick={() => {
+                const newPlacedItem = { ...placedItem };
+                newPlacedItem.rotated = !placedItem.rotated;
+                onModifyPlacedItem(newPlacedItem);
+              }}
+            >
+              <Rotate90DegreesCwIcon />
+            </ToggleButton>
+          </Tooltip>
 
-          <Button
-            value="delete"
-            onClick={() => {
-              onRemovePlacedItem(placedItem);
-            }}
-            color="error"
-            variant="contained"
-            disableElevation
-          >
-            <DeleteIcon />
-          </Button>
+          <Tooltip title="削除">
+            <Button
+              value="delete"
+              onClick={() => {
+                onRemovePlacedItem(placedItem);
+              }}
+              color="error"
+              variant="contained"
+              disableElevation
+            >
+              <DeleteIcon />
+            </Button>
+          </Tooltip>
         </Box>
       </Paper>
     </>

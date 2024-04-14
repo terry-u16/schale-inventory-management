@@ -21,21 +21,35 @@ const clampPosition = (value: number, size: number, boardSize: number) => {
   return Math.min(Math.max(value, 1), boardSize - size + 1);
 };
 
+const shoppingBag = { width: 3, height: 2 } as const;
+const receipt = { width: 1, height: 3 } as const;
+const fountainPen = { width: 2, height: 1 } as const;
+const toyBox = { width: 4, height: 2 } as const;
+const potatoChips = { width: 2, height: 2 } as const;
+const gameMagazine = { width: 3, height: 3 } as const;
+const ambrella = { width: 1, height: 4 } as const;
+const predefinedItems: ItemSet[][] = [
+  [
+    { item: { ...shoppingBag, index: 1 }, count: 1 },
+    { item: { ...receipt, index: 2 }, count: 3 },
+    { item: { ...fountainPen, index: 3 }, count: 5 },
+  ],
+  [
+    { item: { ...toyBox, index: 1 }, count: 1 },
+    { item: { ...potatoChips, index: 2 }, count: 2 },
+    { item: { ...receipt, index: 3 }, count: 3 },
+  ],
+  [
+    { item: { ...gameMagazine, index: 1 }, count: 1 },
+    { item: { ...ambrella, index: 2 }, count: 2 },
+    { item: { ...fountainPen, index: 3 }, count: 4 },
+  ],
+] as const;
+
 const MainArea: FC = () => {
-  const [items, setItems] = useState([
-    new ItemAndPlacement(
-      { item: { width: 3, height: 2, index: 1 }, count: 1 },
-      [],
-    ),
-    new ItemAndPlacement(
-      { item: { width: 1, height: 3, index: 2 }, count: 3 },
-      [],
-    ),
-    new ItemAndPlacement(
-      { item: { width: 2, height: 1, index: 3 }, count: 5 },
-      [],
-    ),
-  ]);
+  const [items, setItems] = useState(
+    predefinedItems[0].map((itemSet) => new ItemAndPlacement(itemSet, [])),
+  );
   const [probs, setProbs] = useState<number[][] | null>(null);
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
@@ -153,6 +167,20 @@ const MainArea: FC = () => {
     setOpenMap(newOpenMap);
   };
 
+  const onItemPresetApply = (preset: number) => {
+    if (!window.confirm('現在の入力内容はリセットされます。よろしいですか？')) {
+      return;
+    }
+
+    setItems(
+      predefinedItems[preset].map(
+        (itemSet) => new ItemAndPlacement(itemSet, []),
+      ),
+    );
+    setProbs(null);
+    setOpenMap(Array(45).fill(false));
+  };
+
   return (
     <Box>
       <Box my={2}>
@@ -171,6 +199,7 @@ const MainArea: FC = () => {
           probsAvailable={probs !== null}
           onExecute={onExecute}
           onToggleShowProb={onToggleShowProb}
+          onItemPresetApply={onItemPresetApply}
         ></ControlPane>
       </Box>
       <Grid container spacing={2}>
