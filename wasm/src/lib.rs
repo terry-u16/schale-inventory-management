@@ -69,7 +69,7 @@ impl TryFrom<JsInput> for GameState {
 
             let item = problem::PlacedItem {
                 item,
-                coord: Coord::new(placed_item.row as usize, placed_item.col as usize),
+                coord: Coord::new(placed_item.row as usize - 1, placed_item.col as usize - 1),
             };
 
             placed_items.push(item);

@@ -1,5 +1,4 @@
 use crate::{
-    alert,
     grid::{Coord, Map2d},
     mat,
     problem::{GameState, Item},
