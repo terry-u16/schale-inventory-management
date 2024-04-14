@@ -182,7 +182,7 @@ const MainArea: FC = () => {
   };
 
   return (
-    <Box>
+    <Box my={6}>
       <Box my={2}>
         <Board
           placedItems={items.map((item) => item.placements).flat()}
