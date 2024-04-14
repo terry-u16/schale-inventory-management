@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { ThemeProvider } from '@mui/material';
 import Box from '@mui/material/Box';
-import { getItemColor, type PlacedItem } from './ItemPane';
+import { getItemPalette, type PlacedItem } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 
 export interface Props {
@@ -9,7 +9,7 @@ export interface Props {
 }
 
 const styleGenerator = (item: PlacedItem) => ({
-  opacity: 0.5,
+  opacity: 0.8,
   gridRow: `${item.row} / ${item.row + getRotatedHeight(item)}`,
   gridColumn: `${item.col} / ${item.col + getRotatedWidth(item)}`,
 });
@@ -23,7 +23,7 @@ const PlacedItemSquare: FC<Props> = (props) => {
         theme={{
           palette: {
             primary: {
-              main: getItemColor(placedItem.item.index),
+              main: getItemPalette(placedItem.item.index)[200],
             },
           },
         }}

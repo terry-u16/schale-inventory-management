@@ -1,6 +1,6 @@
 import { type FC, useState } from 'react';
 import { Divider } from '@mui/material';
-import { red, green, blue } from '@mui/material/colors';
+import { red, lightBlue, yellow } from '@mui/material/colors';
 import AddIcon from '@mui/icons-material/Add';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
@@ -37,8 +37,10 @@ export function getRotatedWidth(item: PlacedItem): number {
   return item.rotated ? item.item.height : item.item.width;
 }
 
-export function getItemColor(index: number): string {
-  return [red, green, blue][(index - 1) % 3][400];
+export function getItemPalette(
+  index: number,
+): typeof red | typeof yellow | typeof lightBlue {
+  return [red, yellow, lightBlue][(index - 1) % 3];
 }
 
 export interface ItemSet {
@@ -110,7 +112,7 @@ const ItemPane: FC<Props> = (props) => {
         <CardHeader
           avatar={
             <Avatar
-              sx={{ bgcolor: getItemColor(itemSet.item.index) }}
+              sx={{ bgcolor: getItemPalette(itemSet.item.index)[300] }}
               aria-label="recipe"
             >
               {' '}

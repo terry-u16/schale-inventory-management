@@ -104,6 +104,7 @@ const PlacedItemPane: FC<Props> = (props) => {
             }}
             color="error"
             variant="contained"
+            disableElevation
           >
             <DeleteIcon />
           </Button>

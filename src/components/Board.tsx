@@ -22,7 +22,6 @@ const Board: FC<Props> = (props) => {
         row: row + 1,
         col: col + 1,
         open: false,
-        colorMod: (400 + col - row) % 4,
       })),
     )
     .flat();

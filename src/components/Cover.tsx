@@ -1,6 +1,6 @@
 import { type FC } from 'react';
 import { Box } from '@mui/material';
-import { pink, indigo, cyan, yellow } from '@mui/material/colors';
+import { blueGrey } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
@@ -8,7 +8,6 @@ export interface Cover {
   row: number;
   col: number;
   open: boolean;
-  colorMod: number;
 }
 
 type Props = {
@@ -30,15 +29,13 @@ const buttonStyleGenerator = (opacity: number) => ({
 });
 
 const CoverButton: FC<Props> = (props) => {
-  const { row, col, open, colorMod } = props.cover;
-  const opacity = open ? 0.2 : 1;
-
-  const color = [yellow, indigo, cyan, pink][colorMod];
+  const { row, col, open } = props.cover;
+  const opacity = open ? 0.15 : 1;
 
   const theme = createTheme({
     palette: {
       primary: {
-        main: color[50],
+        main: blueGrey[100],
       },
     },
   });
