@@ -84,8 +84,8 @@ impl TryFrom<JsInput> for GameState {
             counts[placed.item.item_index()] += 1;
             labels.push((placed.item.item_index() + 1, counts[placed.item.item_index()]));
 
-            let row0 = placed.coord.row + 1;
-            let col0 = placed.coord.col + 1;
+            let row0 = placed.coord.row;
+            let col0 = placed.coord.col;
             let row1 = row0 + placed.item.height();
             let col1 = col0 + placed.item.width();
 
@@ -112,8 +112,8 @@ impl TryFrom<JsInput> for GameState {
                         index0,
                         item1,
                         index1,
-                        row,
-                        col
+                        row + 1,
+                        col + 1
                     ));
                 }
             }
