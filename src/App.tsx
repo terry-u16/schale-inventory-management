@@ -2,7 +2,7 @@ import './App.css';
 import { type FC } from 'react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import MainArea from './components/MainArea';
+import InitWasm from './components/InitWasm';
 
 const App: FC = () => {
   const theme = createTheme({
@@ -15,7 +15,7 @@ const App: FC = () => {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <MainArea />
+        <InitWasm />
       </ThemeProvider>
     </>
   );

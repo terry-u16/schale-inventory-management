@@ -1,15 +1,85 @@
 use crate::{
-    grid::Coord,
+    alert,
+    grid::{Coord, Map2d},
     mat,
     problem::{GameState, Item},
 };
+use anyhow::{ensure, Result};
 use itertools::iproduct;
 use rand::prelude::*;
 use rand_pcg::Pcg64Mcg;
 use std::array;
 
-pub fn calc_count(state: &GameState) -> u64 {
-    calc_count_inner(state, 10000).0
+/// 3アイテムについて、各マスにアイテムが置かれる確率を計算する。
+pub fn calc_probabilities(state: &GameState, sample_count: usize) -> Result<Vec<Map2d<f64>>> {
+    let (all_count, placements) = calc_count_inner(state, sample_count);
+
+    ensure!(all_count > 0, "条件を満たす配置が存在しません。");
+
+    let sampled_count = placements.len();
+    let mut probabilities = vec![];
+
+    // 各アイテムについて、アイテムを置いた回数をカウントする
+    for flag in 0..(1 << GameState::ITEM_GROUP_COUNT) {
+        let mut counts = Map2d::new_with(0, GameState::WIDTH, GameState::HEIGHT);
+
+        // 最初から置かれているもの
+        for placements in state.placed_items.iter() {
+            if flag & (1 << placements.item.item_index()) == 0 {
+                continue;
+            }
+
+            let r0 = placements.coord.row;
+            let c0 = placements.coord.col;
+            let r1 = r0 + placements.item.height();
+            let c1 = c0 + placements.item.width();
+
+            for row in r0..r1 {
+                for col in c0..c1 {
+                    counts[Coord::new(row, col)] += sampled_count;
+                }
+            }
+        }
+
+        // サンプリングされた配置
+        for placements in placements.iter() {
+            for placement in placements.iter() {
+                if flag & (1 << placement.item_index) == 0 {
+                    continue;
+                }
+
+                let item = if placement.is_rotated {
+                    state.remaining_items[placement.item_index].item.rotate()
+                } else {
+                    state.remaining_items[placement.item_index].item
+                };
+
+                let r0 = placement.coord.row;
+                let c0 = placement.coord.col;
+                let r1 = r0 + item.height();
+                let c1 = c0 + item.width();
+
+                for row in r0..r1 {
+                    for col in c0..c1 {
+                        counts[Coord::new(row, col)] += 1;
+                    }
+                }
+            }
+        }
+
+        let mut prob = Map2d::new_with(0.0, GameState::WIDTH, GameState::HEIGHT);
+
+        for row in 0..GameState::HEIGHT {
+            for col in 0..GameState::WIDTH {
+                prob[Coord::new(row, col)] =
+                    counts[Coord::new(row, col)] as f64 / sampled_count as f64;
+            }
+        }
+
+        probabilities.push(prob);
+    }
+
+    Ok(probabilities)
 }
 
 fn calc_count_inner(state: &GameState, sample_count: usize) -> (u64, Vec<Vec<Placement>>) {
@@ -122,10 +192,7 @@ fn calc_count_inner(state: &GameState, sample_count: usize) -> (u64, Vec<Vec<Pla
             next_cnt[i] += 1;
 
             transit(&next_cnt, state.remaining_items[i].item, i, false);
-
-            if let Some(item) = state.remaining_items[i].item.rotate() {
-                transit(&next_cnt, item, i, true);
-            }
+            transit(&next_cnt, state.remaining_items[i].item.rotate(), i, true);
         }
 
         // アイテムを置かずに着目するマスを次の位置に移動する遷移
@@ -226,7 +293,7 @@ fn restore_dfs(
 
     for history in from[col][row][cnt[0]][cnt[1]][cnt[2]][w[0]][w[1]][w[2]][w[3]][w[4]].iter() {
         if let Some((item_i, rotate)) = history.item {
-            current_placements.push(Placement(
+            current_placements.push(Placement::new(
                 Coord::new(history.row, history.col),
                 item_i,
                 rotate,
@@ -288,7 +355,7 @@ fn restore_random(
                 .expect("Histories is empty.");
 
             if let Some((item_i, rotate)) = history.item {
-                current_items.push(Placement(
+                current_items.push(Placement::new(
                     Coord::new(history.row, history.col),
                     item_i,
                     rotate,
@@ -308,7 +375,21 @@ fn restore_random(
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct Placement(Coord, usize, bool);
+struct Placement {
+    coord: Coord,
+    item_index: usize,
+    is_rotated: bool,
+}
+
+impl Placement {
+    fn new(coord: Coord, item_index: usize, is_rotated: bool) -> Self {
+        Self {
+            coord,
+            item_index,
+            is_rotated,
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy)]
 struct History {
@@ -345,14 +426,18 @@ mod tests {
         problem::{Item, ItemGroup},
     };
 
+    fn calc_count(state: &GameState) -> u64 {
+        calc_count_inner(state, 10000).0
+    }
+
     #[test]
     fn test_calc_count() {
         let open_map = Map2d::new_with(false, GameState::WIDTH, GameState::HEIGHT);
 
         let remaining_items = [
-            ItemGroup::new(Item::new(3, 2), 1),
-            ItemGroup::new(Item::new(1, 3), 3),
-            ItemGroup::new(Item::new(2, 1), 5),
+            ItemGroup::new(Item::new(3, 2, 0), 1),
+            ItemGroup::new(Item::new(1, 3, 1), 3),
+            ItemGroup::new(Item::new(2, 1, 2), 5),
         ];
         let placed_items = vec![];
 
@@ -367,9 +452,9 @@ mod tests {
         open_map[Coord::new(2, 1)] = true;
 
         let remaining_items = [
-            ItemGroup::new(Item::new(3, 2), 1),
-            ItemGroup::new(Item::new(1, 3), 3),
-            ItemGroup::new(Item::new(2, 1), 5),
+            ItemGroup::new(Item::new(3, 2, 0), 1),
+            ItemGroup::new(Item::new(1, 3, 1), 3),
+            ItemGroup::new(Item::new(2, 1, 2), 5),
         ];
         let placed_items = vec![];
 

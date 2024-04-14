@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import { solve } from '../../public/wasm/wasm_solver';
 import Board from './Board';
 import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
@@ -35,9 +36,10 @@ const MainArea: FC = () => {
       [],
     ),
   ]);
-  const [probs, _setProbs] = useState<number[][] | null>(null);
-  const [showProbs, setShowProbs] = useState([false, false, false]);
+  const [probs, setProbs] = useState<number[][] | null>(null);
+  const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
+  const [openMap, _setOpenMap] = useState(Array(45).fill(false));
 
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
@@ -121,6 +123,22 @@ const MainArea: FC = () => {
 
   const onExecute = () => {
     setIsRunning(true);
+    try {
+      const { probs, error } = solve({
+        item_and_placement: items,
+        open_map: openMap,
+      }) as { probs: number[][]; error: string };
+
+      if (error !== '') {
+        alert(error);
+        setProbs(null);
+      } else {
+        setProbs(probs);
+      }
+    } catch (e) {
+      alert(e);
+    }
+    setIsRunning(false);
   };
 
   const onToggleShowProb = (index: number) => {

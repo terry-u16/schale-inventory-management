@@ -1,5 +1,5 @@
 [package]
-name = "wasm"
+name = "wasm-solver"
 version = "0.1.0"
 authors = ["terry-u16 <terry-u16@users.noreply.github.com>"]
 edition = "2021"
@@ -23,6 +23,9 @@ itertools = "0.12.1"
 rand = { version = "0.8.5", features = ["small_rng"] }
 rand_pcg = "0.3.1"
 getrandom = { version = "0.2.14", features = ["js"] }
+anyhow = "1.0.82"
+serde = { version = "1.0.197", features = ["derive"] }
+serde-wasm-bindgen = "0.6.5"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.42"

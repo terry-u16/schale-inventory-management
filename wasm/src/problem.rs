@@ -81,16 +81,21 @@ impl GameState {
 pub struct Item {
     height: usize,
     width: usize,
+    item_index: usize,
 }
 
 impl Item {
-    pub fn new(height: usize, width: usize) -> Self {
+    pub fn new(height: usize, width: usize, item_index: usize) -> Self {
         assert!(height > 0);
         assert!(width > 0);
         assert!(height <= GameState::MAX_ITEM_SIZE);
         assert!(width <= GameState::MAX_ITEM_SIZE);
 
-        Self { height, width }
+        Self {
+            height,
+            width,
+            item_index,
+        }
     }
 
     pub fn height(&self) -> usize {
@@ -101,18 +106,18 @@ impl Item {
         self.width
     }
 
+    pub fn item_index(&self) -> usize {
+        self.item_index
+    }
+
     /// 左上の座標を指定して右下の座標を返す。
     pub fn bottom_right(&self, coord: Coord) -> Coord {
         Coord::new(coord.row + self.height, coord.col + self.width)
     }
 
-    /// 90度回転させたアイテムを返す。回転させても高さと幅が同じ場合はNoneを返す。
-    pub fn rotate(&self) -> Option<Self> {
-        if self.height != self.width {
-            Some(Self::new(self.width, self.height))
-        } else {
-            None
-        }
+    /// 90度回転させたアイテムを返す。回転させても高さと幅が同じ場合でも同様。
+    pub fn rotate(&self) -> Self {
+        Self::new(self.width, self.height, self.item_index)
     }
 }
 
@@ -132,8 +137,8 @@ impl ItemGroup {
 /// 盤面上に配置されたアイテム。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
 pub struct PlacedItem {
-    item: Item,
-    coord: Coord,
+    pub item: Item,
+    pub coord: Coord,
 }
 
 impl PlacedItem {
@@ -201,13 +206,5 @@ impl<T: NumAssign + Debug + Clone + Copy> PrefixSumMap2d<T> {
         sum -= self.map[Coord::new(c0.row, c1.col)];
         sum -= self.map[Coord::new(c1.row, c0.col)];
         sum
-    }
-
-    fn width(&self) -> usize {
-        self.width
-    }
-
-    fn height(&self) -> usize {
-        self.height
     }
 }
