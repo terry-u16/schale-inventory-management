@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { Box } from '@mui/material';
 import { pink, indigo, cyan, yellow } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -15,10 +16,13 @@ type Props = {
   onClick: () => void;
 };
 
-const styleGenerator = (opacity: number, row: number, col: number) => ({
-  opacity,
+const boxStyleGenerator = (row: number, col: number) => ({
   gridRow: row,
   gridColumn: col,
+});
+
+const buttonStyleGenerator = (opacity: number) => ({
+  opacity,
   maxWidth: '65px',
   maxHeight: '65px',
   minWidth: '65px',
@@ -34,7 +38,7 @@ const CoverButton: FC<Props> = (props) => {
   const theme = createTheme({
     palette: {
       primary: {
-        main: color[100],
+        main: color[50],
       },
     },
   });
@@ -42,12 +46,23 @@ const CoverButton: FC<Props> = (props) => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Button
-          variant="contained"
-          key={`cover${row}-${col}`}
-          onClick={props.onClick}
-          style={styleGenerator(opacity, row, col)}
-        ></Button>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          style={boxStyleGenerator(row, col)}
+        >
+          <Button
+            variant="contained"
+            key={`cover${row}-${col}`}
+            onClick={props.onClick}
+            style={buttonStyleGenerator(opacity)}
+            sx={{ border: 1, borderColor: '#bdbdbd' }}
+            disableElevation
+          ></Button>
+        </Box>
       </ThemeProvider>
     </>
   );

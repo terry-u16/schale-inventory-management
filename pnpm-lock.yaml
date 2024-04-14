@@ -20,9 +20,6 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
-  react-imask:
-    specifier: ^7.6.0
-    version: 7.6.0(react@18.2.0)
 
 devDependencies:
   '@eslint/eslintrc':
@@ -450,14 +447,6 @@ packages:
       '@babel/core': 7.24.4
       '@babel/helper-plugin-utils': 7.24.0
     dev: true
-
-  /@babel/runtime-corejs3@7.24.4:
-    resolution: {integrity: sha512-VOQOexSilscN24VEY810G/PqtpFvx/z6UqDIjIWbDe2368HhDLkYN5TYwaEz/+eRCUkhJ2WaNLLmQAlxzfWj4w==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      core-js-pure: 3.36.1
-      regenerator-runtime: 0.14.1
-    dev: false
 
   /@babel/runtime@7.24.4:
     resolution: {integrity: sha512-dkxf7+hn8mFBwKjs9bvBlArzLVxVbS8usaPUDd5p2a9JCL9tB8OaOVN1isD4+Xyk4ns89/xeOmbQvgdK7IIVdA==}
@@ -2441,11 +2430,6 @@ packages:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
     dev: true
 
-  /core-js-pure@3.36.1:
-    resolution: {integrity: sha512-NXCvHvSVYSrewP0L5OhltzXeWFJLo2AL2TYnj6iLV3Bw8mM62wAQMNgUCRI6EBu6hVVpbCxmOPlxh1Ikw2PfUA==}
-    requiresBuild: true
-    dev: false
-
   /cosmiconfig@7.1.0:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
     engines: {node: '>=10'}
@@ -3624,13 +3608,6 @@ packages:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}
     engines: {node: '>= 4'}
     dev: true
-
-  /imask@7.6.0:
-    resolution: {integrity: sha512-6EHsq1q7v5+M4Vas2MGrs2oRpxPRWPwPDiL0HmG1ikBI/0hOwvkxRhVRFQnWIlZcTG7R8iw0az5V+z868qnQ9A==}
-    engines: {npm: '>=4.0.0'}
-    dependencies:
-      '@babel/runtime-corejs3': 7.24.4
-    dev: false
 
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
@@ -5004,17 +4981,6 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
-    dev: false
-
-  /react-imask@7.6.0(react@18.2.0):
-    resolution: {integrity: sha512-SilPct67Xw4TN+dqn3SM4BVpy+FwNSeT0wblA/DXQ3El2KPBEWwrn4x3gQ39ZohFAphp7yG7w6gSKq5SeR/6Kg==}
-    engines: {npm: '>=4.0.0'}
-    peerDependencies:
-      react: '>=0.14.0'
-    dependencies:
-      imask: 7.6.0
-      prop-types: 15.8.1
-      react: 18.2.0
     dev: false
 
   /react-is@16.13.1:

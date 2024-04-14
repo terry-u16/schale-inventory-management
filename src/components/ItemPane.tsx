@@ -18,7 +18,7 @@ import PlacedItemPane from './PlacedItemPane';
 export interface Item {
   width: number;
   height: number;
-  id: string;
+  index: number;
 }
 
 export interface PlacedItem {
@@ -37,6 +37,10 @@ export function getRotatedWidth(item: PlacedItem): number {
   return item.rotated ? item.item.height : item.item.width;
 }
 
+export function getItemColor(index: number): string {
+  return [red, green, blue][(index - 1) % 3][400];
+}
+
 export interface ItemSet {
   item: Item;
   count: number;
@@ -45,26 +49,59 @@ export interface ItemSet {
 type Props = {
   itemSet: ItemSet;
   placedItems: PlacedItem[];
-  index: number;
+  onModifyItem: (item: ItemSet) => void;
+  onAddPlacedItem: (item: PlacedItem) => void;
+  onModifyPlacedItem: (item: PlacedItem) => void;
+  onRemovePlacedItem: (item: PlacedItem) => void;
 };
 
 const ItemPane: FC<Props> = (props) => {
-  const { itemSet, placedItems, index } = props;
+  const {
+    itemSet,
+    placedItems,
+    onModifyItem,
+    onAddPlacedItem,
+    onModifyPlacedItem,
+    onRemovePlacedItem,
+  } = props;
   const [widthStr, setWidthStr] = useState(itemSet.item.width.toString());
   const [heightStr, setHeightStr] = useState(itemSet.item.height.toString());
   const [countStr, setCountStr] = useState(itemSet.count.toString());
-  const color = [red, green, blue][(index - 1) % 3];
 
   const onWidthChange = (event: SelectChangeEvent) => {
     setWidthStr(event.target.value);
+    onModifyItem({
+      item: {
+        width: Number(event.target.value),
+        height: itemSet.item.height,
+        index: itemSet.item.index,
+      },
+      count: itemSet.count,
+    });
   };
 
   const onHeightChange = (event: SelectChangeEvent) => {
     setHeightStr(event.target.value);
+    onModifyItem({
+      item: {
+        width: itemSet.item.width,
+        height: Number(event.target.value),
+        index: itemSet.item.index,
+      },
+      count: itemSet.count,
+    });
   };
 
   const onCountChange = (event: SelectChangeEvent) => {
     setCountStr(event.target.value);
+    onModifyItem({
+      item: {
+        width: itemSet.item.width,
+        height: itemSet.item.height,
+        index: itemSet.item.index,
+      },
+      count: Number(event.target.value),
+    });
   };
 
   return (
@@ -72,14 +109,34 @@ const ItemPane: FC<Props> = (props) => {
       <Card>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: color[400] }} aria-label="recipe">
+            <Avatar
+              sx={{ bgcolor: getItemColor(itemSet.item.index) }}
+              aria-label="recipe"
+            >
               {' '}
             </Avatar>
           }
-          title={<Typography variant="h4">{`Item ${index}`}</Typography>}
+          title={
+            <Typography variant="h4">{`Item ${itemSet.item.index}`}</Typography>
+          }
         />
         <CardContent>
           <Box display="grid" gridTemplateColumns="repeat(3, 100px)" gap={2}>
+            <FormControl fullWidth>
+              <InputLabel>高さ</InputLabel>
+              <Select
+                labelId="item-height"
+                id="item-height"
+                value={heightStr}
+                label="高さ"
+                onChange={onHeightChange}
+              >
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+              </Select>
+            </FormControl>
+
             <FormControl fullWidth>
               <InputLabel>幅</InputLabel>
               <Select
@@ -93,21 +150,6 @@ const ItemPane: FC<Props> = (props) => {
                 <MenuItem value={2}>2</MenuItem>
                 <MenuItem value={3}>3</MenuItem>
                 <MenuItem value={4}>4</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel>高さ</InputLabel>
-              <Select
-                labelId="item-height"
-                id="item-height"
-                value={heightStr}
-                label="高さ"
-                onChange={onHeightChange}
-              >
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
               </Select>
             </FormControl>
 
@@ -138,13 +180,29 @@ const ItemPane: FC<Props> = (props) => {
                   key={item.id}
                   placedItem={item}
                   index={index}
-                  onRemove={() => {}}
+                  onModifyPlacedItem={onModifyPlacedItem}
+                  onRemovePlacedItem={onRemovePlacedItem}
                 />
               </Box>
             ))}
 
             <Box gridColumn="1 / 4">
-              <Button variant="contained" fullWidth startIcon={<AddIcon />}>
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  const newPlacedItem: PlacedItem = {
+                    item: itemSet.item,
+                    rotated: false,
+                    row: 1,
+                    col: 1,
+                    id: crypto.randomUUID(),
+                  };
+                  onAddPlacedItem(newPlacedItem);
+                }}
+                disabled={placedItems.length >= itemSet.count}
+              >
                 追加
               </Button>
             </Box>

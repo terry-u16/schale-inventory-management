@@ -2,8 +2,16 @@ import { type FC, useState } from 'react';
 import CoverButton from './Cover';
 import { type Cover } from './Cover';
 import './Board.css';
+import { type PlacedItem } from './ItemPane';
+import PlacedItemSquare from './PlacedItemSquare';
 
-const Board: FC = () => {
+export interface Props {
+  placedItems: PlacedItem[];
+}
+
+const Board: FC<Props> = (props) => {
+  const { placedItems } = props;
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const initCovers: Cover[] = [...Array(5)]
     .map((_: undefined, row: number) =>
@@ -17,6 +25,7 @@ const Board: FC = () => {
       })),
     )
     .flat();
+
   const [covers, setCovers] = useState(initCovers);
 
   const coverOnClick = (idx: number) => {
@@ -31,6 +40,12 @@ const Board: FC = () => {
   return (
     <>
       <div id="board-container">
+        {placedItems.map((placedItem: PlacedItem) => (
+          <PlacedItemSquare
+            key={`placed-item-square-${placedItem.id}`}
+            placedItem={placedItem}
+          />
+        ))}
         {covers.map((cover: Cover, idx: number) => (
           <CoverButton
             cover={cover}

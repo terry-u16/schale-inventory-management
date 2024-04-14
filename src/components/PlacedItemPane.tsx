@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Rotate90DegreesCwIcon from '@mui/icons-material/Rotate90DegreesCw';
 import Box from '@mui/material/Box';
@@ -15,7 +15,8 @@ import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 type Props = {
   placedItem: PlacedItem;
   index: number;
-  onRemove: () => void;
+  onModifyPlacedItem: (item: PlacedItem) => void;
+  onRemovePlacedItem: (item: PlacedItem) => void;
 };
 
 const generateSequence = (start: number, end: number) => {
@@ -25,17 +26,14 @@ const generateSequence = (start: number, end: number) => {
 };
 
 const PlacedItemPane: FC<Props> = (props) => {
-  const { placedItem, onRemove } = props;
-
-  const [rowStr, setRowStr] = useState(placedItem.row.toString());
-  const [colStr, setColStr] = useState(placedItem.col.toString());
+  const { placedItem, onModifyPlacedItem, onRemovePlacedItem } = props;
 
   const onRowChange = (event: SelectChangeEvent) => {
-    setRowStr(event.target.value);
+    onModifyPlacedItem({ ...placedItem, row: parseInt(event.target.value) });
   };
 
   const onColChange = (event: SelectChangeEvent) => {
-    setColStr(event.target.value);
+    onModifyPlacedItem({ ...placedItem, col: parseInt(event.target.value) });
   };
 
   return (
@@ -45,9 +43,9 @@ const PlacedItemPane: FC<Props> = (props) => {
           <FormControl fullWidth>
             <InputLabel>行</InputLabel>
             <Select
-              labelId={`item-row-${placedItem.item.id}`}
-              id={`item-row-${placedItem.item.id}`}
-              value={rowStr}
+              labelId={`item-row-${placedItem.item.index}`}
+              id={`item-row-${placedItem.item.index}`}
+              value={placedItem.row.toString()}
               label="行"
               onChange={onRowChange}
             >
@@ -67,9 +65,9 @@ const PlacedItemPane: FC<Props> = (props) => {
           <FormControl fullWidth>
             <InputLabel>列</InputLabel>
             <Select
-              labelId={`item-col-${placedItem.item.id}`}
-              id={`item-col-${placedItem.item.id}`}
-              value={colStr}
+              labelId={`item-col-${placedItem.item.index}`}
+              id={`item-col-${placedItem.item.index}`}
+              value={placedItem.col.toString()}
               label="列"
               onChange={onColChange}
             >
@@ -86,13 +84,23 @@ const PlacedItemPane: FC<Props> = (props) => {
             </Select>
           </FormControl>
 
-          <ToggleButton value="rotate" selected={placedItem.rotated}>
+          <ToggleButton
+            value="rotate"
+            selected={placedItem.rotated}
+            onClick={() => {
+              const newPlacedItem = { ...placedItem };
+              newPlacedItem.rotated = !placedItem.rotated;
+              onModifyPlacedItem(newPlacedItem);
+            }}
+          >
             <Rotate90DegreesCwIcon />
           </ToggleButton>
 
           <Button
             value="delete"
-            onClick={onRemove}
+            onClick={() => {
+              onRemovePlacedItem(placedItem);
+            }}
             color="error"
             variant="contained"
           >
