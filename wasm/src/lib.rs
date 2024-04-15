@@ -107,7 +107,7 @@ impl TryFrom<JsInput> for GameState {
                     let (item1, index1) = labels[j];
 
                     return Err(anyhow!(
-                        "アイテム{}の{}番目とアイテム{}の{}番目が座標({}, {})で重なっています。\nアイテムの初期位置が重ならないように修正してください。",
+                        "備品{}の{}番目と備品{}の{}番目が座標({}, {})で重なっています。\n備品の位置が重ならないように修正してください。",
                         item0,
                         index0,
                         item1,
