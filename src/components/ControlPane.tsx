@@ -18,8 +18,12 @@ import LooksOneIcon from '@mui/icons-material/LooksOne';
 import LooksTwoIcon from '@mui/icons-material/LooksTwo';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Box from '@mui/material/Box';
+import { type ItemAndPlacement } from './MainArea';
+import ShareButton from './ShareButton';
 
 type Props = {
+  itemAndPlacements: ItemAndPlacement[];
+  openPanels: boolean[];
   isRunning: boolean;
   showProb: boolean[];
   onExecute: () => void;
@@ -29,6 +33,8 @@ type Props = {
 
 const ControlPane: FC<Props> = (props) => {
   const {
+    itemAndPlacements,
+    openPanels,
     isRunning,
     showProb,
     onExecute,
@@ -47,7 +53,7 @@ const ControlPane: FC<Props> = (props) => {
         <Box
           p={3}
           display="grid"
-          gridTemplateColumns="1fr 1fr 2.5fr 0.5fr"
+          gridTemplateColumns="1fr 1fr 2.5fr 0.5fr 56px"
           gap={2}
         >
           <FormControl>
@@ -133,6 +139,10 @@ const ControlPane: FC<Props> = (props) => {
               </span>
             </Tooltip>
           </ToggleButtonGroup>
+          <ShareButton
+            itemAndPlacements={itemAndPlacements}
+            openPanels={openPanels}
+          />
         </Box>
       </Paper>
     </>

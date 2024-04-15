@@ -7,7 +7,7 @@ import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 
-class ItemAndPlacement {
+export class ItemAndPlacement {
   item: ItemSet;
   placements: PlacedItem[];
 
@@ -209,6 +209,8 @@ const MainArea: FC = () => {
       </Box>
       <Box my={2}>
         <ControlPane
+          itemAndPlacements={items}
+          openPanels={openMap}
           isRunning={isRunning}
           showProb={showProbs}
           onExecute={onExecute}
