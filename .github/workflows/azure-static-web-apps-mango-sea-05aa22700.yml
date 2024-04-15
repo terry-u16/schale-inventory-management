@@ -21,9 +21,9 @@ jobs:
         with:
           submodules: true
           lfs: false
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v3.0
         with:
-          version: 8.15.6
+          version: 8.x
       - name: Cache cargo registry
         uses: actions/cache@v1
         with:
@@ -39,19 +39,16 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '21.x'
-          cache: npm
-      - name: Node version
-        run: node --version
       - name: install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - run: wasm-pack build --target web --out-dir ../public/wasm
         working-directory: ./wasm
-      - name: Build And Deploy
-        id: builddeploy
+      - name: Pnpm install
+        run: pnpm install
+      - name: Build
+        run: pnpm build
+      - name: Deploy
+        id: deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_SEA_05AA22700 }}
@@ -59,9 +56,9 @@ jobs:
           action: 'upload'
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: '/' # App source code path
-          output_location: 'dist' # Built app content directory - optional
-          app_build_command: 'tsc && vite build'
+          app_location: '/dist' # App source code path
+          output_location: '' # Built app content directory - optional
+          skip_app_build: true
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
