@@ -62,7 +62,7 @@ impl TryFrom<JsInput> for GameState {
             );
 
             if placed_item.rotated {
-                item = item.rotate();
+                item = item.rotate().unwrap_or(item);
             }
 
             remaining_items[item.item_index()].count -= 1;
@@ -82,7 +82,10 @@ impl TryFrom<JsInput> for GameState {
 
         for (i, placed) in placed_items.iter().enumerate() {
             counts[placed.item.item_index()] += 1;
-            labels.push((placed.item.item_index() + 1, counts[placed.item.item_index()]));
+            labels.push((
+                placed.item.item_index() + 1,
+                counts[placed.item.item_index()],
+            ));
 
             let row0 = placed.coord.row;
             let col0 = placed.coord.col;

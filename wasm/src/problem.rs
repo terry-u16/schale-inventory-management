@@ -115,9 +115,13 @@ impl Item {
         Coord::new(coord.row + self.height, coord.col + self.width)
     }
 
-    /// 90度回転させたアイテムを返す。回転させても高さと幅が同じ場合でも同様。
-    pub fn rotate(&self) -> Self {
-        Self::new(self.width, self.height, self.item_index)
+    /// 90度回転させたアイテムを返す。回転させても高さと幅が同じ場合はNoneを返す。
+    pub fn rotate(&self) -> Option<Self> {
+        if self.height != self.width {
+            Some(Self::new(self.width, self.height, self.item_index))
+        } else {
+            None
+        }
     }
 }
 

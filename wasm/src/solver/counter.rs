@@ -47,10 +47,12 @@ pub fn calc_probabilities(state: &GameState, sample_count: usize) -> Result<Vec<
                     continue;
                 }
 
+                let item = state.remaining_items[placement.item_index].item;
+
                 let item = if placement.is_rotated {
-                    state.remaining_items[placement.item_index].item.rotate()
+                    item.rotate().unwrap_or(item)
                 } else {
-                    state.remaining_items[placement.item_index].item
+                    item
                 };
 
                 let r0 = placement.coord.row;
@@ -191,7 +193,10 @@ fn calc_count_inner(state: &GameState, sample_count: usize) -> (u64, Vec<Vec<Pla
             next_cnt[i] += 1;
 
             transit(&next_cnt, state.remaining_items[i].item, i, false);
-            transit(&next_cnt, state.remaining_items[i].item.rotate(), i, true);
+
+            if let Some(rotated_item) = state.remaining_items[i].item.rotate() {
+                transit(&next_cnt, rotated_item, i, true);
+            }
         }
 
         // アイテムを置かずに着目するマスを次の位置に移動する遷移
