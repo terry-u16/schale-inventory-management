@@ -39,6 +39,11 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+          cache: npm
       - name: install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - run: wasm-pack build --target web --out-dir ../public/wasm
@@ -53,7 +58,8 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: '/' # App source code path
-          output_location: 'build' # Built app content directory - optional
+          output_location: 'dist' # Built app content directory - optional
+          app_build_command: 'tsc && vite build'
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
