@@ -23,7 +23,7 @@ const ShareButton: FC<Props> = (props) => {
     (allItemCount === foundItemCount
       ? `「シャーレの総決算with連邦生徒会 在庫管理計算機」を使って、${openPanelCount}個のパネルを開いて${allItemCount}個全ての在庫を発見しました！`
       : `「シャーレの総決算with連邦生徒会 在庫管理計算機」を使って、${openPanelCount}個のパネルを開いて${allItemCount}個中${foundItemCount}個の在庫を発見しました！`) +
-    ' https://test.com/';
+    ' https://schale-inventory-management.terry-u16.net/';
   const tag = 'シャーレ在庫管理計算機';
   const link = `https://x.com/compose/post?hashtags=${tag}&text=${encodeURIComponent(shareMessage)}`;
 
