@@ -44,6 +44,8 @@ jobs:
         with:
           node-version: '21.x'
           cache: npm
+      - name: Node version
+        run: node --version
       - name: install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
       - run: wasm-pack build --target web --out-dir ../public/wasm
