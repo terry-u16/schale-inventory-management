@@ -112,7 +112,7 @@ const ItemPane: FC<Props> = (props) => {
             </Avatar>
           }
           title={
-            <Typography variant="h5">{`Item ${itemSet.item.index}`}</Typography>
+            <Typography variant="h5">{`備品 ${itemSet.item.index}`}</Typography>
           }
         />
         <CardContent>
@@ -183,7 +183,7 @@ const ItemPane: FC<Props> = (props) => {
             ))}
 
             <Box gridColumn="1 / 4">
-              <Tooltip title="アイテムを配置する">
+              <Tooltip title="備品を配置する">
                 <Button
                   variant="contained"
                   fullWidth

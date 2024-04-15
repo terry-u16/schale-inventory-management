@@ -182,7 +182,7 @@ const MainArea: FC = () => {
   };
 
   return (
-    <Box my={6}>
+    <Box mt={6} mb={2}>
       <Box my={2}>
         <Board
           placedItems={items.map((item) => item.placements).flat()}
@@ -196,7 +196,6 @@ const MainArea: FC = () => {
         <ControlPane
           isRunning={isRunning}
           showProb={showProbs}
-          probsAvailable={probs !== null}
           onExecute={onExecute}
           onToggleShowProb={onToggleShowProb}
           onItemPresetApply={onItemPresetApply}

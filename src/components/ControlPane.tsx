@@ -22,7 +22,6 @@ import Box from '@mui/material/Box';
 type Props = {
   isRunning: boolean;
   showProb: boolean[];
-  probsAvailable: boolean;
   onExecute: () => void;
   onToggleShowProb: (index: number) => void;
   onItemPresetApply: (preset: number) => void;
@@ -32,7 +31,6 @@ const ControlPane: FC<Props> = (props) => {
   const {
     isRunning,
     showProb,
-    probsAvailable,
     onExecute,
     onToggleShowProb,
     onItemPresetApply,
@@ -53,14 +51,12 @@ const ControlPane: FC<Props> = (props) => {
           gap={2}
         >
           <FormControl>
-            <InputLabel id="predefined-choice-label">
-              アイテムプリセット
-            </InputLabel>
+            <InputLabel id="predefined-choice-label">備品プリセット</InputLabel>
             <Select
               labelId="predefined-choice-select"
               id="predefined-choice-select"
               value={predefinedChoice}
-              label="アイテムプリセット"
+              label="備品プリセット"
               onChange={handlepredefinedChoiceChange}
             >
               <MenuItem value={0}>1周目</MenuItem>
@@ -68,7 +64,7 @@ const ControlPane: FC<Props> = (props) => {
               <MenuItem value={2}>3周目</MenuItem>
             </Select>
           </FormControl>
-          <Tooltip title="アイテムプリセットを適用する">
+          <Tooltip title="備品プリセットを適用する">
             <Button
               variant="outlined"
               startIcon={<GradingIcon />}
@@ -79,7 +75,7 @@ const ControlPane: FC<Props> = (props) => {
               適用
             </Button>
           </Tooltip>
-          <Tooltip title="各マスにおけるアイテムの存在確率を計算する">
+          <Tooltip title="各マスにおける備品の存在確率を計算する">
             <LoadingButton
               onClick={onExecute}
               loading={isRunning}
@@ -91,45 +87,42 @@ const ControlPane: FC<Props> = (props) => {
             </LoadingButton>
           </Tooltip>
           <ToggleButtonGroup color="primary">
-            <Tooltip title="アイテム1の確率表示ON/OFFを切り替え">
+            <Tooltip title="備品1の確率表示ON/OFFを切り替え">
               <span>
                 <ToggleButton
                   value="one"
-                  selected={showProb[0] && probsAvailable}
+                  selected={showProb[0]}
                   onClick={() => {
                     onToggleShowProb(0);
                   }}
-                  disabled={!probsAvailable}
                   sx={{ height: '56px' }}
                 >
                   <LooksOneIcon />
                 </ToggleButton>
               </span>
             </Tooltip>
-            <Tooltip title="アイテム2の確率表示ON/OFFを切り替え">
+            <Tooltip title="備品2の確率表示ON/OFFを切り替え">
               <span>
                 <ToggleButton
                   value="two"
-                  selected={showProb[1] && probsAvailable}
+                  selected={showProb[1]}
                   onClick={() => {
                     onToggleShowProb(1);
                   }}
-                  disabled={!probsAvailable}
                   sx={{ height: '56px' }}
                 >
                   <LooksTwoIcon />
                 </ToggleButton>
               </span>
             </Tooltip>
-            <Tooltip title="アイテム3の確率表示ON/OFFを切り替え">
+            <Tooltip title="備品3の確率表示ON/OFFを切り替え">
               <span>
                 <ToggleButton
                   value="three"
-                  selected={showProb[2] && probsAvailable}
+                  selected={showProb[2]}
                   onClick={() => {
                     onToggleShowProb(2);
                   }}
-                  disabled={!probsAvailable}
                   sx={{ height: '56px' }}
                 >
                   <Looks3Icon />
