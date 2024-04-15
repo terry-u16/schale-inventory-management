@@ -166,7 +166,7 @@ const ItemPane: FC<Props> = (props) => {
               </Select>
             </FormControl>
 
-            <Box gridColumn="1 / 4" my={1}>
+            <Box gridColumn="1 / 4">
               <Divider />
             </Box>
 

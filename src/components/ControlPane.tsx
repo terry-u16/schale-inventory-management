@@ -51,7 +51,7 @@ const ControlPane: FC<Props> = (props) => {
     <>
       <Paper>
         <Box
-          p={3}
+          p={2}
           display="grid"
           gridTemplateColumns="1fr 1fr 2.5fr 0.5fr 56px"
           gap={2}
