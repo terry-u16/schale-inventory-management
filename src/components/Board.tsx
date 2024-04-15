@@ -42,7 +42,7 @@ const Board: FC<Props> = (props) => {
   return (
     <>
       <Paper>
-        <Box py={5}>
+        <Box py={3}>
           <div id="board-container">
             {placedItems.map((placedItem: PlacedItem) => (
               <PlacedItemSquare

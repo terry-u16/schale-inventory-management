@@ -24,8 +24,8 @@ const Header: FC = () => {
             p={1.5}
             sx={{ alignItems: 'center' }}
           >
-            <CalculateIcon sx={{ fontSize: 40 }} />
-            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+            <CalculateIcon sx={{ fontSize: 32 }} />
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
               シャーレの総決算with連邦生徒会 在庫管理計算機
             </Typography>
           </Stack>

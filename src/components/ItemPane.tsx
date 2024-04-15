@@ -116,7 +116,7 @@ const ItemPane: FC<Props> = (props) => {
           }
         />
         <CardContent>
-          <Box display="grid" gridTemplateColumns="repeat(3, 100px)" gap={2}>
+          <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
             <FormControl fullWidth>
               <InputLabel>高さ</InputLabel>
               <Select
@@ -166,7 +166,7 @@ const ItemPane: FC<Props> = (props) => {
               </Select>
             </FormControl>
 
-            <Box gridColumn="1 / 4" my={1}>
+            <Box gridColumn="1 / 4">
               <Divider />
             </Box>
 

@@ -5,7 +5,7 @@ const Note: FC = () => {
   return (
     <>
       <Paper>
-        <Box p={4}>
+        <Box p={2}>
           <Container maxWidth="md">
             <Stack spacing={6} my={4} sx={{ textAlign: 'start' }}>
               <Stack spacing={1}>
