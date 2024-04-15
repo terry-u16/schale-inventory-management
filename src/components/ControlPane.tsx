@@ -62,6 +62,9 @@ const ControlPane: FC<Props> = (props) => {
               <MenuItem value={0}>1周目</MenuItem>
               <MenuItem value={1}>2周目</MenuItem>
               <MenuItem value={2}>3周目</MenuItem>
+              <MenuItem value={3}>4周目</MenuItem>
+              <MenuItem value={4}>5周目</MenuItem>
+              <MenuItem value={5}>6周目</MenuItem>
             </Select>
           </FormControl>
           <Tooltip title="備品プリセットを適用する">
