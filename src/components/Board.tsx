@@ -31,12 +31,24 @@ const Board: FC<Props> = (props) => {
 
   const targetProbs = probs?.[probFlag] ?? Array<number>(45).fill(0.0);
 
+  // 小数点第一位まで見て、最大値に一致するものにフラグを付けたい
+  const roundProb = (prob: number) => Math.round(prob * 1000) / 1000;
+  let roundedMax = 0;
+
+  for (let i = 0; i < targetProbs.length; i++) {
+    const rounded = roundProb(targetProbs[i]);
+    if (!openMap[i] && rounded > roundedMax) {
+      roundedMax = rounded;
+    }
+  }
+
   const covers: Cover[] = targetProbs.map((prob: number, index: number) => ({
     row: Math.floor(index / 9) + 1,
     col: (index % 9) + 1,
     open: openMap[index],
     prob,
     probFlag,
+    isBest: !openMap[index] && prob > 0 && roundProb(prob) === roundedMax,
     maxProb: Math.max(...targetProbs.filter((n) => n !== 0)),
     minProb: Math.min(...targetProbs.filter((n) => n !== 0)),
   }));
