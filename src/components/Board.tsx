@@ -50,7 +50,6 @@ const Board: FC<Props> = (props) => {
     probFlag,
     isBest: !openMap[index] && prob > 0 && roundProb(prob) === roundedMax,
     maxProb: Math.max(...targetProbs.filter((n) => n !== 0)),
-    minProb: Math.min(...targetProbs.filter((n) => n !== 0)),
   }));
 
   return (
