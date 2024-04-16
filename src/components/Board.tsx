@@ -29,7 +29,7 @@ const Board: FC<Props> = (props) => {
     probFlag = 0;
   }
 
-  const targetProbs = probs?.[probFlag] ?? Array(45).fill(0.0);
+  const targetProbs = probs?.[probFlag] ?? Array<number>(45).fill(0.0);
 
   const covers: Cover[] = targetProbs.map((prob: number, index: number) => ({
     row: Math.floor(index / 9) + 1,
@@ -37,6 +37,8 @@ const Board: FC<Props> = (props) => {
     open: openMap[index],
     prob,
     probFlag,
+    maxProb: Math.max(...targetProbs.filter((n) => n !== 0)),
+    minProb: Math.min(...targetProbs.filter((n) => n !== 0)),
   }));
 
   return (
