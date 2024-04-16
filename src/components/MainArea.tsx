@@ -1,11 +1,11 @@
-import { type FC, useState } from 'react';
+import { type FC, useState, useRef, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { solve } from '../../public/wasm/wasm_solver';
 import Board from './Board';
 import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
+import Worker from './workers/ProbCalcWorker?worker';
 
 export class ItemAndPlacement {
   item: ItemSet;
@@ -150,13 +150,14 @@ const MainArea: FC = () => {
     setItems(newItems);
   };
 
-  const onExecute = () => {
-    setIsRunning(true);
-    try {
-      const { probs, error } = solve({
-        item_and_placement: items,
-        open_map: openMap,
-      }) as { probs: number[][]; error: string };
+  // 確率計算worker周り
+  const probCalcWorkerRef = useRef<Worker | null>(null);
+
+  useEffect(() => {
+    probCalcWorkerRef.current = new Worker();
+
+    probCalcWorkerRef.current.onmessage = (e) => {
+      const { probs, error } = e.data as { probs: number[][]; error: string };
 
       if (error !== '') {
         alert(error);
@@ -164,10 +165,25 @@ const MainArea: FC = () => {
       } else {
         setProbs(probs);
       }
-    } catch (e) {
-      alert(e);
+
+      setIsRunning(false);
+    };
+
+    return () => {
+      probCalcWorkerRef.current?.terminate();
+    };
+  }, []);
+
+  const onExecute = () => {
+    setIsRunning(true);
+
+    if (probCalcWorkerRef.current != null) {
+      const data = {
+        item_and_placement: items,
+        open_map: openMap,
+      };
+      probCalcWorkerRef.current.postMessage(data);
     }
-    setIsRunning(false);
   };
 
   const onToggleShowProb = (index: number) => {
