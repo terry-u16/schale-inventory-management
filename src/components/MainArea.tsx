@@ -69,6 +69,7 @@ const MainArea: FC = () => {
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
   const [openMap, setOpenMap] = useState(Array(45).fill(false) as boolean[]);
+  const [workerResetCnt, setWorkerResetCnt] = useState(0);
 
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
@@ -172,7 +173,8 @@ const MainArea: FC = () => {
     return () => {
       probCalcWorkerRef.current?.terminate();
     };
-  }, []);
+    // countが変化したらWorkerを再生成
+  }, [workerResetCnt]);
 
   const onExecute = () => {
     setIsRunning(true);
@@ -210,6 +212,8 @@ const MainArea: FC = () => {
     );
     setProbs(null);
     setOpenMap(Array(45).fill(false));
+    setIsRunning(false);
+    setWorkerResetCnt((prev) => prev + 1);
   };
 
   return (
