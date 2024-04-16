@@ -1,11 +1,11 @@
-import { type FC, useState } from 'react';
+import { type FC, useState, useRef, useEffect } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { solve } from '../../public/wasm/wasm_solver';
 import Board from './Board';
 import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
+import Worker from './workers/ProbCalcWorker?worker';
 
 export class ItemAndPlacement {
   item: ItemSet;
@@ -69,6 +69,7 @@ const MainArea: FC = () => {
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
   const [openMap, setOpenMap] = useState(Array(45).fill(false) as boolean[]);
+  const [workerResetCnt, setWorkerResetCnt] = useState(0);
 
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
@@ -150,13 +151,14 @@ const MainArea: FC = () => {
     setItems(newItems);
   };
 
-  const onExecute = () => {
-    setIsRunning(true);
-    try {
-      const { probs, error } = solve({
-        item_and_placement: items,
-        open_map: openMap,
-      }) as { probs: number[][]; error: string };
+  // 確率計算worker周り
+  const probCalcWorkerRef = useRef<Worker | null>(null);
+
+  useEffect(() => {
+    probCalcWorkerRef.current = new Worker();
+
+    probCalcWorkerRef.current.onmessage = (e) => {
+      const { probs, error } = e.data as { probs: number[][]; error: string };
 
       if (error !== '') {
         alert(error);
@@ -164,10 +166,26 @@ const MainArea: FC = () => {
       } else {
         setProbs(probs);
       }
-    } catch (e) {
-      alert(e);
+
+      setIsRunning(false);
+    };
+
+    return () => {
+      probCalcWorkerRef.current?.terminate();
+    };
+    // countが変化したらWorkerを再生成
+  }, [workerResetCnt]);
+
+  const onExecute = () => {
+    setIsRunning(true);
+
+    if (probCalcWorkerRef.current != null) {
+      const data = {
+        item_and_placement: items,
+        open_map: openMap,
+      };
+      probCalcWorkerRef.current.postMessage(data);
     }
-    setIsRunning(false);
   };
 
   const onToggleShowProb = (index: number) => {
@@ -194,6 +212,8 @@ const MainArea: FC = () => {
     );
     setProbs(null);
     setOpenMap(Array(45).fill(false));
+    setIsRunning(false);
+    setWorkerResetCnt((prev) => prev + 1);
   };
 
   return (

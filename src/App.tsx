@@ -2,7 +2,7 @@ import './App.css';
 import { type FC } from 'react';
 import { Box } from '@mui/material';
 import Header from './components/Header';
-import InitWasm from './components/InitWasm';
+import MainArea from './components/MainArea';
 import Note from './components/Note';
 
 const App: FC = () => {
@@ -10,7 +10,7 @@ const App: FC = () => {
     <>
       <Header />
       <Box width={1200}>
-        <InitWasm />
+        <MainArea />
         <Note />
       </Box>
     </>
