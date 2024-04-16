@@ -18,6 +18,7 @@ export interface Cover {
   open: boolean;
   prob: number;
   probFlag: number;
+  isBest: boolean;
 }
 
 type Props = {
@@ -30,28 +31,50 @@ const boxStyleGenerator = (row: number, col: number) => ({
   gridColumn: col,
 });
 
-const buttonStyleGenerator = (opacity: number) => ({
-  opacity,
-  maxWidth: '65px',
-  maxHeight: '65px',
-  minWidth: '65px',
-  minHeight: '65px',
-});
+const buttonStyleGenerator = (
+  opacity: number,
+  isBest: boolean,
+  borderColor: string,
+) => {
+  const color = isBest ? borderColor : '#bdbdbd';
+  const thickness = isBest ? 3 : 1;
+
+  return {
+    opacity,
+    maxWidth: '65px',
+    maxHeight: '65px',
+    minWidth: '65px',
+    minHeight: '65px',
+    border: `${thickness}px solid ${color}`,
+  };
+};
 
 const CoverButton: FC<Props> = (props) => {
-  const { row, col, open, prob, probFlag } = props.cover;
+  const { row, col, open, prob, probFlag, isBest } = props.cover;
   const opacity = open ? 0.1 : 1;
 
-  const probText = probFlag > 0 ? `${(prob * 100).toFixed(1)}%` : '';
+  const probText =
+    probFlag > 0 ? `${(Math.round(prob * 1000) / 10).toFixed(1)}%` : '';
   const colorPalette = [
-    blueGrey[400],
-    red[400],
-    yellow[400],
-    orange[400],
-    lightBlue[400],
-    purple[400],
-    lightGreen[400],
+    blueGrey[300],
+    red[300],
+    yellow[300],
+    orange[300],
+    lightBlue[300],
+    purple[300],
+    lightGreen[300],
     '#f889da',
+  ];
+
+  const darkColorPalette = [
+    blueGrey[700],
+    red[700],
+    yellow[700],
+    orange[700],
+    lightBlue[700],
+    purple[700],
+    lightGreen[700],
+    '#d1029a',
   ];
 
   const generateColor = (probFlag: number, prob: number) => {
@@ -72,6 +95,7 @@ const CoverButton: FC<Props> = (props) => {
   };
 
   const color = generateColor(probFlag, prob);
+  const darkColor = darkColorPalette[probFlag];
 
   const theme = createTheme({
     palette: {
@@ -96,8 +120,7 @@ const CoverButton: FC<Props> = (props) => {
             variant="contained"
             key={`cover${row}-${col}`}
             onClick={props.onClick}
-            style={buttonStyleGenerator(opacity)}
-            sx={{ border: 1, borderColor: '#bdbdbd' }}
+            style={buttonStyleGenerator(opacity, isBest, darkColor)}
             disableElevation
           >
             {probText}
