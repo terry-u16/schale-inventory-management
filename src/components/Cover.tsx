@@ -56,13 +56,13 @@ const CoverButton: FC<Props> = (props) => {
   const probText =
     probFlag > 0 ? `${(Math.round(prob * 1000) / 10).toFixed(1)}%` : '';
   const colorPalette = [
-    blueGrey[400],
-    red[400],
-    yellow[400],
-    orange[400],
-    lightBlue[400],
-    purple[400],
-    lightGreen[400],
+    blueGrey[300],
+    red[300],
+    yellow[300],
+    orange[300],
+    lightBlue[300],
+    purple[300],
+    lightGreen[300],
     '#f889da',
   ];
 
