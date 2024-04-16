@@ -59,6 +59,11 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...ambrella, index: 2 }, count: 2 },
     { item: { ...fountainPen, index: 3 }, count: 4 },
   ],
+  [
+    { item: { ...potatoChips, index: 1 }, count: 2 },
+    { item: { ...receipt, index: 2 }, count: 3 },
+    { item: { ...fountainPen, index: 3 }, count: 6 },
+  ],
 ] as const;
 
 const MainArea: FC = () => {
