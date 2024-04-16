@@ -8,6 +8,8 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+  pull_request_target:
+    types: [labeled]
   workflow_dispatch:
 
 permissions:
@@ -16,7 +18,7 @@ permissions:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.fork == false ) || ( github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'deploy_staging'))
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
