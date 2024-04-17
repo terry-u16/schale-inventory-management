@@ -229,21 +229,16 @@ const Note: FC = () => {
                     備品情報の下部にある「追加」ボタンを押すと、発見した備品の位置を設定することができます。位置の移動と回転を指定して、ゲーム内で発見した備品の位置と一致するように設定してください。間違えて追加ボタンを押してしまった場合は、ゴミ箱アイコンのボタンを押すと削除することができます。
                   </Typography>
                   <Typography variant="body1">
-                    盤面の更新が終わったら、再度「実行」ボタンを押すことで確率が再計算されます。自動では再計算されませんのでご注意ください。
+                    盤面の更新が終わったら、再度「実行」ボタンを押すことで確率が再計算されます。
+                    <b>自動では再計算されません</b>
+                    のでご注意ください。1マスでも開けると確率が変化するため、
+                    <b>毎回実行ボタンを押すことを強く推奨</b>します。
                   </Typography>
                 </Stack>
               </Stack>
 
               <Stack spacing={3}>
-                <Stack spacing={1}>
-                  <Typography variant="h4">よくある質問</Typography>
-                  <Typography variant="h5">
-                    スマートフォンからだと見づらい！
-                  </Typography>
-                  <Typography variant="body1">
-                    それなりに重い計算を行うこと、ブルーアーカイブを起動しながらの使用を想定していることから、スマートフォンからの利用は非推奨としています。PCからアクセスしてください。
-                  </Typography>
-                </Stack>
+                <Typography variant="h4">よくある質問</Typography>
 
                 <Stack spacing={1}>
                   <Typography variant="h5">
@@ -319,21 +314,27 @@ const Note: FC = () => {
                   </Typography>
                   <ul>
                     <li>
-                      備品の配置は、全ての起こりうる配置から一様ランダムに抽選される（ゲーム内で使用されている初期盤面の生成アルゴリズムによっては、
-                      <a
-                        href="https://twitter.com/chokudai/status/1778760450215383085"
-                        target="_brank"
-                        rel="noreferrer"
-                      >
-                        全ての配置の確率が均等ではなくなる
-                      </a>
-                      可能性があります。）
+                      <Typography variant="body1">
+                        備品の配置は、全ての起こりうる配置から一様ランダムに抽選される（ゲーム内で使用されている初期盤面の生成アルゴリズムによっては、
+                        <a
+                          href="https://twitter.com/chokudai/status/1778760450215383085"
+                          target="_brank"
+                          rel="noreferrer"
+                        >
+                          全ての配置の確率が均等ではなくなる
+                        </a>
+                        可能性があります。）
+                      </Typography>
                     </li>
                     <li>
-                      備品の配置がパターン化されておらず、抽選されない配置が存在しない
+                      <Typography variant="body1">
+                        備品の配置がパターン化されておらず、抽選されない配置が存在しない
+                      </Typography>
                     </li>
                     <li>
-                      備品の配置はマスのオープン前に全て確定しており、後から変更されない
+                      <Typography variant="body1">
+                        備品の配置はマスのオープン前に全て確定しており、後から変更されない
+                      </Typography>
                     </li>
                   </ul>
                   <Typography variant="caption">
@@ -561,8 +562,13 @@ const Note: FC = () => {
                   <Typography variant="body1">
                     上記はあくまで上記の前提のもとでシミュレーションにより試算された結果であり、保証された値ではないことにご注意ください。
                     <s>
-                      99%でさえ信用できないことはベテランの先生方ならご存じかと思います。
+                      99%でさえ信用できないことはアロナちゃんに鍛え上げられた先生方ならご存じかと思います。
                     </s>
+                  </Typography>
+                  <Typography variant="body1">
+                    🟦🟦🟦🟦🟦
+                    <br />
+                    🟦🟦🟦🟦🟨
                   </Typography>
                 </Stack>
 
@@ -596,6 +602,13 @@ const Note: FC = () => {
                   <Typography variant="caption">
                     ちなみに私はその優勝者です。
                   </Typography>
+                </Stack>
+
+                <Stack spacing={1}>
+                  <Typography variant="h5">
+                    ブルアカの推し生徒さんは？
+                  </Typography>
+                  <Typography variant="body1">伊落マリーさんです。</Typography>
                 </Stack>
               </Stack>
 
