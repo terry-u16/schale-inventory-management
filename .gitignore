@@ -23,7 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# rust-wasm
+# rust
 /wasm/target/
 /wasm/bin/
 /wasm/pkg/
+/simulator/target/
