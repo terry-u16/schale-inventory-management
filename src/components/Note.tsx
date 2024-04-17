@@ -1,5 +1,177 @@
 import { type FC } from 'react';
 import { Box, Container, Paper, Stack, Typography } from '@mui/material';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
+function createSingleConsumptionData(
+  stage: string,
+  large50: number,
+  large90: number,
+  large99: number,
+  medium50: number,
+  medium90: number,
+  medium99: number,
+  small50: number,
+  small90: number,
+  small99: number,
+) {
+  return {
+    stage,
+    large50,
+    large90,
+    large99,
+    medium50,
+    medium90,
+    medium99,
+    small50,
+    small90,
+    small99,
+  };
+}
+
+const singleConsumptionData = [
+  createSingleConsumptionData(
+    '1周目/4周目',
+    880,
+    1210,
+    1430,
+    2310,
+    2640,
+    2860,
+    3520,
+    3850,
+    3960,
+  ),
+  createSingleConsumptionData(
+    '2周目/5周目',
+    990,
+    1210,
+    1210,
+    1980,
+    2200,
+    2200,
+    3190,
+    3410,
+    3520,
+  ),
+  createSingleConsumptionData(
+    '3周目/6周目',
+    1100,
+    1100,
+    1210,
+    2200,
+    2530,
+    2640,
+    3520,
+    3850,
+    3960,
+  ),
+];
+
+function createMultiConsumptionData(
+  stage: string,
+  large50: number,
+  large90: number,
+  large99: number,
+  medium50: number,
+  medium90: number,
+  medium99: number,
+  small50: number,
+  small90: number,
+  small99: number,
+) {
+  return {
+    stage,
+    large50,
+    large90,
+    large99,
+    medium50,
+    medium90,
+    medium99,
+    small50,
+    small90,
+    small99,
+  };
+}
+
+const multiConsumptionData = [
+  createMultiConsumptionData(
+    '1～6周目',
+    6050,
+    6490,
+    6930,
+    13200,
+    13750,
+    14190,
+    20460,
+    21120,
+    21670,
+  ),
+  createMultiConsumptionData(
+    '2～6周目',
+    5060,
+    5500,
+    5830,
+    10780,
+    11330,
+    11770,
+    16940,
+    17490,
+    17930,
+  ),
+  createMultiConsumptionData(
+    '3～6周目',
+    4070,
+    4510,
+    4730,
+    8800,
+    9350,
+    9680,
+    13750,
+    14300,
+    14740,
+  ),
+  createMultiConsumptionData(
+    '4～6周目',
+    2970,
+    3410,
+    3630,
+    6600,
+    7040,
+    7370,
+    10230,
+    10670,
+    11000,
+  ),
+  createMultiConsumptionData(
+    '5～6周目',
+    2090,
+    2310,
+    2420,
+    4290,
+    4510,
+    4730,
+    6710,
+    7040,
+    7260,
+  ),
+  createMultiConsumptionData(
+    '6～6周目',
+    1100,
+    1100,
+    1210,
+    2200,
+    2530,
+    2640,
+    3520,
+    3850,
+    3960,
+  ),
+];
 
 const Note: FC = () => {
   return (
@@ -166,6 +338,228 @@ const Note: FC = () => {
                   </ul>
                   <Typography variant="caption">
                     バグってたらごめんなさい……。
+                  </Typography>
+                </Stack>
+
+                <Stack>
+                  <Typography variant="h5">
+                    備品の回収にはどのくらい電卓が必要？
+                  </Typography>
+                  <Typography variant="body1">
+                    正確な値は出せませんが、ある戦略にしたがってマスを開けていったときの期待される電卓消費量をシミュレーションしてみましょう。上記前提条件のもとに試算していますので、前提次第で異なった値になる可能性もあります。
+                  </Typography>
+                  <Typography variant="body1">
+                    「オープンしていないマスのうち、狙っている備品の存在する確率が最大のマスを開ける（そのようなマスが複数あるときは一様ランダムに選ぶ）」という戦略を取ることを考えます。狙っている備品以外は完全に無視する（一部が見えたとしても放置する）ことに注意してください。
+                  </Typography>
+                  <Typography variant="body1">
+                    このとき、各周回において「大きな備品のみ狙う」「大・中の備品のみ狙う」「大・中・小全ての備品を狙う」という3つの方針を考えたときに、「50%の確率で」「90%の確率で」「99%の確率で」電卓消費量がこの数に収まるという値をシミュレーション（試行回数1000回）で求めたところ、以下のようになりました。
+                  </Typography>
+                  <Box my={2}>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="center"></TableCell>
+                            <TableCell colSpan={3} align="center">
+                              大
+                            </TableCell>
+                            <TableCell colSpan={3} align="center">
+                              大・中
+                            </TableCell>
+                            <TableCell colSpan={3} align="center">
+                              大・中・小
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell align="center"></TableCell>
+                            <TableCell align="right">50%</TableCell>
+                            <TableCell align="right">90%</TableCell>
+                            <TableCell align="right">99%</TableCell>
+                            <TableCell align="right">50%</TableCell>
+                            <TableCell align="right">90%</TableCell>
+                            <TableCell align="right">99%</TableCell>
+                            <TableCell align="right">50%</TableCell>
+                            <TableCell align="right">90%</TableCell>
+                            <TableCell align="right">99%</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {singleConsumptionData.map((row) => {
+                            return (
+                              <TableRow key={`row-single-${row.stage}`}>
+                                <TableCell
+                                  key={`cell-single-stage-${row.stage}`}
+                                >
+                                  {row.stage}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-large50-${row.stage}`}
+                                >
+                                  {row.large50}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-large90-${row.stage}`}
+                                >
+                                  {row.large90}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-large99-${row.stage}`}
+                                >
+                                  {row.large99}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-medium50-${row.stage}`}
+                                >
+                                  {row.medium50}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-medium90-${row.stage}`}
+                                >
+                                  {row.medium90}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-medium99-${row.stage}`}
+                                >
+                                  {row.medium99}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-small50-${row.stage}`}
+                                >
+                                  {row.small50}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-small90-${row.stage}`}
+                                >
+                                  {row.small90}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-single-small99-${row.stage}`}
+                                >
+                                  {row.small99}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Box>
+
+                  <Typography variant="body1">
+                    また、上記のシミュレーション結果から「X周目開始から6周目完了までの電卓消費量がこの値に収まる数」を求めたところ、以下のようになりました。上の表の単純な和にならないことに注意してください。
+                  </Typography>
+
+                  <Box my={2}>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="center"></TableCell>
+                            <TableCell colSpan={3} align="center">
+                              大
+                            </TableCell>
+                            <TableCell colSpan={3} align="center">
+                              大・中
+                            </TableCell>
+                            <TableCell colSpan={3} align="center">
+                              大・中・小
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell align="center"></TableCell>
+                            <TableCell align="right">50%</TableCell>
+                            <TableCell align="right">90%</TableCell>
+                            <TableCell align="right">99%</TableCell>
+                            <TableCell align="right">50%</TableCell>
+                            <TableCell align="right">90%</TableCell>
+                            <TableCell align="right">99%</TableCell>
+                            <TableCell align="right">50%</TableCell>
+                            <TableCell align="right">90%</TableCell>
+                            <TableCell align="right">99%</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {multiConsumptionData.map((row) => {
+                            return (
+                              <TableRow key={`row-multi-${row.stage}`}>
+                                <TableCell
+                                  key={`cell-multi-stage-${row.stage}`}
+                                >
+                                  {row.stage}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-large50-${row.stage}`}
+                                >
+                                  {row.large50}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-large90-${row.stage}`}
+                                >
+                                  {row.large90}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-large99-${row.stage}`}
+                                >
+                                  {row.large99}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-medium50-${row.stage}`}
+                                >
+                                  {row.medium50}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-medium90-${row.stage}`}
+                                >
+                                  {row.medium90}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-medium99-${row.stage}`}
+                                >
+                                  {row.medium99}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-small50-${row.stage}`}
+                                >
+                                  {row.small50}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-small90-${row.stage}`}
+                                >
+                                  {row.small90}
+                                </TableCell>
+                                <TableCell
+                                  align="right"
+                                  key={`cell-multi-small99-${row.stage}`}
+                                >
+                                  {row.small99}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Box>
+
+                  <Typography variant="body1">
+                    上記はあくまで上記の前提のもとでシミュレーションにより試算された結果であり、保証された値ではないことにご注意ください。
                   </Typography>
                 </Stack>
 
