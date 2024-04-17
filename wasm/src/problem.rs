@@ -85,7 +85,7 @@ pub struct Item {
 }
 
 impl Item {
-    pub fn new(height: usize, width: usize, item_index: usize) -> Self {
+    pub const fn new(height: usize, width: usize, item_index: usize) -> Self {
         assert!(height > 0);
         assert!(width > 0);
         assert!(height <= GameState::MAX_ITEM_SIZE);
@@ -133,7 +133,7 @@ pub struct ItemGroup {
 }
 
 impl ItemGroup {
-    pub fn new(item: Item, count: usize) -> Self {
+    pub const fn new(item: Item, count: usize) -> Self {
         Self { item, count }
     }
 }
