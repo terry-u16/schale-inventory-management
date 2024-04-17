@@ -10,80 +10,92 @@ use rand_pcg::Pcg64Mcg;
 use std::array;
 
 /// 3アイテムについて、各マスにアイテムが置かれる確率を計算する。
-pub fn calc_probabilities(state: &GameState, sample_count: usize) -> Result<Vec<Map2d<f64>>> {
-    let (all_count, placements) = calc_count_inner(state, sample_count);
+pub fn calc_probabilities_all(state: &GameState, sample_count: usize) -> Result<Vec<Map2d<f64>>> {
+    let mut rng = Pcg64Mcg::from_entropy();
+    let (all_count, placements) = sample_placements(state, sample_count, &mut rng);
 
     ensure!(all_count > 0, "条件を満たす配置が存在しません。");
 
-    let sampled_count = placements.len();
     let mut probabilities = vec![];
 
     // 各アイテムについて、アイテムを置いた回数をカウントする
     for flag in 0..(1 << GameState::ITEM_GROUP_COUNT) {
-        let mut counts = Map2d::new_with(0, GameState::WIDTH, GameState::HEIGHT);
-
-        // 最初から置かれているもの
-        for placements in state.placed_items.iter() {
-            if flag & (1 << placements.item.item_index()) == 0 {
-                continue;
-            }
-
-            let r0 = placements.coord.row;
-            let c0 = placements.coord.col;
-            let r1 = r0 + placements.item.height();
-            let c1 = c0 + placements.item.width();
-
-            for row in r0..r1 {
-                for col in c0..c1 {
-                    counts[Coord::new(row, col)] += sampled_count;
-                }
-            }
-        }
-
-        // サンプリングされた配置
-        for placements in placements.iter() {
-            for placement in placements.iter() {
-                if flag & (1 << placement.item_index) == 0 {
-                    continue;
-                }
-
-                let item = state.remaining_items[placement.item_index].item;
-
-                let item = if placement.is_rotated {
-                    item.rotate().unwrap_or(item)
-                } else {
-                    item
-                };
-
-                let r0 = placement.coord.row;
-                let c0 = placement.coord.col;
-                let r1 = r0 + item.height();
-                let c1 = c0 + item.width();
-
-                for row in r0..r1 {
-                    for col in c0..c1 {
-                        counts[Coord::new(row, col)] += 1;
-                    }
-                }
-            }
-        }
-
-        let mut prob = Map2d::new_with(0.0, GameState::WIDTH, GameState::HEIGHT);
-
-        for row in 0..GameState::HEIGHT {
-            for col in 0..GameState::WIDTH {
-                prob[Coord::new(row, col)] =
-                    counts[Coord::new(row, col)] as f64 / sampled_count as f64;
-            }
-        }
-
+        let prob = calc_probabilities(state, flag, &placements);
         probabilities.push(prob);
     }
 
     Ok(probabilities)
 }
 
-fn calc_count_inner(state: &GameState, sample_count: usize) -> (u64, Vec<Vec<Placement>>) {
+pub fn calc_probabilities(
+    state: &GameState,
+    flag: u32,
+    placements: &Vec<Vec<Placement>>,
+) -> Map2d<f64> {
+    let sampled_count = placements.len();
+    let mut counts = Map2d::new_with(0, GameState::WIDTH, GameState::HEIGHT);
+
+    // 最初から置かれているもの
+    for placements in state.placed_items.iter() {
+        if flag & (1 << placements.item.item_index()) == 0 {
+            continue;
+        }
+
+        let r0 = placements.coord.row;
+        let c0 = placements.coord.col;
+        let r1 = r0 + placements.item.height();
+        let c1 = c0 + placements.item.width();
+
+        for row in r0..r1 {
+            for col in c0..c1 {
+                counts[Coord::new(row, col)] += sampled_count;
+            }
+        }
+    }
+
+    // サンプリングされた配置
+    for placements in placements.iter() {
+        for placement in placements.iter() {
+            if flag & (1 << placement.item_index) == 0 {
+                continue;
+            }
+
+            let item = state.remaining_items[placement.item_index].item;
+
+            let item = if placement.is_rotated {
+                item.rotate().unwrap_or(item)
+            } else {
+                item
+            };
+
+            let r0 = placement.coord.row;
+            let c0 = placement.coord.col;
+            let r1 = r0 + item.height();
+            let c1 = c0 + item.width();
+
+            for row in r0..r1 {
+                for col in c0..c1 {
+                    counts[Coord::new(row, col)] += 1;
+                }
+            }
+        }
+    }
+
+    let mut prob = Map2d::new_with(0.0, GameState::WIDTH, GameState::HEIGHT);
+
+    for row in 0..GameState::HEIGHT {
+        for col in 0..GameState::WIDTH {
+            prob[Coord::new(row, col)] = counts[Coord::new(row, col)] as f64 / sampled_count as f64;
+        }
+    }
+    prob
+}
+
+pub fn sample_placements(
+    state: &GameState,
+    sample_count: usize,
+    rng: &mut impl Rng,
+) -> (u64, Vec<Vec<Placement>>) {
     // DPにより候補数を計算する
     //
     // dp[col][row][cnt0][cnt1][cnt2][w0][w1][w2][w3][w4]
@@ -245,8 +257,7 @@ fn calc_count_inner(state: &GameState, sample_count: usize) -> (u64, Vec<Vec<Pla
 
         all_items
     } else {
-        let mut rng = Pcg64Mcg::from_entropy();
-        restore_random(state, &dp, &from, sample_count, &mut rng)
+        restore_random(state, &dp, &from, sample_count, rng)
     };
 
     (all_count, sampled_items)
@@ -379,14 +390,14 @@ fn restore_random(
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct Placement {
-    coord: Coord,
-    item_index: usize,
-    is_rotated: bool,
+pub struct Placement {
+    pub coord: Coord,
+    pub item_index: usize,
+    pub is_rotated: bool,
 }
 
 impl Placement {
-    fn new(coord: Coord, item_index: usize, is_rotated: bool) -> Self {
+    pub fn new(coord: Coord, item_index: usize, is_rotated: bool) -> Self {
         Self {
             coord,
             item_index,
@@ -431,7 +442,8 @@ mod tests {
     };
 
     fn calc_count(state: &GameState) -> u64 {
-        calc_count_inner(state, 10000).0
+        let mut rng = Pcg64Mcg::from_entropy();
+        sample_placements(state, 10000, &mut rng).0
     }
 
     #[test]
