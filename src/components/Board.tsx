@@ -34,11 +34,15 @@ const Board: FC<Props> = (props) => {
   // 小数点第一位まで見て、最大値に一致するものにフラグを付けたい
   const roundProb = (prob: number) => Math.round(prob * 1000) / 1000;
   let roundedMax = 0;
+  let maxProb = -Infinity;
 
   for (let i = 0; i < targetProbs.length; i++) {
     const rounded = roundProb(targetProbs[i]);
     if (!openMap[i] && rounded > roundedMax) {
       roundedMax = rounded;
+    }
+    if(!openMap[i] && targetProbs[i]!==0 && targetProbs[i] > maxProb){
+        maxProb = targetProbs[i];
     }
   }
 
@@ -49,6 +53,7 @@ const Board: FC<Props> = (props) => {
     prob,
     probFlag,
     isBest: !openMap[index] && prob > 0 && roundProb(prob) === roundedMax,
+    maxProb: maxProb,
   }));
 
   return (

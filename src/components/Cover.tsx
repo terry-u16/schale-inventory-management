@@ -19,6 +19,7 @@ export interface Cover {
   prob: number;
   probFlag: number;
   isBest: boolean;
+  maxProb: number;
 }
 
 type Props = {
@@ -50,7 +51,7 @@ const buttonStyleGenerator = (
 };
 
 const CoverButton: FC<Props> = (props) => {
-  const { row, col, open, prob, probFlag, isBest } = props.cover;
+  const { row, col, open, prob, probFlag, isBest, maxProb } = props.cover;
   const opacity = open ? 0.1 : 1;
 
   const probText =
@@ -77,7 +78,7 @@ const CoverButton: FC<Props> = (props) => {
     '#d1029a',
   ];
 
-  const generateColor = (probFlag: number, prob: number) => {
+  const generateColor = (probFlag: number, value: number) => {
     if (probFlag === 0) {
       return blueGrey[100];
     }
@@ -87,14 +88,14 @@ const CoverButton: FC<Props> = (props) => {
 
     for (let i = 0; i < 3; i++) {
       const v = parseInt(baseColor.substring(1 + i * 2, 3 + i * 2), 16);
-      const c = Math.floor(v * Math.sqrt(prob) + 255 * (1 - Math.sqrt(prob)));
+      const c = Math.floor(v * value + 255 * (1 - value));
       s += c.toString(16).padStart(2, '0');
     }
 
     return s;
   };
 
-  const color = generateColor(probFlag, prob);
+  const color = generateColor(probFlag, Math.max(0,Math.min(1,prob / maxProb)));
   const darkColor = darkColorPalette[probFlag];
 
   const theme = createTheme({
