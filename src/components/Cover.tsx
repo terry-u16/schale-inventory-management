@@ -95,7 +95,10 @@ const CoverButton: FC<Props> = (props) => {
     return s;
   };
 
-  const color = generateColor(probFlag, Math.max(0,Math.min(1,prob / maxProb)));
+  const color = generateColor(
+    probFlag,
+    Math.max(0, Math.min(1, prob / maxProb)),
+  );
   const darkColor = darkColorPalette[probFlag];
 
   const theme = createTheme({
