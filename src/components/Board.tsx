@@ -41,8 +41,8 @@ const Board: FC<Props> = (props) => {
     if (!openMap[i] && rounded > roundedMax) {
       roundedMax = rounded;
     }
-    if(!openMap[i] && targetProbs[i]!==0 && targetProbs[i] > maxProb){
-        maxProb = targetProbs[i];
+    if (!openMap[i] && targetProbs[i] !== 0 && targetProbs[i] > maxProb) {
+      maxProb = targetProbs[i];
     }
   }
 
@@ -53,7 +53,7 @@ const Board: FC<Props> = (props) => {
     prob,
     probFlag,
     isBest: !openMap[index] && prob > 0 && roundProb(prob) === roundedMax,
-    maxProb: maxProb,
+    maxProb,
   }));
 
   return (
