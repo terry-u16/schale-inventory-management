@@ -26,6 +26,7 @@ type Props = {
   openPanels: boolean[];
   isRunning: boolean;
   showProb: boolean[];
+  recommendToRun: boolean;
   onExecute: () => void;
   onToggleShowProb: (index: number) => void;
   onItemPresetApply: (preset: number) => void;
@@ -37,6 +38,7 @@ const ControlPane: FC<Props> = (props) => {
     openPanels,
     isRunning,
     showProb,
+    recommendToRun,
     onExecute,
     onToggleShowProb,
     onItemPresetApply,
@@ -46,6 +48,8 @@ const ControlPane: FC<Props> = (props) => {
   const handlepredefinedChoiceChange = (event: SelectChangeEvent) => {
     setPredefinedChoice(event.target.value);
   };
+
+  const runButtonStyle = recommendToRun ? 'contained' : 'outlined';
 
   return (
     <>
@@ -90,7 +94,7 @@ const ControlPane: FC<Props> = (props) => {
               onClick={onExecute}
               loading={isRunning}
               startIcon={<PlayArrowIcon />}
-              variant="contained"
+              variant={runButtonStyle}
               size="large"
             >
               <span>実行</span>

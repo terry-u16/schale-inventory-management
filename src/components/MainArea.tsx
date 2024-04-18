@@ -76,6 +76,13 @@ const MainArea: FC = () => {
   const [openMap, setOpenMap] = useState(Array(45).fill(false) as boolean[]);
   const [workerResetCnt, setWorkerResetCnt] = useState(0);
 
+  // runUuid: 確率計算実行時に発行されたUUID
+  // opUuid: 確率計算実行時または直近の入力変更時に発行されたUUID
+  // runUuid === opUuidのとき、確率計算が実行されたばかりなので再度の確率計算を推奨しない
+  // runUuid !== opUuidのとき、入力が変更されているので確率計算を推奨する
+  const [runUuid, setRunUuid] = useState<string>(crypto.randomUUID());
+  const [opUuid, setOpUuid] = useState<string>(crypto.randomUUID());
+
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
       return {
@@ -126,12 +133,14 @@ const MainArea: FC = () => {
     });
 
     setItems(newItems);
+    setOpUuid(crypto.randomUUID());
   };
 
   const onAddPlacedItem = (item: PlacedItem) => {
     const newItems = [...items];
     items[item.item.index - 1].placements.push(item);
     setItems(newItems);
+    setOpUuid(crypto.randomUUID());
   };
 
   const onModifyPlacedItem = (item: PlacedItem) => {
@@ -144,6 +153,7 @@ const MainArea: FC = () => {
     }
 
     setItems(newItems);
+    setOpUuid(crypto.randomUUID());
   };
 
   const onRemovePlacedItem = (item: PlacedItem) => {
@@ -154,6 +164,7 @@ const MainArea: FC = () => {
     ].placements.filter((it) => it.id !== item.id);
 
     setItems(newItems);
+    setOpUuid(crypto.randomUUID());
   };
 
   // 確率計算worker周り
@@ -173,6 +184,10 @@ const MainArea: FC = () => {
       }
 
       setIsRunning(false);
+
+      const uuid = crypto.randomUUID();
+      setRunUuid(uuid);
+      setOpUuid(uuid);
     };
 
     return () => {
@@ -203,6 +218,7 @@ const MainArea: FC = () => {
     const newOpenMap = [...openMap];
     newOpenMap[index] = !newOpenMap[index];
     setOpenMap(newOpenMap);
+    setOpUuid(crypto.randomUUID());
   };
 
   const onItemPresetApply = (preset: number) => {
@@ -217,6 +233,7 @@ const MainArea: FC = () => {
     );
     setProbs(null);
     setOpenMap(Array(45).fill(false));
+    setOpUuid(crypto.randomUUID());
     setIsRunning(false);
     setWorkerResetCnt((prev) => prev + 1);
   };
@@ -238,6 +255,7 @@ const MainArea: FC = () => {
           openPanels={openMap}
           isRunning={isRunning}
           showProb={showProbs}
+          recommendToRun={runUuid !== opUuid}
           onExecute={onExecute}
           onToggleShowProb={onToggleShowProb}
           onItemPresetApply={onItemPresetApply}
