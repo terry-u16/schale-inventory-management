@@ -41,7 +41,7 @@ const Board: FC<Props> = (props) => {
     if (!openMap[i] && rounded > roundedMax) {
       roundedMax = rounded;
     }
-    if(!openMap[i] && targetProbs[i] > maxProb){
+    if(!openMap[i] && targetProbs[i]!==0 && targetProbs[i] > maxProb){
         maxProb = targetProbs[i];
     }
   }
