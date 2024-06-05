@@ -4,6 +4,7 @@ import { Box, ThemeProvider, createTheme } from '@mui/material';
 import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Note from './components/Note';
+import NotificationPanel from './components/NotificationPanel';
 
 const App: FC = () => {
   const theme = createTheme({
@@ -22,7 +23,8 @@ const App: FC = () => {
     <>
       <ThemeProvider theme={theme}>
         <Header />
-        <Box width={1200}>
+        <Box width={1200} mt={5}>
+          <NotificationPanel />
           <MainArea />
           <Note />
         </Box>
