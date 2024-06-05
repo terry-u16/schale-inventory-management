@@ -30,39 +30,39 @@ const gameMagazine = { width: 3, height: 3 } as const;
 const ambrella = { width: 1, height: 4 } as const;
 const predefinedItems: ItemSet[][] = [
   [
-    { item: { ...shoppingBag, index: 1 }, count: 1 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...fountainPen, index: 3 }, count: 5 },
+    { item: { ...potatoChips, index: 1 }, count: 2 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...toyBox, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...toyBox, index: 1 }, count: 1 },
-    { item: { ...potatoChips, index: 2 }, count: 2 },
-    { item: { ...receipt, index: 3 }, count: 3 },
+    { item: { ...receipt, index: 1 }, count: 3 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...gameMagazine, index: 1 }, count: 1 },
-    { item: { ...ambrella, index: 2 }, count: 2 },
-    { item: { ...fountainPen, index: 3 }, count: 4 },
-  ],
-  [
-    { item: { ...shoppingBag, index: 1 }, count: 1 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...fountainPen, index: 3 }, count: 5 },
-  ],
-  [
-    { item: { ...toyBox, index: 1 }, count: 1 },
-    { item: { ...potatoChips, index: 2 }, count: 2 },
-    { item: { ...receipt, index: 3 }, count: 3 },
-  ],
-  [
-    { item: { ...gameMagazine, index: 1 }, count: 1 },
-    { item: { ...ambrella, index: 2 }, count: 2 },
-    { item: { ...fountainPen, index: 3 }, count: 4 },
+    { item: { ...fountainPen, index: 1 }, count: 4 },
+    { item: { ...receipt, index: 2 }, count: 2 },
+    { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
     { item: { ...potatoChips, index: 1 }, count: 2 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...fountainPen, index: 3 }, count: 6 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...toyBox, index: 3 }, count: 1 },
+  ],
+  [
+    { item: { ...receipt, index: 1 }, count: 3 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...gameMagazine, index: 3 }, count: 1 },
+  ],
+  [
+    { item: { ...fountainPen, index: 1 }, count: 4 },
+    { item: { ...receipt, index: 2 }, count: 2 },
+    { item: { ...ambrella, index: 3 }, count: 2 },
+  ],
+  [
+    { item: { ...shoppingBag, index: 1 }, count: 2 },
+    { item: { ...toyBox, index: 2 }, count: 1 },
+    { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
 ] as const;
 
