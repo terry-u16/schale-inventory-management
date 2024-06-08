@@ -13,6 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
+import { usePlaceSelectHelper } from './PlaceSelectHelper';
 import PlacedItemPane from './PlacedItemPane';
 
 export interface Item {
@@ -29,12 +30,20 @@ export interface PlacedItem {
   id: string;
 }
 
-export function getRotatedHeight(item: PlacedItem): number {
-  return item.rotated ? item.item.width : item.item.height;
+export function getRotatedHeight(placedItem: PlacedItem): number {
+  return placedItem.rotated ? placedItem.item.width : placedItem.item.height;
 }
 
-export function getRotatedWidth(item: PlacedItem): number {
-  return item.rotated ? item.item.height : item.item.width;
+export function getRotatedWidth(placedItem: PlacedItem): number {
+  return placedItem.rotated ? placedItem.item.height : placedItem.item.width;
+}
+
+export function isSquare(item: Item): boolean {
+  return item.width === item.height;
+}
+
+export function isVertical(item: Item): boolean {
+  return item.height > item.width;
 }
 
 export function getItemPalette(
@@ -98,6 +107,8 @@ const ItemPane: FC<Props> = (props) => {
       count: Number(event.target.value),
     });
   };
+
+  const { startPlaceSelect } = usePlaceSelectHelper();
 
   return (
     <>
@@ -184,13 +195,13 @@ const ItemPane: FC<Props> = (props) => {
               </Box>
             ))}
 
-            <Box gridColumn="1 / 4">
-              <Tooltip title="備品を配置する">
+            <Tooltip title="備品を配置する">
+              <Box gridColumn="1 / 4" display="flex" gap={2}>
                 <Button
                   variant="contained"
                   fullWidth
                   startIcon={<AddIcon />}
-                  onClick={() => {
+                  onClick={(e) => {
                     const newPlacedItem: PlacedItem = {
                       item: itemSet.item,
                       rotated: false,
@@ -198,14 +209,54 @@ const ItemPane: FC<Props> = (props) => {
                       col: 1,
                       id: crypto.randomUUID(),
                     };
-                    onAddPlacedItem(newPlacedItem);
+                    startPlaceSelect(newPlacedItem, {
+                      baseEvent: e.nativeEvent,
+                      onSelect: (placedItem) => {
+                        onAddPlacedItem(placedItem);
+                      },
+                    });
                   }}
                   disabled={placedItems.length >= itemSet.count}
                 >
                   追加
+                  {!isSquare(itemSet.item)
+                    ? isVertical(itemSet.item)
+                      ? '(縦)'
+                      : '(横)'
+                    : ''}
                 </Button>
-              </Tooltip>
-            </Box>
+                {!isSquare(itemSet.item) && (
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    startIcon={<AddIcon />}
+                    onClick={(e) => {
+                      const newPlacedItem: PlacedItem = {
+                        item: itemSet.item,
+                        rotated: true,
+                        row: 1,
+                        col: 1,
+                        id: crypto.randomUUID(),
+                      };
+                      startPlaceSelect(newPlacedItem, {
+                        baseEvent: e.nativeEvent,
+                        onSelect: (placedItem) => {
+                          onAddPlacedItem(placedItem);
+                        },
+                      });
+                    }}
+                    disabled={placedItems.length >= itemSet.count}
+                  >
+                    追加
+                    {!isSquare(itemSet.item)
+                      ? isVertical(itemSet.item)
+                        ? '(横)'
+                        : '(縦)'
+                      : ''}
+                  </Button>
+                )}
+              </Box>
+            </Tooltip>
           </Box>
         </CardContent>
       </Card>

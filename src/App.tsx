@@ -5,6 +5,9 @@ import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Note from './components/Note';
 import NotificationPanel from './components/NotificationPanel';
+import Overlay from './components/Overlay';
+import OverlayProvider from './components/OverlayProvider';
+import PlaceSelectHelper from './components/PlaceSelectHelper';
 
 const App: FC = () => {
   const theme = createTheme({
@@ -22,12 +25,17 @@ const App: FC = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Header />
-        <Box width={1200} mt={5}>
-          <NotificationPanel />
-          <MainArea />
-          <Note />
-        </Box>
+        <OverlayProvider>
+          <PlaceSelectHelper>
+            <Header />
+            <Box width={1200} mt={5} position="relative">
+              <Overlay />
+              <NotificationPanel />
+              <MainArea />
+              <Note />
+            </Box>
+          </PlaceSelectHelper>
+        </OverlayProvider>
       </ThemeProvider>
     </>
   );
