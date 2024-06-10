@@ -1,4 +1,4 @@
-import { useLayoutEffect, type FC } from 'react';
+import { useLayoutEffect, useRef, type FC } from 'react';
 import { Box, Paper } from '@mui/material';
 import CoverButton from './Cover';
 import { type Cover } from './Cover';
@@ -59,16 +59,17 @@ const Board: FC<Props> = (props) => {
   }));
 
   const { setMask, removeMask } = useOverlayContext();
+  const refFirstCoverButtonRoot = useRef<HTMLDivElement | null>(null);
   useLayoutEffect(() => {
     const boardContainer = document.getElementById('board-container');
     if (boardContainer === null) return;
     const updateMask = () => {
       const boardContainerRect = boardContainer.getBoundingClientRect();
-      if (boardContainer.firstElementChild === null)
-        throw new Error('firstElementChild is null');
-      const firstChildRect =
-        boardContainer.firstElementChild.getBoundingClientRect();
-      const offsetLeft = firstChildRect.left - boardContainerRect.left;
+      if (refFirstCoverButtonRoot.current === null)
+        throw new Error('firstCoverButtonRoot element not found');
+      const offsetLeft =
+        refFirstCoverButtonRoot.current.getBoundingClientRect().left -
+        boardContainerRect.left;
       setMask('board', {
         x: boardContainer.offsetLeft + offsetLeft,
         y: boardContainer.offsetTop,
@@ -117,6 +118,7 @@ const Board: FC<Props> = (props) => {
                   setSelectingPlace(-1, -1);
                 }}
                 disabled={placeSelecting}
+                {...(idx === 0 ? { elementRef: refFirstCoverButtonRoot } : {})}
               />
             ))}
             {selectingPlacedItem !== null ? (

@@ -28,6 +28,7 @@ type Props = {
   onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
   disabled?: boolean;
+  elementRef?: React.RefObject<HTMLDivElement>;
 };
 
 const boxStyleGenerator = (row: number, col: number) => ({
@@ -125,6 +126,7 @@ const CoverButton: FC<Props> = (props) => {
           onMouseEnter={props.onMouseEnter}
           onMouseLeave={props.onMouseLeave}
           style={boxStyleGenerator(row, col)}
+          ref={props.elementRef}
         >
           <Button
             variant="contained"
