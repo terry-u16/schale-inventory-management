@@ -16,14 +16,23 @@ const Overlay: FC = () => {
     <div id="overlay" style={{ visibility: visible ? 'visible' : 'hidden' }}>
       <svg width="100%" height="100%">
         <defs>
-          <mask id="mask">
-            <rect width="100%" height="100%" fill="#fff" />
-            {maskList.map((mask, index) => (
-              <rect key={index} {...mask} />
-            ))}
-          </mask>
+          <filter id="invert">
+            <feColorMatrix
+              in="SourceGraphic"
+              type="matrix"
+              values="0 0 0 0 0
+                      0 0 0 0 0
+                      0 0 0 0 0
+                      1 0 0 0 0"
+            />
+          </filter>
         </defs>
-        <rect width="100%" height="100%" mask="url(#mask)" fillOpacity="0.75" />
+        <g filter="url(#invert)">
+          <rect width="100%" height="100%" fill="#ddd" />
+          {maskList.map((mask, index) => (
+            <rect key={index} {...mask} fill="#000" />
+          ))}
+        </g>
       </svg>
     </div>
   );
