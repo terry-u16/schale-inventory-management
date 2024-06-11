@@ -6,6 +6,7 @@ import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 
 export interface Props {
   placedItem: PlacedItem;
+  pointerEvents?: 'none' | 'auto';
 }
 
 const styleGenerator = (item: PlacedItem) => ({
@@ -33,10 +34,12 @@ const PlacedItemSquare: FC<Props> = (props) => {
         <Box
           style={styleGenerator(placedItem)}
           sx={{
+            position: 'relative',
             borderRadius: 1,
             border: 1,
             borderColor: 'primary.dark',
             bgcolor: 'primary.light',
+            pointerEvents: props.pointerEvents,
           }}
         />
       </ThemeProvider>

@@ -24,7 +24,11 @@ export interface Cover {
 
 type Props = {
   cover: Cover;
-  onClick: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: React.MouseEventHandler<HTMLDivElement>;
+  disabled?: boolean;
+  elementRef?: React.RefObject<HTMLDivElement>;
 };
 
 const boxStyleGenerator = (row: number, col: number) => ({
@@ -117,13 +121,18 @@ const CoverButton: FC<Props> = (props) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            cursor: 'pointer',
           }}
+          onMouseEnter={props.onMouseEnter}
+          onMouseLeave={props.onMouseLeave}
           style={boxStyleGenerator(row, col)}
+          ref={props.elementRef}
         >
           <Button
             variant="contained"
             key={`cover${row}-${col}`}
             onClick={props.onClick}
+            sx={{ pointerEvents: props.disabled === true ? 'none' : 'auto' }}
             style={buttonStyleGenerator(opacity, isBest, darkColor)}
             disableElevation
           >
