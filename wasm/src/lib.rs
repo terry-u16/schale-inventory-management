@@ -161,25 +161,32 @@ extern "C" {
 
 #[wasm_bindgen]
 pub fn solve(input: JsValue) -> JsValue {
-    match solve_inner(input) {
+    let temp = match solve_inner(input) {
         Ok(result) => serde_wasm_bindgen::to_value(&ProbResult {
             probs: result,
             error: "".to_string(),
-        })
-        .unwrap(),
+        }),
         Err(err) => serde_wasm_bindgen::to_value(&ProbResult {
             probs: vec![],
             error: err.to_string(),
+        }),
+    };
+
+    match temp {
+        Ok(value) => value,
+        Err(err) => serde_wasm_bindgen::to_value(&ProbResult {
+            probs: vec![],
+            error: format!("エラーが発生しました。 {}", err),
         })
-        .unwrap(),
+        .expect("to_valueに失敗しました。"),
     }
 }
 
 fn solve_inner(input: JsValue) -> anyhow::Result<Vec<Vec<f64>>> {
     let input = match serde_wasm_bindgen::from_value::<JsInput>(input) {
         Ok(input) => input,
-        Err(_) => {
-            bail!("入力の読み込み中にエラーが発生しました。")
+        Err(err) => {
+            bail!("入力の読み込み中にエラーが発生しました。: {}", err)
         }
     };
 
