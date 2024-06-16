@@ -235,6 +235,21 @@ const Note: FC = () => {
                   です。計算が間違っていそう・こういった機能が欲しいなど、バグ報告やリクエストはそちらにお願いします。
                 </Typography>
               </Stack>
+
+              <Stack spacing={1}>
+                <Typography variant="h4">Special Thanks</Typography>
+                <Typography variant="body1">
+                  このプロダクトは以下の皆様のコントリビューションによって成り立っています。ありがとうございます！
+                </Typography>
+                <ul>
+                  <li>
+                    <Typography variant="body1">michirakara 様</Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body1">mochiya98 様</Typography>
+                  </li>
+                </ul>
+              </Stack>
             </Stack>
           </Container>
         </Box>
