@@ -49,8 +49,8 @@ const predefinedItems: ItemSet[][] = [
   ],
   [
     { item: { ...mahua, index: 1 }, count: 1 },
-    { item: { ...xingrenDoufu, index: 2 }, count: 1 },
-    { item: { ...ludagun, index: 3 }, count: 1 },
+    { item: { ...xingrenDoufu, index: 2 }, count: 2 },
+    { item: { ...ludagun, index: 3 }, count: 3 },
   ],
   [
     { item: { ...banji, index: 1 }, count: 1 },
@@ -64,8 +64,8 @@ const predefinedItems: ItemSet[][] = [
   ],
   [
     { item: { ...mahua, index: 1 }, count: 1 },
-    { item: { ...xingrenDoufu, index: 2 }, count: 1 },
-    { item: { ...ludagun, index: 3 }, count: 1 },
+    { item: { ...xingrenDoufu, index: 2 }, count: 2 },
+    { item: { ...ludagun, index: 3 }, count: 3 },
   ],
   [
     { item: { ...banji, index: 1 }, count: 1 },
