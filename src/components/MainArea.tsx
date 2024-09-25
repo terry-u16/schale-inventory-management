@@ -22,20 +22,15 @@ const clampPosition = (value: number, size: number, boardSize: number) => {
 };
 
 // 在庫管理のアイテム
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/*
 const shoppingBag = { width: 3, height: 2 } as const;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const receipt = { width: 1, height: 3 } as const;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fountainPen = { width: 2, height: 1 } as const;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const toyBox = { width: 4, height: 2 } as const;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const potatoChips = { width: 2, height: 2 } as const;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const gameMagazine = { width: 3, height: 3 } as const;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ambrella = { width: 1, height: 4 } as const;
+*/
 
 // 五塵来降のアイテム
 const longxutang = { width: 3, height: 2 } as const; // 龍のひげ飴
