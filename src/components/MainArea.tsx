@@ -21,6 +21,8 @@ const clampPosition = (value: number, size: number, boardSize: number) => {
   return Math.min(Math.max(value, 1), boardSize - size + 1);
 };
 
+// 在庫管理のアイテム
+/*
 const shoppingBag = { width: 3, height: 2 } as const;
 const receipt = { width: 1, height: 3 } as const;
 const fountainPen = { width: 2, height: 1 } as const;
@@ -28,41 +30,52 @@ const toyBox = { width: 4, height: 2 } as const;
 const potatoChips = { width: 2, height: 2 } as const;
 const gameMagazine = { width: 3, height: 3 } as const;
 const ambrella = { width: 1, height: 4 } as const;
+*/
+
+// 五塵来降のアイテム
+const longxutang = { width: 3, height: 2 } as const; // 龍のひげ飴
+const ludagun = { width: 3, height: 1 } as const; // ローダーグン
+const yuebing = { width: 2, height: 1 } as const; // 月餅
+const mahua = { width: 4, height: 2 } as const; // 麻花
+const xingrenDoufu = { width: 2, height: 2 } as const; // 杏仁豆腐
+const banji = { width: 3, height: 3 } as const; // 班戟（パンケーキ）
+const tanghulu = { width: 1, height: 4 } as const; // 糖葫蘆
+
 const predefinedItems: ItemSet[][] = [
   [
-    { item: { ...potatoChips, index: 1 }, count: 2 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
-    { item: { ...toyBox, index: 3 }, count: 1 },
+    { item: { ...longxutang, index: 1 }, count: 1 },
+    { item: { ...ludagun, index: 2 }, count: 5 },
+    { item: { ...yuebing, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...receipt, index: 1 }, count: 2 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
-    { item: { ...gameMagazine, index: 3 }, count: 1 },
+    { item: { ...mahua, index: 1 }, count: 1 },
+    { item: { ...xingrenDoufu, index: 2 }, count: 1 },
+    { item: { ...ludagun, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 5 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...ambrella, index: 3 }, count: 2 },
+    { item: { ...banji, index: 1 }, count: 1 },
+    { item: { ...tanghulu, index: 2 }, count: 1 },
+    { item: { ...yuebing, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...potatoChips, index: 1 }, count: 2 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
-    { item: { ...toyBox, index: 3 }, count: 1 },
+    { item: { ...longxutang, index: 1 }, count: 1 },
+    { item: { ...ludagun, index: 2 }, count: 5 },
+    { item: { ...yuebing, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...receipt, index: 1 }, count: 2 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
-    { item: { ...gameMagazine, index: 3 }, count: 1 },
+    { item: { ...mahua, index: 1 }, count: 1 },
+    { item: { ...xingrenDoufu, index: 2 }, count: 1 },
+    { item: { ...ludagun, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 5 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...ambrella, index: 3 }, count: 2 },
+    { item: { ...banji, index: 1 }, count: 1 },
+    { item: { ...tanghulu, index: 2 }, count: 1 },
+    { item: { ...yuebing, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...shoppingBag, index: 1 }, count: 2 },
-    { item: { ...toyBox, index: 2 }, count: 1 },
-    { item: { ...gameMagazine, index: 3 }, count: 1 },
+    { item: { ...xingrenDoufu, index: 1 }, count: 1 },
+    { item: { ...ludagun, index: 2 }, count: 1 },
+    { item: { ...yuebing, index: 3 }, count: 1 },
   ],
 ] as const;
 

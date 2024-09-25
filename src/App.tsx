@@ -4,7 +4,7 @@ import { Box, ThemeProvider, createTheme } from '@mui/material';
 import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Note from './components/Note';
-// import NotificationPanel from './components/NotificationPanel';
+import NotificationPanel from './components/NotificationPanel';
 import Overlay from './components/Overlay';
 import OverlayProvider from './components/OverlayProvider';
 import PlaceSelectHelper from './components/PlaceSelectHelper';
@@ -30,7 +30,7 @@ const App: FC = () => {
             <Header />
             <Box width={1200} mt={5} position="relative">
               <Overlay />
-              {/* <NotificationPanel /> */}
+              <NotificationPanel />
               <MainArea />
               <Note />
             </Box>
