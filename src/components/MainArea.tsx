@@ -54,8 +54,8 @@ const predefinedItems: ItemSet[][] = [
   ],
   [
     { item: { ...banji, index: 1 }, count: 1 },
-    { item: { ...tanghulu, index: 2 }, count: 1 },
-    { item: { ...yuebing, index: 3 }, count: 1 },
+    { item: { ...tanghulu, index: 2 }, count: 3 },
+    { item: { ...yuebing, index: 3 }, count: 2 },
   ],
   [
     { item: { ...longxutang, index: 1 }, count: 1 },
@@ -69,8 +69,8 @@ const predefinedItems: ItemSet[][] = [
   ],
   [
     { item: { ...banji, index: 1 }, count: 1 },
-    { item: { ...tanghulu, index: 2 }, count: 1 },
-    { item: { ...yuebing, index: 3 }, count: 1 },
+    { item: { ...tanghulu, index: 2 }, count: 3 },
+    { item: { ...yuebing, index: 3 }, count: 2 },
   ],
   [
     { item: { ...xingrenDoufu, index: 1 }, count: 1 },
