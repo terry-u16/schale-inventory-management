@@ -73,9 +73,9 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...yuebing, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...xingrenDoufu, index: 1 }, count: 1 },
-    { item: { ...ludagun, index: 2 }, count: 1 },
-    { item: { ...yuebing, index: 3 }, count: 1 },
+    { item: { ...xingrenDoufu, index: 1 }, count: 2 },
+    { item: { ...ludagun, index: 2 }, count: 3 },
+    { item: { ...yuebing, index: 3 }, count: 6 },
   ],
 ] as const;
 
