@@ -153,15 +153,15 @@ const MainArea: FC = () => {
     const newItems = [...items];
     newItems[item.item.index - 1].placements.push(item);
     setItems(newItems);
-    
+
     // アイテムがある場所のマス目を自動で開ける
     const newOpenMap = [...openMap];
     for (let i = item.row; i < item.row + getRotatedHeight(item); i++) {
       for (let j = item.col; j < item.col + getRotatedWidth(item); j++) {
-        newOpenMap[i * 9 + j] = true;
+        newOpenMap[(i - 1) * 9 + (j - 1)] = true;
       }
     }
-    
+
     setOpenMap(newOpenMap);
     setOpUuid(crypto.randomUUID());
   };
