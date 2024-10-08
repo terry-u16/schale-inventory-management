@@ -248,6 +248,14 @@ const Note: FC = () => {
                   <li>
                     <Typography variant="body1">mochiya98 様</Typography>
                   </li>
+                  <li>
+                    <Typography variant="body1">saharan 様</Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body1">
+                      アイテム数量をご報告くださった皆様
+                    </Typography>
+                  </li>
                 </ul>
               </Stack>
             </Stack>
