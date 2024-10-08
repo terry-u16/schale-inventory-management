@@ -11,14 +11,18 @@ import './Board.css';
 export interface Props {
   placedItems: PlacedItem[];
   probs: number[][] | null;
+  isMaxProbs: boolean[][] | null;
   openMap: boolean[];
   showProb: boolean[];
   onToggleOpen: (idx: number) => void;
 }
 
 const Board: FC<Props> = (props) => {
-  const { placedItems, probs, openMap, showProb, onToggleOpen } = props;
+  const { placedItems, probs, isMaxProbs, openMap, showProb, onToggleOpen } =
+    props;
 
+  // 注目しているアイテムの組合せフラグ
+  // 備品1, 2, 3に対して、それぞれ確率計算時に考慮するか（2^3通り）を表す
   let probFlag = 0;
 
   for (let i = 0; i < showProb.length; i++) {
@@ -32,17 +36,13 @@ const Board: FC<Props> = (props) => {
   }
 
   const targetProbs = probs?.[probFlag] ?? Array<number>(45).fill(0.0);
+  const targetIsMaxProbs =
+    isMaxProbs?.[probFlag] ?? Array<boolean>(45).fill(false);
 
-  // 小数点第一位まで見て、最大値に一致するものにフラグを付けたい
-  const roundProb = (prob: number) => Math.round(prob * 1000) / 1000;
-  let roundedMax = 0;
+  // 最大確率を探す
   let maxProb = -Infinity;
 
   for (let i = 0; i < targetProbs.length; i++) {
-    const rounded = roundProb(targetProbs[i]);
-    if (!openMap[i] && rounded > roundedMax) {
-      roundedMax = rounded;
-    }
     if (!openMap[i] && targetProbs[i] !== 0 && targetProbs[i] > maxProb) {
       maxProb = targetProbs[i];
     }
@@ -54,7 +54,7 @@ const Board: FC<Props> = (props) => {
     open: openMap[index],
     prob,
     probFlag,
-    isBest: !openMap[index] && prob > 0 && roundProb(prob) === roundedMax,
+    isBest: !openMap[index] && targetIsMaxProbs[index],
     maxProb,
   }));
 
