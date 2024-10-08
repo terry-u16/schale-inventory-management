@@ -84,6 +84,7 @@ const MainArea: FC = () => {
     predefinedItems[0].map((itemSet) => new ItemAndPlacement(itemSet, [])),
   );
   const [probs, setProbs] = useState<number[][] | null>(null);
+  const [isMaxProbs, setIsMaxProbs] = useState<boolean[][] | null>(null);
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
   const [openMap, setOpenMap] = useState(Array(45).fill(false) as boolean[]);
@@ -202,8 +203,42 @@ const MainArea: FC = () => {
       if (error !== '') {
         alert(error);
         setProbs(null);
+        setIsMaxProbs(null);
       } else {
+        // アイテムの組合せフラグごとに、各マスの確率を小数点第一位まで見て、
+        // 最大値に一致するものにフラグを付けたい
+        // 3種類のアイテムについてオンオフの組合せは8通り
+        const roundProb = (prob: number) => Math.round(prob * 1000) / 1000;
+        const isMaxProbs = Array.from(
+          new Array(1 << 3),
+          () => new Array(45).fill(false) as boolean[],
+        );
+
+        for (let itemFlag = 0; itemFlag < 1 << 3; itemFlag++) {
+          let roundedMax = 0;
+          const currentProbs = probs[itemFlag];
+          const currentIsMaxProbs = isMaxProbs[itemFlag];
+
+          // 開いているマスの中から一番確率が高いものを探す
+          for (let i = 0; i < currentProbs.length; i++) {
+            const rounded = roundProb(currentProbs[i]);
+            if (!openMap[i] && rounded > roundedMax) {
+              roundedMax = rounded;
+            }
+          }
+
+          // 一番確率の高いものと一致していたらフラグをセット
+          // ただし、確率が0のものは除外
+          for (let i = 0; i < currentProbs.length; i++) {
+            const rounded = roundProb(currentProbs[i]);
+            if (rounded === roundedMax && rounded > 0) {
+              currentIsMaxProbs[i] = true;
+            }
+          }
+        }
+
         setProbs(probs);
+        setIsMaxProbs(isMaxProbs);
       }
 
       setIsRunning(false);
@@ -217,7 +252,7 @@ const MainArea: FC = () => {
       probCalcWorkerRef.current?.terminate();
     };
     // countが変化したらWorkerを再生成
-  }, [workerResetCnt]);
+  }, [openMap, workerResetCnt]);
 
   const onExecute = () => {
     setIsRunning(true);
@@ -255,6 +290,7 @@ const MainArea: FC = () => {
       ),
     );
     setProbs(null);
+    setIsMaxProbs(null);
     setOpenMap(Array(45).fill(false));
     setOpUuid(crypto.randomUUID());
     setIsRunning(false);
@@ -267,6 +303,7 @@ const MainArea: FC = () => {
         <Board
           placedItems={items.map((item) => item.placements).flat()}
           probs={probs}
+          isMaxProbs={isMaxProbs}
           openMap={openMap}
           showProb={showProbs}
           onToggleOpen={onToggleOpen}
