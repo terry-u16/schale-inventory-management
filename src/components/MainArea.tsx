@@ -58,32 +58,32 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...characterToothbrush, index: 2 }, count: 5 },
     { item: { ...purpleScarf, index: 3 }, count: 2 },
   ],
-  [  // FIXME: below counts are not updated
+  [
     { item: { ...boardGame, index: 1 }, count: 1 },
     { item: { ...bodyPillow, index: 2 }, count: 2 },
-    { item: { ...characterToothbrush, index: 3 }, count: 3 },
+    { item: { ...characterToothbrush, index: 3 }, count: 5 },
   ],
   [
     { item: { ...characterPillow, index: 1 }, count: 1 },
-    { item: { ...hairband, index: 2 }, count: 3 },
-    { item: { ...purpleScarf, index: 3 }, count: 2 },
+    { item: { ...hairband, index: 2 }, count: 4 },
+    { item: { ...purpleScarf, index: 3 }, count: 3 },
   ],
   [
-    { item: { ...slippers, index: 1 }, count: 1 },
+    { item: { ...slippers, index: 1 }, count: 2 },
     { item: { ...characterToothbrush, index: 2 }, count: 5 },
     { item: { ...purpleScarf, index: 3 }, count: 2 },
   ],
   [
     { item: { ...boardGame, index: 1 }, count: 1 },
     { item: { ...bodyPillow, index: 2 }, count: 2 },
-    { item: { ...characterToothbrush, index: 3 }, count: 3 },
+    { item: { ...characterToothbrush, index: 3 }, count: 5 },
   ],
   [
     { item: { ...characterPillow, index: 1 }, count: 1 },
-    { item: { ...hairband, index: 2 }, count: 3 },
-    { item: { ...purpleScarf, index: 3 }, count: 2 },
+    { item: { ...hairband, index: 2 }, count: 4 },
+    { item: { ...purpleScarf, index: 3 }, count: 3 },
   ],
-  [
+  [  // FIXME: below counts are not updated
     { item: { ...boardGame, index: 1 }, count: 2 },
     { item: { ...characterToothbrush, index: 2 }, count: 3 },
     { item: { ...purpleScarf, index: 3 }, count: 6 },
