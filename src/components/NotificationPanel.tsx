@@ -6,9 +6,10 @@ const NotificationPanel: FC = () => {
     <>
       <Paper>
         <Box p={2} textAlign="start">
-          <Alert severity="success">
-            2024/9/25開始の山海経イベントへの対応を完了しました。
-            お気付きの点がございましたら
+          <Alert severity="warning">
+            現在、2024/12/24開始のミレニアムイベントの対応を進めています。
+            6周目までの備品の種類・数量については最新版への更新が完了しておりますが、7周目以降の備品の数量については不明なため仮の値を設定しています。
+            7周目以降の備品数量をご存じの方は
             <a
               href="https://github.com/terry-u16/schale-inventory-management/issues"
               target="_blank"
@@ -17,6 +18,7 @@ const NotificationPanel: FC = () => {
               githubのissue
             </a>
             にてご報告頂けますと幸いです。
+            ご不便をおかけしますが、どうぞよろしくお願いいたします。
           </Alert>
         </Box>
       </Paper>
