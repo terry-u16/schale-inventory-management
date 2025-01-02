@@ -83,7 +83,7 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...hairband, index: 2 }, count: 4 },
     { item: { ...purpleScarf, index: 3 }, count: 3 },
   ],
-  [  // FIXME: below counts are not updated
+  [
     { item: { ...boardGame, index: 1 }, count: 2 },
     { item: { ...characterToothbrush, index: 2 }, count: 3 },
     { item: { ...purpleScarf, index: 3 }, count: 6 },
