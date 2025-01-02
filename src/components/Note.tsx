@@ -252,6 +252,9 @@ const Note: FC = () => {
                     <Typography variant="body1">saharan 様</Typography>
                   </li>
                   <li>
+                    <Typography variant="body1">wx257osn2 様</Typography>
+                  </li>
+                  <li>
                     <Typography variant="body1">
                       アイテム数量をご報告くださった皆様
                     </Typography>
