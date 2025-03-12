@@ -22,7 +22,6 @@ const clampPosition = (value: number, size: number, boardSize: number) => {
 };
 
 // 在庫管理のアイテム
-/*
 const shoppingBag = { width: 3, height: 2 } as const;
 const receipt = { width: 1, height: 3 } as const;
 const fountainPen = { width: 2, height: 1 } as const;
@@ -30,7 +29,6 @@ const toyBox = { width: 4, height: 2 } as const;
 const potatoChips = { width: 2, height: 2 } as const;
 const gameMagazine = { width: 3, height: 3 } as const;
 const ambrella = { width: 1, height: 4 } as const;
-*/
 
 // 五塵来降のアイテム
 /*
@@ -44,6 +42,7 @@ const tanghulu = { width: 1, height: 4 } as const; // 糖葫蘆
 */
 
 // 秘密のミッドナイトパーティーのアイテム
+/*
 const slippers = { width: 3, height: 2 } as const; // スリッパ
 const characterToothbrush = { width: 3, height: 1 } as const; // キャラもの歯ブラシ
 const purpleScarf = { width: 2, height: 1 } as const; // 紫のマフラー
@@ -51,42 +50,43 @@ const boardGame = { width: 4, height: 2 } as const; // ボードゲーム「KIVO
 const hairband = { width: 2, height: 2 } as const; // ヘアバンド
 const characterPillow = { width: 3, height: 3 } as const; // キャラものクッション
 const bodyPillow = { width: 1, height: 4 } as const; // 抱き枕
+*/
 
 const predefinedItems: ItemSet[][] = [
   [
-    { item: { ...slippers, index: 1 }, count: 2 },
-    { item: { ...characterToothbrush, index: 2 }, count: 5 },
-    { item: { ...purpleScarf, index: 3 }, count: 2 },
+    { item: { ...potatoChips, index: 1 }, count: 3 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...toyBox, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...boardGame, index: 1 }, count: 1 },
-    { item: { ...bodyPillow, index: 2 }, count: 2 },
-    { item: { ...characterToothbrush, index: 3 }, count: 5 },
+    { item: { ...receipt, index: 1 }, count: 2 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...characterPillow, index: 1 }, count: 1 },
-    { item: { ...hairband, index: 2 }, count: 4 },
-    { item: { ...purpleScarf, index: 3 }, count: 3 },
+    { item: { ...fountainPen, index: 1 }, count: 5 },
+    { item: { ...receipt, index: 2 }, count: 3 },
+    { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...slippers, index: 1 }, count: 2 },
-    { item: { ...characterToothbrush, index: 2 }, count: 5 },
-    { item: { ...purpleScarf, index: 3 }, count: 2 },
+    { item: { ...potatoChips, index: 1 }, count: 3 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...toyBox, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...boardGame, index: 1 }, count: 1 },
-    { item: { ...bodyPillow, index: 2 }, count: 2 },
-    { item: { ...characterToothbrush, index: 3 }, count: 5 },
+    { item: { ...receipt, index: 1 }, count: 2 },
+    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...characterPillow, index: 1 }, count: 1 },
-    { item: { ...hairband, index: 2 }, count: 4 },
-    { item: { ...purpleScarf, index: 3 }, count: 3 },
+    { item: { ...fountainPen, index: 1 }, count: 5 },
+    { item: { ...receipt, index: 2 }, count: 3 },
+    { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...boardGame, index: 1 }, count: 2 },
-    { item: { ...characterToothbrush, index: 2 }, count: 3 },
-    { item: { ...purpleScarf, index: 3 }, count: 6 },
+    { item: { ...shoppingBag, index: 1 }, count: 2 },
+    { item: { ...toyBox, index: 2 }, count: 1 },
+    { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
 ] as const;
 
