@@ -60,12 +60,12 @@ const predefinedItems: ItemSet[][] = [
   ],
   [
     { item: { ...receipt, index: 1 }, count: 2 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...shoppingBag, index: 2 }, count: 3 },
     { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 5 },
-    { item: { ...receipt, index: 2 }, count: 3 },
+    { item: { ...fountainPen, index: 1 }, count: 6 },
+    { item: { ...receipt, index: 2 }, count: 4 },
     { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
@@ -75,12 +75,12 @@ const predefinedItems: ItemSet[][] = [
   ],
   [
     { item: { ...receipt, index: 1 }, count: 2 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
+    { item: { ...shoppingBag, index: 2 }, count: 3 },
     { item: { ...gameMagazine, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 5 },
-    { item: { ...receipt, index: 2 }, count: 3 },
+    { item: { ...fountainPen, index: 1 }, count: 6 },
+    { item: { ...receipt, index: 2 }, count: 4 },
     { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
