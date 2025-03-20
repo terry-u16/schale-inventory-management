@@ -43,7 +43,7 @@ const Header: FC = () => {
           >
             <CalculateIcon sx={{ fontSize: 32 }} />
             <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-              シャーレの総決算with連邦生徒会 在庫管理計算機
+              {t('typography')}
             </Typography>
             <Container
               sx={{
