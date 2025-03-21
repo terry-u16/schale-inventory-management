@@ -1,0 +1,19 @@
+{
+  "predefined_choice_label": "Supply Preset",
+  "predefined_choice_select": [
+    "Round 1",
+    "Round 2",
+    "Round 3",
+    "Round 4",
+    "Round 5",
+    "Round 6",
+    "Round 7 onward"
+  ],
+  "item_preset_apply_button_tooltip": "Apply supply preset",
+  "item_preset_apply_button": "Apply",
+  "execute_button_tooltip": "Calculate the probability of supply presence for each cell",
+  "execute_button": "Execute",
+  "look_one_button_tooltip": "Toggle probability display for Supply 1 ON/OFF",
+  "look_two_button_tooltip": "Toggle probability display for Supply 2 ON/OFF",
+  "look_three_button_tooltip": "Toggle probability display for Supply 3 ON/OFF"
+}

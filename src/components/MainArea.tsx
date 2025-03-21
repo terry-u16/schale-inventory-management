@@ -6,6 +6,7 @@ import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 import Worker from './workers/ProbCalcWorker?worker';
+import { useTranslation } from 'react-i18next';
 
 export class ItemAndPlacement {
   item: ItemSet;
@@ -91,6 +92,8 @@ const predefinedItems: ItemSet[][] = [
 ] as const;
 
 const MainArea: FC = () => {
+  const { t } = useTranslation('MainArea');
+
   const [items, setItems] = useState(
     predefinedItems[0].map((itemSet) => new ItemAndPlacement(itemSet, [])),
   );
@@ -210,6 +213,7 @@ const MainArea: FC = () => {
 
     probCalcWorkerRef.current.onmessage = (e) => {
       const { probs, error } = e.data as { probs: number[][]; error: string };
+      console.log(probs, error);
 
       if (error !== '') {
         alert(error);
@@ -291,7 +295,7 @@ const MainArea: FC = () => {
   };
 
   const onItemPresetApply = (preset: number) => {
-    if (!window.confirm('現在の入力内容はリセットされます。よろしいですか？')) {
+    if (!window.confirm(t('item_preset_apply_confirm'))) {
       return;
     }
 

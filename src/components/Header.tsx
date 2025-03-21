@@ -58,7 +58,7 @@ const Header: FC = () => {
                 <Select
                   value={i18n.language}
                   onChange={handleLanguageChange}
-                  sx={{ backgroundColor: '#fff' }}
+                  sx={{ backgroundColor: '#ffffff' }}
                 >
                   <MenuItem value="jp">日本語</MenuItem>
                   <MenuItem value="en">English</MenuItem>

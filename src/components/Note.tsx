@@ -1,7 +1,10 @@
 import { type FC } from 'react';
 import { Box, Container, Paper, Stack, Typography } from '@mui/material';
+import { Trans, useTranslation } from 'react-i18next';
 
 const Note: FC = () => {
+  const { t } = useTranslation('Note');
+
   return (
     <>
       <Paper>
@@ -9,176 +12,126 @@ const Note: FC = () => {
           <Container maxWidth="md">
             <Stack spacing={6} my={4} sx={{ textAlign: 'start' }}>
               <Stack spacing={1}>
-                <Typography variant="h4">これは何？</Typography>
+                <Typography variant="h4">{t('what_is_this.0')}</Typography>
                 <Typography variant="body1">
-                  スマートフォン向けゲームアプリ「
+                  {t('what_is_this.1')}
                   <a
                     href="https://bluearchive.jp/"
                     target="_brank"
                     rel="noreferrer"
                   >
-                    ブルーアーカイブ
+                    {t('what_is_this.2')}
                   </a>
-                  」におけるイベント「シャーレの総決算with連邦生徒会」のコンテンツ「在庫管理」を補助するためのツールです。
+                  {t('what_is_this.3')}
                 </Typography>
-                <Typography variant="body1">
-                  各マスにどの備品がどのくらいの確率で存在するかを計算することができます。
-                </Typography>
+                <Typography variant="body1">{t('what_is_this.4')}</Typography>
               </Stack>
 
               <Stack spacing={3}>
-                <Typography variant="h4">使い方</Typography>
+                <Typography variant="h4">{t('how_to_use.header')}</Typography>
                 <Stack spacing={1}>
-                  <Typography variant="h5">1. 初期設定</Typography>
-                  <Typography variant="body1">
-                    「備品プリセット」から何周目のデータを読み込むかを選択し「適用」ボタンを押すと、その周回における備品の高さ・幅・個数が読み込まれます。
-                  </Typography>
-                  <Typography variant="body1">
-                    プリセットデータが存在しない場合、自分で備品の高さ・幅・個数を設定することもできます。
-                  </Typography>
+                  <Typography variant="h5">{t('how_to_use.1.0')}</Typography>
+                  <Typography variant="body1">{t('how_to_use.1.1')}</Typography>
+                  <Typography variant="body1">{t('how_to_use.1.2')}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">2. 初期確率の計算</Typography>
-                  <Typography variant="body1">
-                    画面中央部の「実行」ボタンを押すと、1マスもオープンしていない状態において、各マスに何%の確率で備品が存在するかを計算します（環境によっては計算に数秒かかります）。備品が存在する確率が最大のマスは強調表示されます。
-                  </Typography>
-                  <Typography variant="body1">
-                    「実行」ボタンの横の「1」「2」「3」のボタンを押すと、備品ごとに確率を表示するかどうかを切り替えることができます。例えば「1」「2」がONで「3」がOFFの場合、備品1か備品2のどちらかを引き当てる確率が表示されます。小さい備品を無視して大きい備品を引きたい時に便利です。
-                  </Typography>
+                  <Typography variant="h5">{t('how_to_use.2.0')}</Typography>
+                  <Typography variant="body1">{t('how_to_use.2.1')}</Typography>
+                  <Typography variant="body1">{t('how_to_use.2.2')}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">3. 盤面の更新と再計算</Typography>
+                  <Typography variant="h5">{t('how_to_use.3.0')}</Typography>
+                  <Typography variant="body1">{t('how_to_use.3.1')}</Typography>
+                  <Typography variant="body1">{t('how_to_use.3.2')}</Typography>
                   <Typography variant="body1">
-                    各マスをクリックすると、マスのオープン・クローズを切り替えることができます。
-                  </Typography>
-                  <Typography variant="body1">
-                    備品情報の下部にある「追加」ボタンを押すと、発見した備品の位置を設定することができます。位置の移動と回転を指定して、ゲーム内で発見した備品の位置と一致するように設定してください。間違えて追加ボタンを押してしまった場合は、ゴミ箱アイコンのボタンを押すと削除することができます。
-                  </Typography>
-                  <Typography variant="body1">
-                    盤面の更新が終わったら、再度「実行」ボタンを押すことで確率が再計算されます。
-                    <b>自動では再計算されません</b>
-                    のでご注意ください。1マスでも開けると確率が変化するため、
-                    <b>毎回実行ボタンを押すことを強く推奨</b>します。
+                    <Trans
+                      i18nKey="Note:how_to_use.3.3"
+                      components={{ b: <b /> }}
+                    />
                   </Typography>
                 </Stack>
               </Stack>
 
               <Stack spacing={3}>
-                <Typography variant="h4">よくある質問</Typography>
+                <Typography variant="h4">{t('faq.header')}</Typography>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">
-                    「備品が重なっています」というエラーが出た！
-                  </Typography>
-                  <Typography variant="body1">
-                    ゲーム内で備品が重なって出てくることはないため、そのような配置には制限をかけています。エラーメッセージ中にどの位置で備品が重なっているかが表示されているので、それに従って入力を修正してください。
-                  </Typography>
+                  <Typography variant="h5">{t('faq.1.0')}</Typography>
+                  <Typography variant="body1">{t('faq.1.1')}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">
-                    「条件を満たす配置が存在しません」というエラーが出た！
-                  </Typography>
-                  <Typography variant="body1">
-                    どのように配置しても矛盾が生じてしまい、条件を満たす配置が一つも存在しない状態です。入力が間違っていないかご確認ください。
-                  </Typography>
+                  <Typography variant="h5">{t('faq.2.0')}</Typography>
+                  <Typography variant="body1">{t('faq.2.1')}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">
-                    よく分からない内容のエラーが出た！
-                  </Typography>
+                  <Typography variant="h5">{t('faq.3.0')}</Typography>
                   <Typography variant="body1">
-                    バグかもしれません。
+                    {t('faq.3.1')}
                     <a
                       href="https://twitter.com/terry_u16"
                       target="_brank"
                       rel="noreferrer"
                     >
-                      開発者
+                      {t('faq.3.2')}
                     </a>
-                    にお問い合わせください。
+                    {t('faq.3.3')}
                   </Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">盤面をリセットしたい！</Typography>
+                  <Typography variant="h5">{t('faq.4.0')}</Typography>
+                  <Typography variant="body1">{t('faq.4.1')}</Typography>
+                </Stack>
+
+                <Stack spacing={1}>
+                  <Typography variant="h5">{t('faq.5.0')}</Typography>
+                  <Typography variant="body1">{t('faq.5.1')}</Typography>
+                </Stack>
+
+                <Stack spacing={1}>
+                  <Typography variant="h5">{t('faq.6.0')}</Typography>
+                  <Typography variant="body1">{t('faq.6.1')}</Typography>
                   <Typography variant="body1">
-                    備品プリセットを読み込み直すか、ページをリロードすると盤面がリセットされます。逆に、リロードすると作業中の内容が消えてしまうのでご注意ください。
+                    <Trans i18nKey="Note:faq.6.2" components={{ s: <s /> }} />
                   </Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">
-                    実行ボタンを押しても確率が表示されない！
-                  </Typography>
-                  <Typography variant="body1">
-                    お使いの端末やブラウザによっては、確率計算に時間がかかる可能性があるほか、ブラウザによっては機能に対応していない可能性があります（動作確認はGoogle
-                    Chromeにて実行しております）。また、確率表示ボタンが全てOFFになっていないかもご確認ください。
-                  </Typography>
-                </Stack>
-
-                <Stack spacing={1}>
-                  <Typography variant="h5">
-                    実行ボタンを押すたびに確率が変わるんだけど？
-                  </Typography>
-                  <Typography variant="body1">
-                    あり得る全パターンの配置を計算すると時間がかかりすぎるため、一部の配置をランダムにサンプリングすることで計算時間を削減しています。そのため、実行のたびに表示される確率が変化します。
-                  </Typography>
-                  <Typography variant="body1">
-                    なお、あり得る全パターンが100,000通り以下の場合は全パターンを計算した厳密な確率が表示されます。
-                    <s>かんぺき～</s>
-                  </Typography>
-                </Stack>
-
-                <Stack spacing={1}>
-                  <Typography variant="h5">
-                    表示された確率は絶対に正しいの？
-                  </Typography>
-                  <Typography variant="body1">
-                    正しくない可能性もあります。上記のように配置をランダムにサンプリングしているほか、確率計算を行う上での前提が異なっている可能性もあります。以下の仮定の下で計算を行っているので、妥当性判定の参考にしてください。
-                  </Typography>
+                  <Typography variant="h5">{t('faq.7.0')}</Typography>
+                  <Typography variant="body1">{t('faq.7.1')}</Typography>
                   <ul>
                     <li>
                       <Typography variant="body1">
-                        備品の配置は、全ての起こりうる配置から一様ランダムに抽選される（ゲーム内で使用されている初期盤面の生成アルゴリズムによっては、
+                        {t('faq.7.2')}
                         <a
                           href="https://twitter.com/chokudai/status/1778760450215383085"
                           target="_brank"
                           rel="noreferrer"
                         >
-                          全ての配置の確率が均等ではなくなる
+                          {t('faq.7.3')}
                         </a>
-                        可能性があります。）
+                        {t('faq.7.4')}
                       </Typography>
                     </li>
                     <li>
-                      <Typography variant="body1">
-                        備品の配置がパターン化されておらず、抽選されない配置が存在しない
-                      </Typography>
+                      <Typography variant="body1">{t('faq.7.5')}</Typography>
                     </li>
                     <li>
-                      <Typography variant="body1">
-                        備品の配置はマスのオープン前に全て確定しており、後から変更されない
-                      </Typography>
+                      <Typography variant="body1">{t('faq.7.6')}</Typography>
                     </li>
                   </ul>
-                  <Typography variant="caption">
-                    バグってたらごめんなさい……。
-                  </Typography>
+                  <Typography variant="caption">{t('faq.7.7')}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">
-                    確率が最大のマスを開けていけば電卓消費量の期待値が最小になるの？
-                  </Typography>
+                  <Typography variant="h5">{t('faq.8.0')}</Typography>
+                  <Typography variant="body1">{t('faq.8.1')}</Typography>
                   <Typography variant="body1">
-                    比較的筋の良い戦略とは思われますが、最適な行動という保証はありません。
-                  </Typography>
-                  <Typography variant="body1">
-                    なお、似た題材の問題として、競技プログラミングサイト
+                    {t('faq.8.2')}
                     <a
                       href="https://atcoder.jp/"
                       target="_brank"
@@ -186,7 +139,7 @@ const Note: FC = () => {
                     >
                       AtCoder
                     </a>
-                    上で行われた
+                    {t('faq.8.3')}
                     <a
                       href="https://atcoder.jp/contests/ahc030"
                       target="_brank"
@@ -194,26 +147,22 @@ const Note: FC = () => {
                     >
                       AtCoder Heuristic Contest 030
                     </a>
-                    がありますので、ご興味のある方は挑戦してみてください。
+                    {t('faq.8.4')}
                   </Typography>
 
-                  <Typography variant="caption">
-                    ちなみに私はその優勝者です。
-                  </Typography>
+                  <Typography variant="caption">{t('faq.8.5')}</Typography>
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">
-                    ブルアカの推し生徒さんは？
-                  </Typography>
-                  <Typography variant="body1">伊落マリーさんです。</Typography>
+                  <Typography variant="h5">{t('faq.9.0')}</Typography>
+                  <Typography variant="body1">{t('faq.9.1')}</Typography>
                 </Stack>
               </Stack>
 
               <Stack spacing={1}>
-                <Typography variant="h4">開発者について</Typography>
+                <Typography variant="h4">{t('about_developer.0')}</Typography>
                 <Typography variant="body1">
-                  このページは
+                  {t('about_developer.1')}
                   <a
                     href="https://twitter.com/terry_u16"
                     target="_brank"
@@ -221,26 +170,24 @@ const Note: FC = () => {
                   >
                     terry_u16
                   </a>
-                  が作成しました。
+                  {t('about_developer.2')}
                 </Typography>
                 <Typography variant="body1">
-                  GitHubリポジトリは
+                  {t('about_developer.3')}
                   <a
                     href="https://github.com/terry-u16/schale-inventory-management"
                     target="_brank"
                     rel="noreferrer"
                   >
-                    こちら
+                    {t('about_developer.4')}
                   </a>
-                  です。計算が間違っていそう・こういった機能が欲しいなど、バグ報告やリクエストはそちらにお願いします。
+                  {t('about_developer.5')}
                 </Typography>
               </Stack>
 
               <Stack spacing={1}>
                 <Typography variant="h4">Special Thanks</Typography>
-                <Typography variant="body1">
-                  このプロダクトは以下の皆様のコントリビューションによって成り立っています。ありがとうございます！
-                </Typography>
+                <Typography variant="body1">{t('special_thanks.0')}</Typography>
                 <ul>
                   <li>
                     <Typography variant="body1">michirakara 様</Typography>
@@ -256,7 +203,7 @@ const Note: FC = () => {
                   </li>
                   <li>
                     <Typography variant="body1">
-                      アイテム数量をご報告くださった皆様
+                      {t('special_thanks.1')}
                     </Typography>
                   </li>
                 </ul>
