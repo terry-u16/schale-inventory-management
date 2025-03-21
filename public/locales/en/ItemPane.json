@@ -1,0 +1,7 @@
+{
+  "card_header_title": "Supply",
+  "height": "Height",
+  "width": "Width",
+  "amount": "Amount",
+  "add_button_tooltip": ["Place supply", "Add", "(Vertical)", "(Horizontal)"]
+}

@@ -1,0 +1,19 @@
+{
+  "predefined_choice_label": "備品プリセット",
+  "predefined_choice_select": [
+    "1周目",
+    "2周目",
+    "3周目",
+    "4周目",
+    "5周目",
+    "6周目",
+    "7周目以降"
+  ],
+  "item_preset_apply_button_tooltip": "備品プリセットを適用する",
+  "item_preset_apply_button": "適用",
+  "execute_button_tooltip": "各マスにおける備品の存在確率を計算する",
+  "execute_button": "実行",
+  "look_one_button_tooltip": "備品1の確率表示ON/OFFを切り替え",
+  "look_two_button_tooltip": "備品2の確率表示ON/OFFを切り替え",
+  "look_three_button_tooltip": "備品3の確率表示ON/OFFを切り替え"
+}

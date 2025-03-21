@@ -20,6 +20,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Box from '@mui/material/Box';
 import { type ItemAndPlacement } from './MainArea';
 import ShareButton from './ShareButton';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   itemAndPlacements: ItemAndPlacement[];
@@ -43,6 +44,8 @@ const ControlPane: FC<Props> = (props) => {
     onToggleShowProb,
     onItemPresetApply,
   } = props;
+  const { t } = useTranslation('ControlPane');
+
   const [predefinedChoice, setPredefinedChoice] = useState('0');
 
   const handlepredefinedChoiceChange = (event: SelectChangeEvent) => {
@@ -61,24 +64,26 @@ const ControlPane: FC<Props> = (props) => {
           gap={2}
         >
           <FormControl>
-            <InputLabel id="predefined-choice-label">備品プリセット</InputLabel>
+            <InputLabel id="predefined-choice-label">
+              {t('predefined_choice_label')}
+            </InputLabel>
             <Select
               labelId="predefined-choice-select"
               id="predefined-choice-select"
               value={predefinedChoice}
-              label="備品プリセット"
+              label={t('predefined_choice_label')}
               onChange={handlepredefinedChoiceChange}
             >
-              <MenuItem value={0}>1周目</MenuItem>
-              <MenuItem value={1}>2周目</MenuItem>
-              <MenuItem value={2}>3周目</MenuItem>
-              <MenuItem value={3}>4周目</MenuItem>
-              <MenuItem value={4}>5周目</MenuItem>
-              <MenuItem value={5}>6周目</MenuItem>
-              <MenuItem value={6}>7周目以降</MenuItem>
+              <MenuItem value={0}>{t('predefined_choice_select.0')}</MenuItem>
+              <MenuItem value={1}>{t('predefined_choice_select.1')}</MenuItem>
+              <MenuItem value={2}>{t('predefined_choice_select.2')}</MenuItem>
+              <MenuItem value={3}>{t('predefined_choice_select.3')}</MenuItem>
+              <MenuItem value={4}>{t('predefined_choice_select.4')}</MenuItem>
+              <MenuItem value={5}>{t('predefined_choice_select.5')}</MenuItem>
+              <MenuItem value={6}>{t('predefined_choice_select.6')}</MenuItem>
             </Select>
           </FormControl>
-          <Tooltip title="備品プリセットを適用する">
+          <Tooltip title={t('item_preset_apply_button_tooltip')}>
             <Button
               variant="outlined"
               startIcon={<GradingIcon />}
@@ -86,10 +91,10 @@ const ControlPane: FC<Props> = (props) => {
                 onItemPresetApply(parseInt(predefinedChoice));
               }}
             >
-              適用
+              {t('item_preset_apply_button')}
             </Button>
           </Tooltip>
-          <Tooltip title="各マスにおける備品の存在確率を計算する">
+          <Tooltip title={t('execute_button_tooltip')}>
             <LoadingButton
               onClick={onExecute}
               loading={isRunning}
@@ -97,11 +102,11 @@ const ControlPane: FC<Props> = (props) => {
               variant={runButtonStyle}
               size="large"
             >
-              <span>実行</span>
+              <span>{t('execute_button')}</span>
             </LoadingButton>
           </Tooltip>
           <ToggleButtonGroup color="primary">
-            <Tooltip title="備品1の確率表示ON/OFFを切り替え">
+            <Tooltip title={t('look_one_button_tooltip')}>
               <span>
                 <ToggleButton
                   value="one"
@@ -115,7 +120,7 @@ const ControlPane: FC<Props> = (props) => {
                 </ToggleButton>
               </span>
             </Tooltip>
-            <Tooltip title="備品2の確率表示ON/OFFを切り替え">
+            <Tooltip title={t('look_two_button_tooltip')}>
               <span>
                 <ToggleButton
                   value="two"
@@ -129,7 +134,7 @@ const ControlPane: FC<Props> = (props) => {
                 </ToggleButton>
               </span>
             </Tooltip>
-            <Tooltip title="備品3の確率表示ON/OFFを切り替え">
+            <Tooltip title={t('look_three_button_tooltip')}>
               <span>
                 <ToggleButton
                   value="three"

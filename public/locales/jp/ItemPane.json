@@ -1,0 +1,7 @@
+{
+  "card_header_title": "備品",
+  "height": "高さ",
+  "width": "幅",
+  "amount": "個数",
+  "add_button_tooltip": ["備品を配置する", "追加", "(縦)", "(横)"]
+}
