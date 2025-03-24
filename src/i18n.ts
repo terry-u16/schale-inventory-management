@@ -16,7 +16,7 @@ i18n
     // set to true if you want to see console.log
     debug: false,
     supportedLngs: ['jp', 'en'],
-    fallbackLng: ['jp'],
+    fallbackLng: 'jp',
     // default language if not found
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
