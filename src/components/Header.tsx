@@ -51,6 +51,7 @@ const Header: FC = () => {
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 gap: 1,
+                width: 'auto',
               }}
             >
               <LanguageIcon sx={{ fontSize: 24 }} />
