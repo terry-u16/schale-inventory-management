@@ -29,14 +29,14 @@
     "header": "Frequently Asked Questions",
     "1": [
       "An error says '備品が重なっています'!",
-      "Since supplies do not overlap in the game, overlapping configurations are restricted. The error message will indicate where the overlap occurs, so please adjust your input accordingly."
+      "Since supplies do not overlap in the game, overlapping configurations are not allowed. The error message will indicate where the overlap occurs, so please adjust your input accordingly."
     ],
     "2": [
       "An error says '条件を満たす配置が存在しません'!",
       "This means that no valid supply arrangement can be made without contradictions. Please check if your input is correct."
     ],
     "3": [
-      "An unclear error message appeared!",
+      "An unexpected error message appeared!",
       "It might be a bug. ",
       "Please contact the developer.",
       ""
@@ -57,10 +57,10 @@
     "7": [
       "Are the displayed probabilities always correct?",
       "Not necessarily. Since probabilities are estimated using random sampling, discrepancies may occur. The following assumptions are made during calculations:",
-      "Supply placements are randomly drawn from all possible configurations. (Depending on the game's internal mechanics, ",
+      "Supply placements are drawn uniformly at random from all possible configurations. (Depending on the game's internal mechanics, ",
       "some configurations may not have equal probability",
       ").",
-      "All configurations are valid without predefined patterns.",
+      "There are no predefined patterns, and all possible configurations are equally eligible to be selected.",
       "Supply placement is determined before the board is opened and does not change afterward.",
       "Apologies if there's a bug..."
     ],
