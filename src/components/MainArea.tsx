@@ -213,7 +213,6 @@ const MainArea: FC = () => {
 
     probCalcWorkerRef.current.onmessage = (e) => {
       const { probs, error } = e.data as { probs: number[][]; error: string };
-      console.log(probs, error);
 
       if (error !== '') {
         alert(error);
