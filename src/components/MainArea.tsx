@@ -93,6 +93,7 @@ const predefinedItems: ItemSet[][] = [
 
 const MainArea: FC = () => {
   const { t } = useTranslation('MainArea');
+  const { t: errorT } = useTranslation('Error');
 
   const [items, setItems] = useState(
     predefinedItems[0].map((itemSet) => new ItemAndPlacement(itemSet, [])),
@@ -215,7 +216,8 @@ const MainArea: FC = () => {
       const { probs, error } = e.data as { probs: number[][]; error: string };
 
       if (error !== '') {
-        alert(error);
+        const errors = error.split(' ');
+        alert(errorT(errors[0], { error: errors.slice(1) }));
         setProbs(null);
         setIsMaxProbs(null);
       } else {

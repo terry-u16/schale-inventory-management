@@ -28,11 +28,11 @@
   "faq": {
     "header": "Frequently Asked Questions",
     "1": [
-      "An error says '備品が重なっています'!",
+      "An error says 'The supply is overlapping'!",
       "Since supplies do not overlap in the game, overlapping configurations are not allowed. The error message will indicate where the overlap occurs, so please adjust your input accordingly."
     ],
     "2": [
-      "An error says '条件を満たす配置が存在しません'!",
+      "An error says 'No valid configuration exists.'!",
       "This means that no valid supply arrangement can be made without contradictions. Please check if your input is correct."
     ],
     "3": [
