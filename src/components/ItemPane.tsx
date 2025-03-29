@@ -15,6 +15,7 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
 import { usePlaceSelectHelper } from './PlaceSelectHelper';
 import PlacedItemPane from './PlacedItemPane';
+import { useTranslation } from 'react-i18next';
 
 export interface Item {
   width: number;
@@ -75,6 +76,9 @@ const ItemPane: FC<Props> = (props) => {
     onModifyPlacedItem,
     onRemovePlacedItem,
   } = props;
+
+  const { t } = useTranslation('ItemPane');
+
   const onWidthChange = (event: SelectChangeEvent) => {
     onModifyItem({
       item: {
@@ -123,18 +127,18 @@ const ItemPane: FC<Props> = (props) => {
             </Avatar>
           }
           title={
-            <Typography variant="h5">{`備品 ${itemSet.item.index}`}</Typography>
+            <Typography variant="h5">{`${t('card_header_title')} ${itemSet.item.index}`}</Typography>
           }
         />
         <CardContent>
           <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={2}>
             <FormControl fullWidth>
-              <InputLabel>高さ</InputLabel>
+              <InputLabel>{t('height')}</InputLabel>
               <Select
                 labelId="item-height"
                 id="item-height"
                 value={itemSet.item.height.toString()}
-                label="高さ"
+                label={t('height')}
                 onChange={onHeightChange}
               >
                 <MenuItem value={1}>1</MenuItem>
@@ -145,12 +149,12 @@ const ItemPane: FC<Props> = (props) => {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel>幅</InputLabel>
+              <InputLabel>{t('width')}</InputLabel>
               <Select
                 labelId="item-width"
                 id="item-width"
                 value={itemSet.item.width.toString()}
-                label="幅"
+                label={t('width')}
                 onChange={onWidthChange}
               >
                 <MenuItem value={1}>1</MenuItem>
@@ -161,12 +165,12 @@ const ItemPane: FC<Props> = (props) => {
             </FormControl>
 
             <FormControl fullWidth>
-              <InputLabel>個数</InputLabel>
+              <InputLabel>{t('amount')}</InputLabel>
               <Select
                 labelId="item-height"
                 id="item-height"
                 value={itemSet.count.toString()}
-                label="個数"
+                label={t('amount')}
                 onChange={onCountChange}
               >
                 <MenuItem value={0}>0</MenuItem>
@@ -195,7 +199,7 @@ const ItemPane: FC<Props> = (props) => {
               </Box>
             ))}
 
-            <Tooltip title="備品を配置する">
+            <Tooltip title={t('add_button_tooltip.0')}>
               <Box gridColumn="1 / 4" display="flex" gap={2}>
                 <Button
                   variant="contained"
@@ -218,11 +222,11 @@ const ItemPane: FC<Props> = (props) => {
                   }}
                   disabled={placedItems.length >= itemSet.count}
                 >
-                  追加
+                  {t('add_button_tooltip.1')}
                   {!isSquare(itemSet.item)
                     ? isVertical(itemSet.item)
-                      ? '(縦)'
-                      : '(横)'
+                      ? t('add_button_tooltip.2')
+                      : t('add_button_tooltip.3')
                     : ''}
                 </Button>
                 {!isSquare(itemSet.item) && (
@@ -247,11 +251,11 @@ const ItemPane: FC<Props> = (props) => {
                     }}
                     disabled={placedItems.length >= itemSet.count}
                   >
-                    追加
+                    {t('add_button_tooltip.1')}
                     {!isSquare(itemSet.item)
                       ? isVertical(itemSet.item)
-                        ? '(横)'
-                        : '(縦)'
+                        ? t('add_button_tooltip.3')
+                        : t('add_button_tooltip.2')
                       : ''}
                   </Button>
                 )}

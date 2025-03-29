@@ -1,0 +1,5 @@
+{
+  "no_valid_configuration": "No valid configuration exists.",
+  "overlap": "Supply {{error.0}}, instance {{error.1}}, and supply {{error.2}}, instance {{error.3}}, overlap at coordinates ({{error.4}}, {{error.5}}).\nPlease adjust the supply positions so that they do not overlap.",
+  "input_error": "An error occurred while loading the input."
+}

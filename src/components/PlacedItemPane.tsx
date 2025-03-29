@@ -12,6 +12,7 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import ToggleButton from '@mui/material/ToggleButton';
 import { type PlacedItem } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   placedItem: PlacedItem;
@@ -27,6 +28,8 @@ const generateSequence = (start: number, end: number) => {
 };
 
 const PlacedItemPane: FC<Props> = (props) => {
+  const { t } = useTranslation('PlacedItemPane');
+
   const { placedItem, onModifyPlacedItem, onRemovePlacedItem } = props;
 
   const onRowChange = (event: SelectChangeEvent) => {
@@ -42,12 +45,12 @@ const PlacedItemPane: FC<Props> = (props) => {
       <Paper>
         <Box p={2} display="grid" gridTemplateColumns="repeat(4, 1fr)" gap={2}>
           <FormControl fullWidth>
-            <InputLabel>行</InputLabel>
+            <InputLabel>{t('row')}</InputLabel>
             <Select
               labelId={`item-row-${placedItem.item.index}`}
               id={`item-row-${placedItem.item.index}`}
               value={placedItem.row.toString()}
-              label="行"
+              label={t('row')}
               onChange={onRowChange}
             >
               {generateSequence(1, 5 - getRotatedHeight(placedItem) + 1).map(
@@ -64,12 +67,12 @@ const PlacedItemPane: FC<Props> = (props) => {
           </FormControl>
 
           <FormControl fullWidth>
-            <InputLabel>列</InputLabel>
+            <InputLabel>{t('col')}</InputLabel>
             <Select
               labelId={`item-col-${placedItem.item.index}`}
               id={`item-col-${placedItem.item.index}`}
               value={placedItem.col.toString()}
-              label="列"
+              label={t('col')}
               onChange={onColChange}
             >
               {generateSequence(1, 9 - getRotatedWidth(placedItem) + 1).map(
@@ -85,7 +88,7 @@ const PlacedItemPane: FC<Props> = (props) => {
             </Select>
           </FormControl>
 
-          <Tooltip title="回転">
+          <Tooltip title={t('rotate_button_tooltip')}>
             <ToggleButton
               value="rotate"
               color="primary"
@@ -100,7 +103,7 @@ const PlacedItemPane: FC<Props> = (props) => {
             </ToggleButton>
           </Tooltip>
 
-          <Tooltip title="削除">
+          <Tooltip title={t('delete_button_tooltip')}>
             <Button
               value="delete"
               onClick={() => {

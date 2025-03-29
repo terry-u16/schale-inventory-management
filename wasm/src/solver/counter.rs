@@ -14,7 +14,7 @@ pub fn calc_probabilities_all(state: &GameState, sample_count: usize) -> Result<
     let mut rng = Pcg64Mcg::from_entropy();
     let (all_count, placements) = sample_placements(state, sample_count, &mut rng);
 
-    ensure!(all_count > 0, "条件を満たす配置が存在しません。");
+    ensure!(all_count > 0, "no_valid_configuration");
 
     let mut probabilities = vec![];
 

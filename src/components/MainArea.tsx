@@ -6,6 +6,7 @@ import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
 import { getRotatedHeight, getRotatedWidth } from './ItemPane';
 import Worker from './workers/ProbCalcWorker?worker';
+import { useTranslation } from 'react-i18next';
 
 export class ItemAndPlacement {
   item: ItemSet;
@@ -91,6 +92,9 @@ const predefinedItems: ItemSet[][] = [
 ] as const;
 
 const MainArea: FC = () => {
+  const { t } = useTranslation('MainArea');
+  const { t: errorT } = useTranslation('Error');
+
   const [items, setItems] = useState(
     predefinedItems[0].map((itemSet) => new ItemAndPlacement(itemSet, [])),
   );
@@ -212,7 +216,8 @@ const MainArea: FC = () => {
       const { probs, error } = e.data as { probs: number[][]; error: string };
 
       if (error !== '') {
-        alert(error);
+        const errors = error.split(' ');
+        alert(errorT(errors[0], { error: errors.slice(1) }));
         setProbs(null);
         setIsMaxProbs(null);
       } else {
@@ -291,7 +296,7 @@ const MainArea: FC = () => {
   };
 
   const onItemPresetApply = (preset: number) => {
-    if (!window.confirm('現在の入力内容はリセットされます。よろしいですか？')) {
+    if (!window.confirm(t('item_preset_apply_confirm'))) {
       return;
     }
 

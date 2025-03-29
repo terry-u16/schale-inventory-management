@@ -1,0 +1,89 @@
+{
+  "what_is_this": [
+    "What is this?",
+    "This is a tool to assist with the 'Inventory Management' content in the event 'SCHALE Settlement Task with General Student Council Calculator' from the mobile game '",
+    "Blue Archive",
+    "'.",
+    "It calculates the probability of each supply appearing in each cell."
+  ],
+  "how_to_use": {
+    "header": "How to Use",
+    "1": [
+      "1. Initial Setup",
+      "Select which round's data to load from 'Supply Preset' and press the 'Apply' button. This will load the supply height, width, and amount for that round.",
+      "If preset data does not exist, you can manually set the supply height, width, and amount."
+    ],
+    "2": [
+      "2. Initial Probability Calculation",
+      "Press the 'Execute' button in the center of the screen to calculate the probability of each supply appearing in each cell before any cells are opened. (Depending on the environment, this may take a few seconds.) The cell with the highest probability will be highlighted.",
+      "Pressing the '1', '2', or '3' buttons next to the 'Execute' button toggles the probability display for each supply. For example, if '1' and '2' are ON and '3' is OFF, the probability of drawing either supply 1 or supply 2 will be displayed. This is useful when prioritizing larger supplies over smaller ones."
+    ],
+    "3": [
+      "3. Board Updates and Recalculation",
+      "Click on a cell to toggle its open/closed state.",
+      "Press the 'Add' button at the bottom of the supply information section to register discovered supply locations. You can specify movement and rotation to match the in-game discovered supply positions. If you mistakenly add an supply, you can delete it using the trash can icon.",
+      "After updating the board, press the 'Execute' button again to recalculate probabilities. <b>It does not recalculate automatically</b>, so make sure to press the button every time a cell is opened to keep the probabilities accurate."
+    ]
+  },
+  "faq": {
+    "header": "Frequently Asked Questions",
+    "1": [
+      "An error says 'The supply is overlapping'!",
+      "Since supplies do not overlap in the game, overlapping configurations are not allowed. The error message will indicate where the overlap occurs, so please adjust your input accordingly."
+    ],
+    "2": [
+      "An error says 'No valid configuration exists.'!",
+      "This means that no valid supply arrangement can be made without contradictions. Please check if your input is correct."
+    ],
+    "3": [
+      "An unexpected error message appeared!",
+      "It might be a bug. ",
+      "Please contact the developer.",
+      ""
+    ],
+    "4": [
+      "I want to reset the board!",
+      "Reloading the supply preset or refreshing the page will reset the board. Be aware that reloading will erase your current work."
+    ],
+    "5": [
+      "Pressing the Execute button doesn’t show probabilities!",
+      "Depending on your device or browser, the probability calculations may take time. Also, some browsers may not support the feature (tested on Google Chrome). Ensure that at least one probability display button is ON."
+    ],
+    "6": [
+      "The probabilities change every time I press Execute!",
+      "To reduce computation time, only a subset of possible configurations is randomly sampled. As a result, the displayed probabilities may vary.",
+      "If the number of possible configurations is 100,000 or less, all configurations are calculated for precise probabilities."
+    ],
+    "7": [
+      "Are the displayed probabilities always correct?",
+      "Not necessarily. Since probabilities are estimated using random sampling, discrepancies may occur. The following assumptions are made during calculations:",
+      "Supply placements are drawn uniformly at random from all possible configurations. (Depending on the game's internal mechanics, ",
+      "some configurations may not have equal probability",
+      ").",
+      "There are no predefined patterns, and all possible configurations are equally eligible to be selected.",
+      "Supply placement is determined before the board is opened and does not change afterward.",
+      "Apologies if there's a bug..."
+    ],
+    "8": [
+      "Will opening the highest probability cell minimize calculator usage?",
+      "It is a reasonable strategy, but not necessarily the optimal one.",
+      "For those interested in a similar problem, a competitive programming contest on ",
+      " addressed this topic. ",
+      "",
+      " By the way, I won that contest."
+    ],
+    "9": ["Who is your favorite Blue Archive student?", "Mari Iochi."]
+  },
+  "about_developer": [
+    "About the Developer",
+    "This page was created by ",
+    "",
+    " The GitHub repository is ",
+    "here",
+    ". If you find calculation errors or have feature requests, please report them there."
+  ],
+  "special_thanks": [
+    "This project is supported by the contributions of the following people. Thank you!",
+    "Everyone who provided supply quantity data."
+  ]
+}
