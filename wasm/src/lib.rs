@@ -110,7 +110,7 @@ impl TryFrom<JsInput> for GameState {
                     let (item1, index1) = labels[j];
 
                     return Err(anyhow!(
-                        "2 {} {} {} {} {} {}",
+                        "overlap {} {} {} {} {} {}",
                         item0,
                         index0,
                         item1,
@@ -179,7 +179,7 @@ fn solve_inner(input: JsValue) -> anyhow::Result<Vec<Vec<f64>>> {
     let input = match serde_wasm_bindgen::from_value::<JsInput>(input) {
         Ok(input) => input,
         Err(_) => {
-            bail!("3")
+            bail!("input_error")
         }
     };
 
