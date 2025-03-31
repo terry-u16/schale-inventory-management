@@ -7,13 +7,13 @@
     "第4轮",
     "第5轮",
     "第6轮",
-    "第7轮及以后"
+    "第7轮及之后"
   ],
-  "item_preset_apply_button_tooltip": "应用物品预设",
-  "item_preset_apply_button": "应用",
-  "execute_button_tooltip": "计算每个格子上物品存在的概率",
-  "execute_button": "执行",
-  "look_one_button_tooltip": "切换物品1的概率显示开/关",
-  "look_two_button_tooltip": "切换物品2的概率显示开/关",
-  "look_three_button_tooltip": "切换物品3的概率显示开/关"
-} 
+  "item_preset_apply_button_tooltip": "适用所选周目物品预设",
+  "item_preset_apply_button": "适用",
+  "execute_button_tooltip": "计算标签下存在物品的概率",
+  "execute_button": "计算",
+  "look_one_button_tooltip": "打开/关闭查看翻出物品1的概率",
+  "look_two_button_tooltip": "打开/关闭查看翻出物品2的概率",
+  "look_three_button_tooltip": "打开/关闭查看翻出物品3的概率"
+}

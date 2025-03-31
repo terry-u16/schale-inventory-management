@@ -1,5 +1,5 @@
 {
-  "no_valid_configuration": "不存在有效配置。",
-  "overlap": "第{{error.1}}个物品{{error.0}}，与第{{error.3}}个物品{{error.2}}，在坐标({{error.4}}, {{error.5}})重叠。\n请调整物品位置，使它们不重叠。",
-  "input_error": "加载输入时发生错误。"
-} 
+  "no_valid_configuration": "与所选配置相符的结果不存在，请检查配置是否正确。",
+  "overlap": "物品{{error.0}}的第{{error.1}}项与物品{{error.2}}的第{{error.3}}项在坐标（{{error.4}}, {{error.5}}）处发生重叠。\n请调整物品位置，避免重叠。",
+  "input_error": "读取输入信息时发生了错误。请重新刷新页面。"
+}

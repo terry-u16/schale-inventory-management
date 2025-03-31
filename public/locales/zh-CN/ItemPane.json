@@ -3,5 +3,5 @@
   "height": "高度",
   "width": "宽度",
   "amount": "数量",
-  "add_button_tooltip": ["放置物品", "添加", "(纵向)", "(横向)"]
-} 
+  "add_button_tooltip": ["配置物品", "添加", "(横向)", "(纵向)"]
+}
