@@ -15,7 +15,7 @@ i18n
   .init({
     // set to true if you want to see console.log
     debug: false,
-    supportedLngs: ['jp', 'en'],
+    supportedLngs: ['jp', 'en', 'zh-CN'],
     fallbackLng: 'jp',
     // default language if not found
     interpolation: {

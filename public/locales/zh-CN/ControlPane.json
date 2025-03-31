@@ -1,0 +1,19 @@
+{
+  "predefined_choice_label": "物品预设",
+  "predefined_choice_select": [
+    "第1轮",
+    "第2轮",
+    "第3轮",
+    "第4轮",
+    "第5轮",
+    "第6轮",
+    "第7轮及以后"
+  ],
+  "item_preset_apply_button_tooltip": "应用物品预设",
+  "item_preset_apply_button": "应用",
+  "execute_button_tooltip": "计算每个格子上物品存在的概率",
+  "execute_button": "执行",
+  "look_one_button_tooltip": "切换物品1的概率显示开/关",
+  "look_two_button_tooltip": "切换物品2的概率显示开/关",
+  "look_three_button_tooltip": "切换物品3的概率显示开/关"
+} 

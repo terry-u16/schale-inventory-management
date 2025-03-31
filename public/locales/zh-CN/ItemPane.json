@@ -1,0 +1,7 @@
+{
+  "card_header_title": "物品",
+  "height": "高度",
+  "width": "宽度",
+  "amount": "数量",
+  "add_button_tooltip": ["放置物品", "添加", "(纵向)", "(横向)"]
+} 

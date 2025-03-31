@@ -63,6 +63,7 @@ const Header: FC = () => {
                 >
                   <MenuItem value="jp">日本語</MenuItem>
                   <MenuItem value="en">English</MenuItem>
+                  <MenuItem value="zh-CN">简体中文</MenuItem>
                 </Select>
               </FormControl>
             </Container>
