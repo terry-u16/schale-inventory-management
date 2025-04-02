@@ -190,20 +190,28 @@ const Note: FC = () => {
                 <Typography variant="body1">{t('special_thanks.0')}</Typography>
                 <ul>
                   <li>
-                    <Typography variant="body1">michirakara 様</Typography>
-                  </li>
-                  <li>
-                    <Typography variant="body1">mochiya98 様</Typography>
-                  </li>
-                  <li>
-                    <Typography variant="body1">saharan 様</Typography>
-                  </li>
-                  <li>
-                    <Typography variant="body1">wx257osn2 様</Typography>
+                    <Typography variant="body1">
+                      {t('special_thanks.1')}
+                    </Typography>
                   </li>
                   <li>
                     <Typography variant="body1">
-                      {t('special_thanks.1')}
+                      {t('special_thanks.2')}
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body1">
+                      {t('special_thanks.3')}
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body1">
+                      {t('special_thanks.4')}
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body1">
+                      {t('special_thanks.5')}
                     </Typography>
                   </li>
                 </ul>

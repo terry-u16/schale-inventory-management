@@ -1,3 +1,8 @@
 {
-  "typography": "SCHALE Settlement Task with General Student Council Calculator"
+  "typography": "SCHALE Settlement Task with General Student Council Calculator",
+  "lang": {
+    "jp": "日本語",
+    "en": "English",
+    "zhCN": "简体中文"
+  }
 }

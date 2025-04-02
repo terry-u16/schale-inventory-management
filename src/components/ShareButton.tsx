@@ -1,5 +1,6 @@
 import { type FC } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import ShareIcon from '@mui/icons-material/Share';
 import { type ItemAndPlacement } from './MainArea';
 
@@ -10,6 +11,7 @@ type Props = {
 
 const ShareButton: FC<Props> = (props) => {
   const { itemAndPlacements, openPanels } = props;
+  const { t } = useTranslation('Share');
 
   const allItemCount = itemAndPlacements
     .map((ip) => ip.item.count)
@@ -21,8 +23,8 @@ const ShareButton: FC<Props> = (props) => {
 
   const shareMessage =
     (allItemCount === foundItemCount
-      ? `「シャーレの総決算with連邦生徒会 在庫管理計算機」を使って、${openPanelCount}個のパネルを開いて${allItemCount}個全ての在庫を発見しました！`
-      : `「シャーレの総決算with連邦生徒会 在庫管理計算機」を使って、${openPanelCount}個のパネルを開いて${allItemCount}個中${foundItemCount}個の在庫を発見しました！`) +
+      ? t('find_all', { openPanelCount, allItemCount })
+      : t('find_some', { openPanelCount, allItemCount, foundItemCount })) +
     ' https://schale-inventory-management.terry-u16.net/';
   const tag = 'シャーレ在庫管理計算機';
   const link = `https://x.com/compose/post?hashtags=${tag}&text=${encodeURIComponent(shareMessage)}`;
@@ -33,7 +35,7 @@ const ShareButton: FC<Props> = (props) => {
 
   return (
     <>
-      <Tooltip title="Xで共有">
+      <Tooltip title={t('share_button')}>
         <IconButton aria-label="share-x" onClick={onClickShare}>
           <ShareIcon />
         </IconButton>

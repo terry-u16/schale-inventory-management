@@ -1,0 +1,6 @@
+{
+  "share_button": "Share with X",
+  "find_all": "I use 'SCHALE Settlement Task with General Student Council Calculator' and by opening {{openPanelCount}} cells, I find all {{allItemCount}} items!",
+  "find_some": "I use 'SCHALE Settlement Task with General Student Council Calculator' and by opening {{openPanelCount}} cells, I find {{foundItemCount}} out of  {{allItemCount}} items!",
+  "tag": "シャーレ在庫管理計算機"
+}

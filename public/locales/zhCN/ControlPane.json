@@ -1,0 +1,19 @@
+{
+  "predefined_choice_label": "道具预设",
+  "predefined_choice_select": [
+    "1 周目",
+    "2 周目",
+    "3 周目",
+    "4 周目",
+    "5 周目",
+    "6 周目",
+    "7 周目及以后"
+  ],
+  "item_preset_apply_button_tooltip": "应用道具预设",
+  "item_preset_apply_button": "应用",
+  "execute_button_tooltip": "计算每个格子出现道具的概率",
+  "execute_button": "运行",
+  "look_one_button_tooltip": "显示/隐藏道具1的概率",
+  "look_two_button_tooltip": "显示/隐藏道具1的概率",
+  "look_three_button_tooltip": "显示/隐藏道具1的概率"
+}

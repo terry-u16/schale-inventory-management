@@ -1,6 +1,7 @@
 import './App.css';
-import { type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { Box, ThemeProvider, createTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 import MainArea from './components/MainArea';
 import Note from './components/Note';
@@ -10,17 +11,43 @@ import OverlayProvider from './components/OverlayProvider';
 import PlaceSelectHelper from './components/PlaceSelectHelper';
 
 const App: FC = () => {
+  const [fontFamily, setFontFamily] = useState<string[]>([]);
+  const { i18n } = useTranslation();
+
   const theme = createTheme({
     typography: {
-      fontFamily: [
-        'Roboto',
-        '"Noto Sans JP"',
-        '"Helvetica"',
-        'Arial',
-        'sans-serif',
-      ].join(','),
+      fontFamily: fontFamily.join(','),
     },
   });
+
+  useEffect(() => {
+    switch (i18n.language) {
+      case 'jp': {
+        setFontFamily([
+          'Roboto',
+          '"Noto Sans JP"',
+          '"Helvetica"',
+          'Arial',
+          'sans-serif',
+        ]);
+        break;
+      }
+      case 'en': {
+        setFontFamily([
+          'Roboto',
+          '"Noto Sans JP"',
+          '"Helvetica"',
+          'Arial',
+          'sans-serif',
+        ]);
+        break;
+      }
+      case 'zhCN': {
+        setFontFamily(['Arial', 'Helvetica', 'sans-serif', '宋体']);
+        break;
+      }
+    }
+  }, [i18n.language]);
 
   return (
     <>
