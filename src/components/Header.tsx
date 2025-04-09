@@ -17,6 +17,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import TranslateIcon from '@mui/icons-material/Translate';
+import { supportedLngs } from '../i18n.ts';
 
 async function sleep(ms: number) {
   return await new Promise((resolve) => setTimeout(resolve, ms));
@@ -99,7 +100,7 @@ const Header: FC = () => {
             {Array.isArray(i18n.options.supportedLngs) && (
               <>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                  {i18n.options.supportedLngs.map((lang: string, idx) => (
+                  {supportedLngs.map((lang: string, idx) => (
                     <MenuItem
                       key={idx}
                       onClick={async (ev) => {
