@@ -214,6 +214,16 @@ const Note: FC = () => {
                       {t('special_thanks.5')}
                     </Typography>
                   </li>
+                  <li>
+                    <Typography variant="body1">
+                      {t('special_thanks.6')}
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body1">
+                      {t('special_thanks.7')}
+                    </Typography>
+                  </li>
                 </ul>
               </Stack>
             </Stack>
