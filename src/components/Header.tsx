@@ -1,19 +1,27 @@
-import { type FC } from 'react';
+import { type FC, useEffect, useState } from 'react';
+import { Check } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
   AppBar,
+  CircularProgress,
   Container,
-  FormControl,
+  ListItemIcon,
+  ListItemText,
+  Menu,
   MenuItem,
-  Select,
-  SelectChangeEvent,
   Stack,
   Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CalculateIcon from '@mui/icons-material/Calculate';
-import LanguageIcon from '@mui/icons-material/Language';
 import { useTranslation } from 'react-i18next';
+import CalculateIcon from '@mui/icons-material/Calculate';
+import TranslateIcon from '@mui/icons-material/Translate';
+import { supportedLngs } from '../i18n.ts';
+
+async function sleep(ms: number) {
+  return await new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const Header: FC = () => {
   const theme = createTheme({
@@ -26,10 +34,32 @@ const Header: FC = () => {
   });
 
   const { i18n, t } = useTranslation('Header');
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const open = Boolean(anchorEl);
 
-  const handleLanguageChange = (event: SelectChangeEvent) => {
-    i18n.changeLanguage(event.target.value);
+  const handleClickListItem = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = async (
+    _event: React.MouseEvent<HTMLElement>,
+    lang: string,
+  ) => {
+    setIsLoading(true);
+    setAnchorEl(null);
+    await sleep(500); //
+    await i18n.changeLanguage(lang);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    document.title = t('typography');
+  }, [i18n.language]);
 
   return (
     <>
@@ -54,18 +84,44 @@ const Header: FC = () => {
                 width: 'auto',
               }}
             >
-              <LanguageIcon sx={{ fontSize: 24 }} />
-              <FormControl size="small">
-                <Select
-                  value={i18n.language}
-                  onChange={handleLanguageChange}
-                  sx={{ backgroundColor: '#ffffff' }}
-                >
-                  <MenuItem value="jp">日本語</MenuItem>
-                  <MenuItem value="en">English</MenuItem>
-                </Select>
-              </FormControl>
+              <LoadingButton
+                loading={isLoading}
+                sx={{ color: 'white' }}
+                onClick={handleClickListItem}
+                loadingIndicator={
+                  <CircularProgress sx={{ color: 'white' }} size={24} />
+                }
+                startIcon={<TranslateIcon />}
+              >
+                {t(`lang.${i18n.language}`)}
+              </LoadingButton>
             </Container>
+
+            {Array.isArray(i18n.options.supportedLngs) && (
+              <>
+                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                  {supportedLngs.map((lang: string, idx) => (
+                    <MenuItem
+                      key={idx}
+                      onClick={async (ev) => {
+                        await handleMenuItemClick(ev, lang);
+                      }}
+                    >
+                      {lang === i18n.language ? (
+                        <>
+                          <ListItemIcon>
+                            <Check />
+                          </ListItemIcon>
+                          {t(`lang.${lang}`)}
+                        </>
+                      ) : (
+                        <ListItemText inset>{t(`lang.${lang}`)}</ListItemText>
+                      )}
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </>
+            )}
           </Stack>
         </AppBar>
       </ThemeProvider>

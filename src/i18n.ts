@@ -1,10 +1,11 @@
+import i18n from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
-import i18n from 'i18next';
-import Backend from 'i18next-http-backend';
-import LanguageDetector from 'i18next-browser-languagedetector';
+export const supportedLngs = ['jp', 'en', 'zhCN'];
 
-i18n
+void i18n
   // loads translations from your server
   .use(Backend)
   // load user prefered language
@@ -15,7 +16,7 @@ i18n
   .init({
     // set to true if you want to see console.log
     debug: false,
-    supportedLngs: ['jp', 'en'],
+    supportedLngs,
     fallbackLng: 'jp',
     // default language if not found
     interpolation: {

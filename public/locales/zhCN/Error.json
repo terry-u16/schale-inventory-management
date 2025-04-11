@@ -1,0 +1,5 @@
+{
+  "no_valid_configuration": "没有满足条件的布局。",
+  "overlap": "道具{{error.0}}的第{{error.1}}个和道具{{error.2}}的第{{error.3}}个在坐标位置({{error.4}}, {{error.5}})发生了重叠。\n请修正发生重叠的物品",
+  "input_error": "读取输入过程中出现错误。"
+}
