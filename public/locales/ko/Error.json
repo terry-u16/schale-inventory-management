@@ -1,0 +1,5 @@
+{
+  "no_valid_configuration": "유효한 설정값이 없습니다.",
+  "overlap": "재고 {{error.0}}의 {{error.1}}번째 물건과 재고 {{error.2}}의 {{error.3}}번째 물건이 좌표 ({{error.4}}, {{error.5}})에서 서로 겹칩니다.\n물건의 위치가 겹치지 않도록 수정해주세요.",
+  "input_error": "입력을 가져오는 데 오류가 발생했습니다."
+}

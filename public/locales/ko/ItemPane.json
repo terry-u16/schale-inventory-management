@@ -1,0 +1,12 @@
+{
+  "card_header_title": "물건",
+  "height": "높이",
+  "width": "너비",
+  "amount": "개수",
+  "add_button_tooltip": [
+    "물건 배치",
+    "배치",
+    "(수직)",
+    "(수평)"
+  ]
+}
