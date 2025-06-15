@@ -12,6 +12,41 @@
 
 https://schale-inventory-management.terry-u16.net/
 
+## ローカル実行方法
+
+### 実行環境
+
+以下の環境で動作確認しています。
+
+- Node.js v23.9.0
+- pnpm v10.11.0
+- Rust（Cargo 1.85.0）
+- wasm-pack 0.13.1
+
+### 実行方法
+
+事前にwasmのビルドが必要です。以下のコマンドを実行し、wasmをビルドしてください。
+
+Rustのコードを変更した際には再度ビルドが必要です。
+
+```sh
+cd ./wasm
+cargo install wasm-pack     # wasm-packが未インストールの場合のみ
+wasm-pack build --target web
+```
+
+また初回実行時は、プロジェクトのルートディレクトリで以下のコマンドを実行して依存パッケージをインストールしてください。
+
+```sh
+pnpm install
+```
+
+その後、プロジェクトルートで以下のコマンドを実行するとローカルでサーバが立ち上がります。
+
+```sh
+pnpm dev
+```
+
 ## 確率計算方法について
 
 ### 計算を行う上での仮定
