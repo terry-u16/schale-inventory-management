@@ -1,5 +1,5 @@
 {
-  "predefined_choice_label": "재고 프리셋",
+  "predefined_choice_label": "비품 프리셋",
   "predefined_choice_select": [
     "1회차",
     "2회차",
@@ -9,11 +9,11 @@
     "6회차",
     "7회차 이후"
   ],
-  "item_preset_apply_button_tooltip": "재고 프리셋 적용",
+  "item_preset_apply_button_tooltip": "비품 프리셋 적용",
   "item_preset_apply_button": "적용",
-  "execute_button_tooltip": "각 칸마다 물건이 있을 확률을 계산합니다.",
+  "execute_button_tooltip": "각 칸마다 비품이 있을 확률을 계산합니다.",
   "execute_button": "실행",
-  "look_one_button_tooltip": "물건 1의 확률 표시 여부를 ON/OFF 합니다.",
-  "look_two_button_tooltip": "물건 2의 확률 표시 여부를 ON/OFF 합니다.",
-  "look_three_button_tooltip": "물건 3의 확률 표시 여부를 ON/OFF 합니다."
+  "look_one_button_tooltip": "비품 1의 확률 표시 여부를 ON/OFF 합니다.",
+  "look_two_button_tooltip": "비품 2의 확률 표시 여부를 ON/OFF 합니다.",
+  "look_three_button_tooltip": "비품 3의 확률 표시 여부를 ON/OFF 합니다."
 }

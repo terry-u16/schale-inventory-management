@@ -1,6 +1,6 @@
 {
   "share_button": "X로 공유하기",
-  "find_all": "'샬레 총결산 with 총학생회 재고관리 계산기'를 사용하여 {{openPanelCount}}칸을 열고 {{allItemCount}}개의 모든 아이템을 찾았습니다!",
-  "find_some": "'샬레 총결산 with 총학생회 재고관리 계산기'를 사용하여 {{openPanelCount}}칸을 열고 {{allItemCount}}개 중 {{allItemCount}}개의 아이템을 찾았습니다!",
+  "find_all": "'샬레 총결산 with 총학생회 재고관리 계산기'를 사용하여 {{openPanelCount}}칸을 열고 {{allItemCount}}개의 모든 재고를 찾았습니다!",
+  "find_some": "'샬레 총결산 with 총학생회 재고관리 계산기'를 사용하여 {{openPanelCount}}칸을 열고 {{allItemCount}}개 중 {{foundItemCount}}개의 재고를 찾았습니다!",
   "tag": "シャーレ在庫管理計算機"
 }
