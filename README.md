@@ -1,5 +1,7 @@
 # シャーレの総決算with連邦生徒会 在庫管理計算機
 
+※ English version is available [below](#overview).
+
 ## 概要
 
 スマートフォン向けゲームアプリ「ブルーアーカイブ」におけるイベント「シャーレの総決算with連邦生徒会」のコンテンツ「在庫管理」を補助するためのツールです。
@@ -66,5 +68,76 @@ pnpm dev
 処理の詳細は `/wasm/src/solver/counter.rs` をご参照ください。
 
 ## ライセンス
+
+MIT License
+
+---
+
+## Overview
+
+This tool assists with the "Settlement Task with General Student Council" content in the event "SCHALE Settlement Task with General Student Council" of the mobile game "Blue Archive".
+
+It calculates the probability of each item being present in each cell.
+
+## Website
+
+Available at:
+
+https://schale-inventory-management.terry-u16.net/
+
+## How to Run Locally
+
+### Environment
+
+Tested with the following environment:
+
+- Node.js v23.9.0
+- pnpm v10.11.0
+- Rust (Cargo 1.85.0)
+- wasm-pack 0.13.1
+
+### Usage
+
+You need to build the wasm module first. Run the following commands:
+
+If you modify the Rust code, rebuild is required.
+
+```sh
+cd ./wasm
+cargo install wasm-pack     # Only if wasm-pack is not installed
+wasm-pack build --target web
+```
+
+For the first run, install dependencies in the project root:
+
+```sh
+pnpm install
+```
+
+Then, start the local server from the project root:
+
+```sh
+pnpm dev
+```
+
+## About the Probability Calculation
+
+### Assumptions
+
+The probability calculation is based on the following assumptions:
+
+- Item placement is uniformly random among all possible configurations
+- There are no unselectable or patterned placements
+- All item placements are determined before any cell is opened and do not change afterwards
+
+### Calculation Method
+
+The number of placement patterns is calculated using dynamic programming (DP). Define `dp(c, r, i0, i1, i2, w0, w1, w2, w3, w4)` as the number of ways to fill up to cell (r, c), having placed i0, i1, i2 of items 0, 1, 2, and with rows 0-4 filled for w0-w4 cells ahead, and fill the DP table in ascending order.
+
+If the total number of possible patterns is 100,000 or less, all patterns are enumerated. If it exceeds that, random sampling is performed to estimate the probability of each item in each cell. When sampling, the DP table is used to efficiently backtrack in proportion to the number of patterns.
+
+For details, see `/wasm/src/solver/counter.rs`.
+
+## License
 
 MIT License
