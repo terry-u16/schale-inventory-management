@@ -72,7 +72,10 @@
       "",
       " By the way, I won that contest."
     ],
-    "9": ["Who is your favorite Blue Archive student?", "Mari Iochi."]
+    "9": [
+      "Who is your favorite Blue Archive student?",
+      "Mari Iochi."
+    ]
   },
   "about_developer": [
     "About the Developer",
@@ -90,6 +93,7 @@
     "wx257osn2",
     "puttimeth",
     "zeka_laz",
+    "Bellevue",
     "All the Senseis who reported supply quantity data"
   ]
 }
