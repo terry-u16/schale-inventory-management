@@ -3,7 +3,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
-export const supportedLngs = ['jp', 'en', 'zhCN', 'ko'];
+export const supportedLngs = ['jp', 'en', 'zh-CN', 'ko'];
 
 void i18n
   // loads translations from your server

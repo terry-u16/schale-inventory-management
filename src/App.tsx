@@ -42,7 +42,7 @@ const App: FC = () => {
         ]);
         break;
       }
-      case 'zhCN': {
+      case 'zh-CN': {
         setFontFamily(['Arial', 'Helvetica', 'sans-serif', '宋体']);
         break;
       }
