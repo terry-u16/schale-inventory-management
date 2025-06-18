@@ -22,7 +22,7 @@ const App: FC = () => {
 
   useEffect(() => {
     switch (i18n.language) {
-      case 'jp': {
+      case 'ja': {
         setFontFamily([
           'Roboto',
           '"Noto Sans JP"',
