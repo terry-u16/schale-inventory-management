@@ -3,7 +3,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
 
-export const supportedLngs = ['jp', 'en', 'zh-CN', 'ko'];
+export const supportedLngs = ['ja', 'en', 'zh-CN', 'ko'];
 
 void i18n
   // loads translations from your server
@@ -17,7 +17,7 @@ void i18n
     // set to true if you want to see console.log
     debug: false,
     supportedLngs,
-    fallbackLng: 'jp',
+    fallbackLng: 'ja',
     // default language if not found
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
