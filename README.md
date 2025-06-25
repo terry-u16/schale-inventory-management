@@ -34,7 +34,7 @@ Rustのコードを変更した際には再度ビルドが必要です。
 ```sh
 cd ./wasm
 cargo install wasm-pack     # wasm-packが未インストールの場合のみ
-wasm-pack build --target web
+wasm-pack build --target web --out-dir ../public/wasm
 ```
 
 また初回実行時は、プロジェクトのルートディレクトリで以下のコマンドを実行して依存パッケージをインストールしてください。
@@ -105,7 +105,7 @@ If you modify the Rust code, rebuild is required.
 ```sh
 cd ./wasm
 cargo install wasm-pack     # Only if wasm-pack is not installed
-wasm-pack build --target web
+wasm-pack build --target web --out-dir ../public/wasm
 ```
 
 For the first run, install dependencies in the project root:
