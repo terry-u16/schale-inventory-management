@@ -361,6 +361,20 @@ const MainArea: FC = () => {
     setWorkerResetCnt((prev) => prev + 1);
   };
 
+  const onResetMap = () => {
+    if (!window.confirm(t('reset_confirm'))) {
+      return;
+    }
+
+    setItems(items.map((item) => new ItemAndPlacement(item.item, [])));
+    setProbs(null);
+    setIsMaxProbs(null);
+    setOpenMap(Array(45).fill(false));
+    setOpUuid(crypto.randomUUID());
+    setIsRunning(false);
+    setWorkerResetCnt((prev) => prev + 1);
+  };
+
   return (
     <Box mb={2}>
       <Box my={2}>
@@ -383,6 +397,7 @@ const MainArea: FC = () => {
           onExecute={onExecute}
           onToggleShowProb={onToggleShowProb}
           onItemPresetApply={onItemPresetApply}
+          onResetMap={onResetMap}
         ></ControlPane>
       </Box>
       <Grid container spacing={2}>

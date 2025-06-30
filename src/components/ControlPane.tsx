@@ -12,6 +12,7 @@ import {
   Tooltip,
   Button,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import GradingIcon from '@mui/icons-material/Grading';
 import Looks3Icon from '@mui/icons-material/Looks3';
 import LooksOneIcon from '@mui/icons-material/LooksOne';
@@ -20,7 +21,6 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Box from '@mui/material/Box';
 import { type ItemAndPlacement } from './MainArea';
 import ShareButton from './ShareButton';
-import { useTranslation } from 'react-i18next';
 
 type Props = {
   itemAndPlacements: ItemAndPlacement[];
@@ -31,6 +31,7 @@ type Props = {
   onExecute: () => void;
   onToggleShowProb: (index: number) => void;
   onItemPresetApply: (preset: number) => void;
+  onResetMap: () => void;
 };
 
 const ControlPane: FC<Props> = (props) => {
@@ -43,6 +44,7 @@ const ControlPane: FC<Props> = (props) => {
     onExecute,
     onToggleShowProb,
     onItemPresetApply,
+    onResetMap,
   } = props;
   const { t } = useTranslation('ControlPane');
 
@@ -60,7 +62,7 @@ const ControlPane: FC<Props> = (props) => {
         <Box
           p={2}
           display="grid"
-          gridTemplateColumns="1fr 1fr 2.5fr 0.5fr 56px"
+          gridTemplateColumns="1fr 1fr 0.5fr 2.5fr 0.5fr 56px"
           gap={2}
         >
           <FormControl>
@@ -94,6 +96,9 @@ const ControlPane: FC<Props> = (props) => {
               {t('item_preset_apply_button')}
             </Button>
           </Tooltip>
+          <Button variant="outlined" onClick={onResetMap}>
+            RESET
+          </Button>
           <Tooltip title={t('execute_button_tooltip')}>
             <LoadingButton
               onClick={onExecute}
