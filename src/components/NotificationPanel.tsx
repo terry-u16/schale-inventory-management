@@ -9,7 +9,7 @@ const NotificationPanel: FC = () => {
     <>
       <Paper>
         <Box p={2} textAlign="start">
-          <Alert severity="warning">
+          <Alert severity="success">
             {t('alert.0')}
             <a
               href="https://github.com/terry-u16/schale-inventory-management/issues"
