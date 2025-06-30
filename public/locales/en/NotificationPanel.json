@@ -1,7 +1,7 @@
 {
   "alert": [
-    "We are currently working on the Hyakka Ryouran event starting on 2025/6/25. The update for the item types and quantities up to lap 6 has been completed to the latest version, but since the item quantities from lap 7 onward are unknown, provisional values have been set. If you know the item quantities from lap 7 onward, please report via ",
+    "We have completed the updates for the Hyakka Ryouran event that began on 2025/6/25. If you find anything, please let us know through a ",
     "github issue. ",
-    "We would greatly appreciate your help in improving the data accuracy."
+    "We would greatly appreciate it."
   ]
 }

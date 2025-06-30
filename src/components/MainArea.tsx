@@ -96,10 +96,9 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...sunscreen, index: 3 }, count: 3 },
   ],
   [
-    // 7週目以降の数量は仮
-    { item: { ...surfboard, index: 1 }, count: 1 },
-    { item: { ...smartphoneCase, index: 2 }, count: 1 },
-    { item: { ...sunscreen, index: 3 }, count: 1 },
+    { item: { ...surfboard, index: 1 }, count: 2 },
+    { item: { ...smartphoneCase, index: 2 }, count: 3 },
+    { item: { ...sunscreen, index: 3 }, count: 6 },
   ],
 ] as const;
 
