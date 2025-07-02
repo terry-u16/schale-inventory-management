@@ -111,6 +111,11 @@ export function useLocalStorage<S>(
   initValue: S,
 ): [S, (setStateAction: S | ((prevState: S) => S)) => void] {
   const [value, setValue] = useState<S>(() => {
+    // ブラウザ環境チェック
+    if (typeof window === 'undefined') {
+      return initValue;
+    }
+
     const savedValue = localStorage.getItem(key);
     try {
       return savedValue !== null ? (JSON.parse(savedValue) as S) : initValue;
@@ -126,7 +131,10 @@ export function useLocalStorage<S>(
           ? setStateAction(value)
           : setStateAction;
 
-      localStorage.setItem(key, JSON.stringify(newValue));
+      // ブラウザ環境チェック
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      }
       setValue(() => newValue);
     },
     [key, value],
