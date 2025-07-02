@@ -1,3 +1,4 @@
 {
-  "item_preset_apply_confirm": "현재 재고가 재설정됩니다. 적용하시겠습니까?"
+  "item_preset_apply_confirm": "현재 재고가 재설정됩니다. 적용하시겠습니까?",
+  "reset_confirm": "현재 재고가 재설정됩니다. 적용하시겠습니까?"
 }

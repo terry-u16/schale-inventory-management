@@ -1,4 +1,4 @@
-import { type FC, useState, useRef, useEffect } from 'react';
+import { type FC, useState, useRef, useEffect, useCallback } from 'react';
 import { Box } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/material/Grid';
@@ -102,18 +102,62 @@ const predefinedItems: ItemSet[][] = [
   ],
 ] as const;
 
+/**
+ * ローカルストレージに保存された値を取得・更新する
+ */
+export function useLocalStorage<S>(
+  key: string,
+  initValue: S,
+): [S, (setStateAction: S | ((prevState: S) => S)) => void] {
+  const [value, setValue] = useState<S>(() => {
+    // ブラウザ環境チェック
+    if (typeof window === 'undefined') {
+      return initValue;
+    }
+
+    const savedValue = localStorage.getItem(key);
+    try {
+      return savedValue !== null ? (JSON.parse(savedValue) as S) : initValue;
+    } catch (e) {
+      return initValue;
+    }
+  });
+
+  const setLocalStorageValue = useCallback(
+    (setStateAction: S | ((prevState: S) => S)) => {
+      const newValue =
+        setStateAction instanceof Function
+          ? setStateAction(value)
+          : setStateAction;
+
+      // ブラウザ環境チェック
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(key, JSON.stringify(newValue));
+      }
+      setValue(() => newValue);
+    },
+    [key, value],
+  );
+
+  return [value, setLocalStorageValue] as const;
+}
+
 const MainArea: FC = () => {
   const { t } = useTranslation('MainArea');
   const { t: errorT } = useTranslation('Error');
 
-  const [items, setItems] = useState(
+  const [items, setItems] = useLocalStorage(
+    'items',
     predefinedItems[0].map((itemSet) => new ItemAndPlacement(itemSet, [])),
   );
   const [probs, setProbs] = useState<number[][] | null>(null);
   const [isMaxProbs, setIsMaxProbs] = useState<boolean[][] | null>(null);
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
-  const [openMap, setOpenMap] = useState(Array(45).fill(false) as boolean[]);
+  const [openMap, setOpenMap] = useLocalStorage(
+    'openMap',
+    Array(45).fill(false) as boolean[],
+  );
   const [workerResetCnt, setWorkerResetCnt] = useState(0);
 
   // runUuid: 確率計算実行時に発行されたUUID
@@ -324,6 +368,20 @@ const MainArea: FC = () => {
     setWorkerResetCnt((prev) => prev + 1);
   };
 
+  const onResetMap = () => {
+    if (!window.confirm(t('reset_confirm'))) {
+      return;
+    }
+
+    setItems(items.map((item) => new ItemAndPlacement(item.item, [])));
+    setProbs(null);
+    setIsMaxProbs(null);
+    setOpenMap(Array(45).fill(false));
+    setOpUuid(crypto.randomUUID());
+    setIsRunning(false);
+    setWorkerResetCnt((prev) => prev + 1);
+  };
+
   return (
     <Box mb={2}>
       <Box my={2}>
@@ -346,6 +404,7 @@ const MainArea: FC = () => {
           onExecute={onExecute}
           onToggleShowProb={onToggleShowProb}
           onItemPresetApply={onItemPresetApply}
+          onResetMap={onResetMap}
         ></ControlPane>
       </Box>
       <Grid container spacing={2}>
