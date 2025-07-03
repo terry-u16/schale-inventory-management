@@ -115,10 +115,12 @@ export function useLocalStorage<S>(
       return initValue;
     }
 
-    const savedValue = localStorage.getItem(key);
     try {
+      const savedValue = localStorage.getItem(key);
+
       return savedValue !== null ? (JSON.parse(savedValue) as S) : initValue;
     } catch (e) {
+      // 読み取りに失敗したので初期値を返す
       return initValue;
     }
   });
@@ -132,7 +134,11 @@ export function useLocalStorage<S>(
 
       // ブラウザ環境チェック
       if (typeof window !== 'undefined') {
-        localStorage.setItem(key, JSON.stringify(newValue));
+        try {
+          localStorage.setItem(key, JSON.stringify(newValue));
+        } catch (e) {
+          // 保存失敗時は無視する
+        }
       }
       setValue(() => newValue);
     },
