@@ -1,7 +1,7 @@
 {
   "alert": [
-    "We have completed the updates for the Hyakka Ryouran event that began on 2025/6/25. If you find anything, please let us know through a ",
-    "github issue. ",
-    "We would greatly appreciate it."
+    "We are currently working on support for the Settlement event starting on 2025/10/15. Item types and quantities up to the first lap have been updated to the latest version, but the quantities beyond the first lap are unknown, so we have set placeholder values. If you know the item counts for the second lap or later, please let us know through a ",
+    "github issue",
+    ". We would greatly appreciate it."
   ]
 }
