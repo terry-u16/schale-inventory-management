@@ -81,8 +81,10 @@ const ControlPane: FC<Props> = (props) => {
               <MenuItem value={2}>{t('predefined_choice_select.2')}</MenuItem>
               <MenuItem value={3}>{t('predefined_choice_select.3')}</MenuItem>
               <MenuItem value={4}>{t('predefined_choice_select.4')}</MenuItem>
+              {/*
               <MenuItem value={5}>{t('predefined_choice_select.5')}</MenuItem>
               <MenuItem value={6}>{t('predefined_choice_select.6')}</MenuItem>
+              */}
             </Select>
           </FormControl>
           <Tooltip title={t('item_preset_apply_button_tooltip')}>
