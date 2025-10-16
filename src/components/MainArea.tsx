@@ -71,8 +71,8 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...toyBox, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 6 },
-    { item: { ...receipt, index: 2 }, count: 2 },
+    { item: { ...fountainPen, index: 1 }, count: 7 },
+    { item: { ...receipt, index: 2 }, count: 3 },
     { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
@@ -81,8 +81,8 @@ const predefinedItems: ItemSet[][] = [
     { item: { ...toyBox, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 6 },
-    { item: { ...receipt, index: 2 }, count: 2 },
+    { item: { ...fountainPen, index: 1 }, count: 7 },
+    { item: { ...receipt, index: 2 }, count: 3 },
     { item: { ...ambrella, index: 3 }, count: 2 },
   ],
   [
