@@ -1,7 +1,7 @@
 {
   "alert": [
-    "We are currently working on support for the Settlement event starting on 2025/10/15. Item types and quantities up to the 4th lap have been updated to the latest version, but the quantities beyond the 4th lap are unknown, so we have set placeholder values. If you know the item counts for the 5th lap or later, please let us know through a ",
-    "github issue",
-    ". We would greatly appreciate it."
+    "We have completed the updates for the event that began on 2025/10/15. If you find anything, please let us know through a ",
+    "github issue. ",
+    "We would greatly appreciate it."
   ]
 }
