@@ -184,22 +184,6 @@ const ItemPane: FC<Props> = (props) => {
               </Select>
             </FormControl>
 
-            <Box gridColumn="1 / 4">
-              <Divider />
-            </Box>
-
-            {placedItems.map((item: PlacedItem, index: number) => (
-              <Box gridColumn="1 / 4" key={`box-${item.id}-${index}`}>
-                <PlacedItemPane
-                  key={item.id}
-                  placedItem={item}
-                  index={index}
-                  onModifyPlacedItem={onModifyPlacedItem}
-                  onRemovePlacedItem={onRemovePlacedItem}
-                />
-              </Box>
-            ))}
-
             <Tooltip title={t('add_button_tooltip.0')}>
               <Box gridColumn="1 / 4" display="flex" gap={2}>
                 <Button
@@ -262,6 +246,22 @@ const ItemPane: FC<Props> = (props) => {
                 )}
               </Box>
             </Tooltip>
+
+            <Box gridColumn="1 / 4">
+              <Divider />
+            </Box>
+
+            {placedItems.map((item: PlacedItem, index: number) => (
+              <Box gridColumn="1 / 4" key={`box-${item.id}-${index}`}>
+                <PlacedItemPane
+                  key={item.id}
+                  placedItem={item}
+                  index={index}
+                  onModifyPlacedItem={onModifyPlacedItem}
+                  onRemovePlacedItem={onRemovePlacedItem}
+                />
+              </Box>
+            ))}
           </Box>
         </CardContent>
       </Card>
