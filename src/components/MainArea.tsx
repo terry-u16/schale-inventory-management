@@ -1,5 +1,5 @@
 import { type FC, useState, useRef, useEffect, useCallback } from 'react';
-import { Box } from '@mui/material';
+import { Alert, Box, Snackbar } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/material/Grid';
 import Board from './Board';
@@ -151,6 +151,7 @@ export function useLocalStorage<S>(
 const MainArea: FC = () => {
   const { t } = useTranslation('MainArea');
   const { t: errorT } = useTranslation('Error');
+  const { t: controlPaneT } = useTranslation('ControlPane');
 
   const [items, setItems] = useLocalStorage(
     'items',
@@ -160,6 +161,9 @@ const MainArea: FC = () => {
   const [isMaxProbs, setIsMaxProbs] = useState<boolean[][] | null>(null);
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
+  const [presetAppliedToast, setPresetAppliedToast] = useState<string | null>(
+    null,
+  );
   const [openMap, setOpenMap] = useLocalStorage(
     'openMap',
     Array(45).fill(false) as boolean[],
@@ -368,6 +372,8 @@ const MainArea: FC = () => {
     setOpUuid(crypto.randomUUID());
     setIsRunning(false);
     setWorkerResetCnt((prev) => prev + 1);
+    const presetLabel = controlPaneT(`predefined_choice_select.${preset}`);
+    setPresetAppliedToast(t('item_preset_applied_toast', { presetLabel }));
   };
 
   const onResetMap = () => {
@@ -424,6 +430,24 @@ const MainArea: FC = () => {
           </Grid>
         ))}
       </Grid>
+      <Snackbar
+        open={presetAppliedToast !== null}
+        autoHideDuration={2000}
+        onClose={() => {
+          setPresetAppliedToast(null);
+        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          severity="success"
+          variant="filled"
+          onClose={() => {
+            setPresetAppliedToast(null);
+          }}
+        >
+          {presetAppliedToast}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
