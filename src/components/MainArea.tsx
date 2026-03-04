@@ -357,10 +357,6 @@ const MainArea: FC = () => {
   };
 
   const onItemPresetApply = (preset: number) => {
-    if (!window.confirm(t('item_preset_apply_confirm'))) {
-      return;
-    }
-
     setItems(
       predefinedItems[preset].map(
         (itemSet) => new ItemAndPlacement(itemSet, []),
