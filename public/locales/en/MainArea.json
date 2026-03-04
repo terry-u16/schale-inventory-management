@@ -1,4 +1,4 @@
 {
   "reset_confirm": "Your current input will be reset. Are you sure?",
-  "item_preset_applied_toast": "Applied item preset for {{presetLabel}}"
+  "item_preset_applied_toast": "Applied supply preset for {{presetLabel}}"
 }

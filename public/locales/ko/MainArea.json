@@ -1,4 +1,4 @@
 {
   "reset_confirm": "현재 재고가 재설정됩니다. 적용하시겠습니까?",
-  "item_preset_applied_toast": "{{presetLabel}} 아이템 프리셋을 적용했습니다"
+  "item_preset_applied_toast": "{{presetLabel}} 비품 프리셋을 적용했습니다"
 }
