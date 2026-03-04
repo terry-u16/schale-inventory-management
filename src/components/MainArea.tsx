@@ -34,6 +34,7 @@ const ambrella = { width: 1, height: 4 } as const;
 */
 
 // 五塵来降のアイテム
+/*
 const longxutang = { width: 3, height: 2 } as const; // 龍のひげ飴
 const ludagun = { width: 3, height: 1 } as const; // ローダーグン
 const yuebing = { width: 2, height: 1 } as const; // 月餅
@@ -41,9 +42,9 @@ const mahua = { width: 4, height: 2 } as const; // 麻花
 const xingrenDoufu = { width: 2, height: 2 } as const; // 杏仁豆腐
 const banji = { width: 3, height: 3 } as const; // 班戟（パンケーキ）
 const tanghulu = { width: 1, height: 4 } as const; // 糖葫蘆
+*/
 
 // 秘密のミッドナイトパーティーのアイテム
-/*
 const slippers = { width: 3, height: 2 } as const; // スリッパ
 const characterToothbrush = { width: 3, height: 1 } as const; // キャラもの歯ブラシ
 const purpleScarf = { width: 2, height: 1 } as const; // 紫のマフラー
@@ -51,7 +52,6 @@ const boardGame = { width: 4, height: 2 } as const; // ボードゲーム「KIVO
 const hairband = { width: 2, height: 2 } as const; // ヘアバンド
 const characterPillow = { width: 3, height: 3 } as const; // キャラものクッション
 const bodyPillow = { width: 1, height: 4 } as const; // 抱き枕
-*/
 
 // 百ヨリ出ズル一輪ノ 〜いざ尋常に、水上勝負〜 のアイテム
 /*
@@ -66,39 +66,39 @@ const bandana = { width: 2, height: 2 } as const; // バンダナ
 
 const predefinedItems: ItemSet[][] = [
   [
-    { item: { ...longxutang, index: 1 }, count: 1 },
-    { item: { ...ludagun, index: 2 }, count: 5 },
-    { item: { ...yuebing, index: 3 }, count: 2 },
+    { item: { ...slippers, index: 1 }, count: 2 },
+    { item: { ...characterToothbrush, index: 2 }, count: 5 },
+    { item: { ...purpleScarf, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...mahua, index: 1 }, count: 1 },
-    { item: { ...xingrenDoufu, index: 2 }, count: 2 },
-    { item: { ...ludagun, index: 3 }, count: 3 },
+    { item: { ...boardGame, index: 1 }, count: 1 },
+    { item: { ...bodyPillow, index: 2 }, count: 2 },
+    { item: { ...characterToothbrush, index: 3 }, count: 5 },
   ],
   [
-    { item: { ...banji, index: 1 }, count: 1 },
-    { item: { ...tanghulu, index: 2 }, count: 3 },
-    { item: { ...yuebing, index: 3 }, count: 2 },
+    { item: { ...characterPillow, index: 1 }, count: 1 },
+    { item: { ...hairband, index: 2 }, count: 4 },
+    { item: { ...purpleScarf, index: 3 }, count: 3 },
   ],
   [
-    { item: { ...longxutang, index: 1 }, count: 1 },
-    { item: { ...ludagun, index: 2 }, count: 5 },
-    { item: { ...yuebing, index: 3 }, count: 2 },
+    { item: { ...slippers, index: 1 }, count: 2 },
+    { item: { ...characterToothbrush, index: 2 }, count: 5 },
+    { item: { ...purpleScarf, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...mahua, index: 1 }, count: 1 },
-    { item: { ...xingrenDoufu, index: 2 }, count: 2 },
-    { item: { ...ludagun, index: 3 }, count: 3 },
+    { item: { ...boardGame, index: 1 }, count: 1 },
+    { item: { ...bodyPillow, index: 2 }, count: 2 },
+    { item: { ...characterToothbrush, index: 3 }, count: 5 },
   ],
   [
-    { item: { ...banji, index: 1 }, count: 1 },
-    { item: { ...tanghulu, index: 2 }, count: 3 },
-    { item: { ...yuebing, index: 3 }, count: 2 },
+    { item: { ...characterPillow, index: 1 }, count: 1 },
+    { item: { ...hairband, index: 2 }, count: 4 },
+    { item: { ...purpleScarf, index: 3 }, count: 3 },
   ],
   [
-    { item: { ...xingrenDoufu, index: 1 }, count: 2 },
-    { item: { ...ludagun, index: 2 }, count: 3 },
-    { item: { ...yuebing, index: 3 }, count: 6 },
+    { item: { ...boardGame, index: 1 }, count: 2 },
+    { item: { ...characterToothbrush, index: 2 }, count: 3 },
+    { item: { ...purpleScarf, index: 3 }, count: 6 },
   ],
 ] as const;
 
