@@ -443,15 +443,17 @@ const MainArea: FC = () => {
         }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert
-          severity="success"
-          variant="filled"
-          onClose={() => {
-            setPresetAppliedToast(null);
-          }}
-        >
-          {presetAppliedToast?.message}
-        </Alert>
+        {presetAppliedToast == null ? undefined : (
+          <Alert
+            severity="success"
+            variant="filled"
+            onClose={() => {
+              setPresetAppliedToast(null);
+            }}
+          >
+            {presetAppliedToast.message}
+          </Alert>
+        )}
       </Snackbar>
     </Box>
   );
