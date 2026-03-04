@@ -1,5 +1,4 @@
 {
-  "item_preset_apply_confirm": "現在の入力内容はリセットされます。よろしいですか？",
   "reset_confirm": "現在の入力内容はリセットされます。よろしいですか？",
   "item_preset_applied_toast": "{{presetLabel}}のアイテムプリセットを適用しました"
 }
