@@ -161,9 +161,10 @@ const MainArea: FC = () => {
   const [isMaxProbs, setIsMaxProbs] = useState<boolean[][] | null>(null);
   const [showProbs, setShowProbs] = useState([true, true, true]);
   const [isRunning, setIsRunning] = useState(false);
-  const [presetAppliedToast, setPresetAppliedToast] = useState<string | null>(
-    null,
-  );
+  const [presetAppliedToast, setPresetAppliedToast] = useState<{
+    id: string;
+    message: string;
+  } | null>(null);
   const [openMap, setOpenMap] = useLocalStorage(
     'openMap',
     Array(45).fill(false) as boolean[],
@@ -373,7 +374,10 @@ const MainArea: FC = () => {
     setIsRunning(false);
     setWorkerResetCnt((prev) => prev + 1);
     const presetLabel = controlPaneT(`predefined_choice_select.${preset}`);
-    setPresetAppliedToast(t('item_preset_applied_toast', { presetLabel }));
+    setPresetAppliedToast({
+      id: crypto.randomUUID(),
+      message: t('item_preset_applied_toast', { presetLabel }),
+    });
   };
 
   const onResetMap = () => {
@@ -431,6 +435,7 @@ const MainArea: FC = () => {
         ))}
       </Grid>
       <Snackbar
+        key={presetAppliedToast?.id}
         open={presetAppliedToast !== null}
         autoHideDuration={2000}
         onClose={() => {
@@ -445,7 +450,7 @@ const MainArea: FC = () => {
             setPresetAppliedToast(null);
           }}
         >
-          {presetAppliedToast}
+          {presetAppliedToast?.message}
         </Alert>
       </Snackbar>
     </Box>
