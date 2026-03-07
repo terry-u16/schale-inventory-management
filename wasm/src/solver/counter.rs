@@ -192,7 +192,14 @@ pub fn sample_placements(
                 [new_w[2]][new_w[3]][new_w[4]] += current_dp;
             from[new_col][new_row][new_cnts[0]][new_cnts[1]][new_cnts[2]][new_w[0]][new_w[1]]
                 [new_w[2]][new_w[3]][new_w[4]]
-                .push(History::new(row, col, cnts, w, Some((item_i, rotate))));
+                .push(History::new(
+                    row,
+                    col,
+                    cnts,
+                    w,
+                    Some((item_i, rotate)),
+                    current_dp,
+                ));
         };
 
         // 新たにアイテムを置く遷移
@@ -220,7 +227,7 @@ pub fn sample_placements(
             dp[col][row + 1][cnt0][cnt1][cnt2][new_w[0]][new_w[1]][new_w[2]][new_w[3]][new_w[4]] +=
                 current_dp;
             from[col][row + 1][cnt0][cnt1][cnt2][new_w[0]][new_w[1]][new_w[2]][new_w[3]][new_w[4]]
-                .push(History::new(row, col, cnts, w, None));
+                .push(History::new(row, col, cnts, w, None, current_dp));
         } else if col + 1 <= GameState::WIDTH {
             // 次の列に移動する
             let mut new_w = w.clone();
@@ -229,7 +236,7 @@ pub fn sample_placements(
             dp[col + 1][0][cnt0][cnt1][cnt2][new_w[0]][new_w[1]][new_w[2]][new_w[3]][new_w[4]] +=
                 current_dp;
             from[col + 1][0][cnt0][cnt1][cnt2][new_w[0]][new_w[1]][new_w[2]][new_w[3]][new_w[4]]
-                .push(History::new(row, col, cnts, w, None));
+                .push(History::new(row, col, cnts, w, None, current_dp));
         }
     }
 
@@ -362,12 +369,17 @@ fn restore_random(
         while row > 0 || col > 0 {
             // 場合の数に比例した確率で次の状態を選択
             let histories = &from[col][row][cnt[0]][cnt[1]][cnt[2]][w[0]][w[1]][w[2]][w[3]][w[4]];
-            let history = histories
-                .choose_weighted(rng, |h| {
-                    dp[h.col][h.row][h.cnt[0]][h.cnt[1]][h.cnt[2]][h.w[0]][h.w[1]][h.w[2]][h.w[3]]
-                        [h.w[4]]
-                })
-                .expect("Histories is empty.");
+            let total = dp[col][row][cnt[0]][cnt[1]][cnt[2]][w[0]][w[1]][w[2]][w[3]][w[4]];
+            let mut pick = rng.gen_range(0..total);
+            let mut history = &histories[0];
+
+            for h in histories.iter() {
+                if pick < h.weight {
+                    history = h;
+                    break;
+                }
+                pick -= h.weight;
+            }
 
             if let Some((item_i, rotate)) = history.item {
                 current_items.push(Placement::new(
@@ -413,6 +425,7 @@ struct History {
     cnt: [usize; 3],
     w: [usize; 5],
     item: Option<(usize, bool)>,
+    weight: u64,
 }
 
 impl History {
@@ -422,6 +435,7 @@ impl History {
         cnt: [usize; 3],
         w: [usize; 5],
         item: Option<(usize, bool)>,
+        weight: u64,
     ) -> Self {
         Self {
             row,
@@ -429,6 +443,7 @@ impl History {
             cnt,
             w,
             item,
+            weight,
         }
     }
 }
