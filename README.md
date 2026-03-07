@@ -61,7 +61,9 @@ pnpm dev
 
 ### 計算方法
 
-配置パターン数の計算にはDPを用いています。 `dp(c, r, i0, i1, i2, w0, w1, w2, w3, w4) := マス(r, c)まで見て、備品0, 1, 2をそれぞれi0, i1, i2個配置済みで、0, 1, 2, 3, 4行目がこの先それぞれw0, w1, w2, w3, w4マス先まで埋まっているときの場合の数` と定義して、昇順にDPテーブルを埋めることで計算を行っています。
+配置パターン数の計算にはDPを用いています。元の状態定義は `dp(c, r, i0, i1, i2, w0, w1, w2, w3, w4)` で、これは「マス(r, c)まで見て、備品0, 1, 2をそれぞれi0, i1, i2個配置済みで、0, 1, 2, 3, 4行目がこの先それぞれw0, w1, w2, w3, w4マス先まで埋まっているときの場合の数」を表します。
+
+実装では `GameState::MAX_ITEM_SIZE = 4` 固定（各 `wi` は0..=3）を利用し、`w0..w4` を 2bit x 5行 = 10bit の `w_bits` にエンコードして `dp(c, r, i0, i1, i2, w_bits)` として計算しています（`w_bits = (w0 << 0) | (w1 << 2) | (w2 << 4) | (w3 << 6) | (w4 << 8)`）。
 
 その後、起こりうる全パターンの数が100,000通り以下の場合は全パターンを復元し、それを超える場合はランダムサンプリングを行うことで、各マスに各備品が存在する確率を求めています。ランダムサンプリングを行う際は、上記のDPテーブルを使用して、パターン数に比例した確率でランダムにバックトラックを行うことで効率的なサンプリングを行っています。
 
@@ -132,7 +134,9 @@ The probability calculation is based on the following assumptions:
 
 ### Calculation Method
 
-The number of placement patterns is calculated using dynamic programming (DP). Define `dp(c, r, i0, i1, i2, w0, w1, w2, w3, w4)` as the number of ways to fill up to cell (r, c), having placed i0, i1, i2 of items 0, 1, 2, and with rows 0-4 filled for w0-w4 cells ahead, and fill the DP table in ascending order.
+The number of placement patterns is calculated with dynamic programming (DP). The original state definition is `dp(c, r, i0, i1, i2, w0, w1, w2, w3, w4)`, which means the number of ways when scanning up to cell (r, c), having already placed i0, i1, i2 of items 0, 1, 2, and with rows 0-4 already occupied for w0-w4 cells ahead.
+
+In the implementation, `GameState::MAX_ITEM_SIZE = 4` is fixed (so each `wi` is in 0..=3). Therefore, `w0..w4` are encoded into a 10-bit integer (`w_bits`, 2 bits per row), and the DP is computed as `dp(c, r, i0, i1, i2, w_bits)` (`w_bits = (w0 << 0) | (w1 << 2) | (w2 << 4) | (w3 << 6) | (w4 << 8)`).
 
 If the total number of possible patterns is 100,000 or less, all patterns are enumerated. If it exceeds that, random sampling is performed to estimate the probability of each item in each cell. When sampling, the DP table is used to efficiently backtrack in proportion to the number of patterns.
 
