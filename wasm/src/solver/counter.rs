@@ -54,7 +54,7 @@ fn fill_w_if_placeable(w_bits: WBits, row: usize, item: Item) -> Option<WBits> {
 }
 
 /// 3アイテムについて、各マスにアイテムが置かれる確率を計算する。
-pub fn calc_probabilities_all(state: &GameState, sample_count: usize) -> Result<Vec<Map2d<f64>>> {
+pub fn calc_probabilities_all(state: &GameState, sample_count: u64) -> Result<Vec<Map2d<f64>>> {
     let mut rng = Pcg64Mcg::from_entropy();
     let (all_count, sampled_count, sampled_item_counts) =
         sample_placements(state, sample_count, &mut rng);
@@ -75,7 +75,7 @@ pub fn calc_probabilities_all(state: &GameState, sample_count: usize) -> Result<
 pub fn calc_probabilities(
     state: &GameState,
     flag: u32,
-    sampled_count: usize,
+    sampled_count: u64,
     sampled_item_counts: &[Map2d<u64>],
 ) -> Map2d<f64> {
     let mut counts = Map2d::new_with(0u64, GameState::WIDTH, GameState::HEIGHT);
@@ -93,7 +93,7 @@ pub fn calc_probabilities(
 
         for row in r0..r1 {
             for col in c0..c1 {
-                counts[Coord::new(row, col)] += sampled_count as u64;
+                counts[Coord::new(row, col)] += sampled_count;
             }
         }
     }
@@ -187,9 +187,9 @@ impl TopLeftCounts {
 
 pub fn sample_placements(
     state: &GameState,
-    sample_count: usize,
+    sample_count: u64,
     rng: &mut impl Rng,
-) -> (u64, usize, Vec<Map2d<u64>>) {
+) -> (u64, u64, Vec<Map2d<u64>>) {
     // DPにより候補数を計算する。
     //
     // 元の定義は次の10次元状態:
@@ -315,14 +315,14 @@ pub fn sample_placements(
     let all_count = dp[GameState::WIDTH][0][state.remaining_items[0].count]
         [state.remaining_items[1].count][state.remaining_items[2].count][0];
 
-    let (sampled_count, top_left_counts) = if all_count <= sample_count as u64 {
+    let (sampled_count, top_left_counts) = if all_count <= sample_count {
         let mut top_left_counts = TopLeftCounts::new();
         let cnt = [
             state.remaining_items[0].count,
             state.remaining_items[1].count,
             state.remaining_items[2].count,
         ];
-        let sampled_count = restore_dfs(&from, 0, GameState::WIDTH, cnt, 0, &mut top_left_counts) as usize;
+        let sampled_count = restore_dfs(&from, 0, GameState::WIDTH, cnt, 0, &mut top_left_counts);
         (sampled_count, top_left_counts)
     } else {
         let top_left_counts = restore_random(state, &dp, &from, sample_count, rng);
@@ -378,7 +378,7 @@ fn restore_random(
     state: &GameState,
     dp: &DP,
     from: &From,
-    sample_count: usize,
+    sample_count: u64,
     rng: &mut impl Rng,
 )-> TopLeftCounts {
     let mut top_left_counts = TopLeftCounts::new();
