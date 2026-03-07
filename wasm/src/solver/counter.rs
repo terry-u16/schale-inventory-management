@@ -4,7 +4,6 @@ use crate::{
     problem::{GameState, Item},
 };
 use anyhow::{ensure, Result};
-use arrayvec::ArrayVec;
 use itertools::iproduct;
 use rand::prelude::*;
 use rand_pcg::Pcg64Mcg;
@@ -19,8 +18,6 @@ const W_BITS_PER_ROW: usize = 2;
 const W_MASK: WBits = (1 << W_BITS_PER_ROW) - 1;
 /// w_bits の全状態数。2bit x 5行 = 10bit なので 2^10 = 1024。
 const W_STATE_COUNT: usize = 1 << (GameState::HEIGHT * W_BITS_PER_ROW);
-/// 1状態あたりの逆遷移最大数。3種 * 回転有無2 + スキップ1。
-const MAX_FROM_ENTRIES: usize = 7;
 
 /// w_bits から row 行目の wi(0..=3) を取り出す。
 fn get_w(w_bits: WBits, row: usize) -> usize {
@@ -274,8 +271,7 @@ fn sample_top_left_counts(
         state.remaining_items[1].count + 1;
         state.remaining_items[2].count + 1
     ];
-    let from_cell: [ArrayVec<History, MAX_FROM_ENTRIES>; W_STATE_COUNT] =
-        array::from_fn(|_| ArrayVec::new());
+    let from_cell: [Vec<_>; W_STATE_COUNT] = array::from_fn(|_| Vec::new());
     let mut from = mat![from_cell;
         GameState::WIDTH + 1;
         GameState::HEIGHT + 1;
@@ -407,7 +403,7 @@ pub struct SamplePlacementsResult {
 
 type DP = Vec<Vec<Vec<Vec<Vec<[u64; W_STATE_COUNT]>>>>>;
 
-type From = Vec<Vec<Vec<Vec<Vec<[ArrayVec<History, MAX_FROM_ENTRIES>; W_STATE_COUNT]>>>>>;
+type From = Vec<Vec<Vec<Vec<Vec<[Vec<History>; W_STATE_COUNT]>>>>>;
 
 /// DFSで全ての解を復元する
 fn restore_dfs(
