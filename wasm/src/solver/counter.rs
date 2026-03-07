@@ -56,16 +56,15 @@ fn fill_w_if_placeable(w_bits: WBits, row: usize, item: Item) -> Option<WBits> {
 /// 3アイテムについて、各マスにアイテムが置かれる確率を計算する。
 pub fn calc_probabilities_all(state: &GameState, sample_count: u64) -> Result<Vec<Map2d<f64>>> {
     let mut rng = Pcg64Mcg::from_entropy();
-    let (all_count, sampled_count, sampled_item_counts) =
-        sample_placements(state, sample_count, &mut rng);
+    let sampled = sample_placements(state, sample_count, &mut rng);
 
-    ensure!(all_count > 0, "no_valid_configuration");
+    ensure!(sampled.all_count > 0, "no_valid_configuration");
 
     let mut probabilities = vec![];
 
     // 各アイテムについて、アイテムを置いた回数をカウントする
     for flag in 0..(1 << GameState::ITEM_GROUP_COUNT) {
-        let prob = calc_probabilities(state, flag, sampled_count, &sampled_item_counts);
+        let prob = calc_probabilities(state, flag, sampled.sampled_count, &sampled.sampled_item_counts);
         probabilities.push(prob);
     }
 
@@ -189,7 +188,7 @@ pub fn sample_placements(
     state: &GameState,
     sample_count: u64,
     rng: &mut impl Rng,
-) -> (u64, u64, Vec<Map2d<u64>>) {
+) -> SamplePlacementsResult {
     // DPにより候補数を計算する。
     //
     // 元の定義は次の10次元状態:
@@ -330,7 +329,17 @@ pub fn sample_placements(
     };
     let sampled_item_counts = top_left_counts.into_item_counts(state);
 
-    (all_count, sampled_count, sampled_item_counts)
+    SamplePlacementsResult {
+        all_count,
+        sampled_count,
+        sampled_item_counts,
+    }
+}
+
+pub struct SamplePlacementsResult {
+    pub all_count: u64,
+    pub sampled_count: u64,
+    pub sampled_item_counts: Vec<Map2d<u64>>,
 }
 
 type DP = Vec<Vec<Vec<Vec<Vec<[u64; W_STATE_COUNT]>>>>>;
@@ -517,7 +526,7 @@ mod tests {
 
     fn calc_count(state: &GameState) -> u64 {
         let mut rng = Pcg64Mcg::from_entropy();
-        sample_placements(state, 10000, &mut rng).0
+        sample_placements(state, 10000, &mut rng).all_count
     }
 
     #[test]
