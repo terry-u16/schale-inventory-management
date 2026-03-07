@@ -224,7 +224,7 @@ pub fn sample_placements(
                     col,
                     cnts,
                     w_bits,
-                    Some((item_i, rotate)),
+                    Some((item_i as u8, rotate)),
                     current_dp,
                 ));
         };
@@ -319,7 +319,7 @@ fn restore_dfs(
 
     for history in from[col][row][cnt[0]][cnt[1]][cnt[2]][w_bits].iter() {
         if let Some((item_i, rotate)) = history.item {
-            current_placements.push(Placement::new(history.coord(), item_i, rotate));
+            current_placements.push(Placement::new(history.coord(), item_i as usize, rotate));
         }
         let prev = history.prev_state();
 
@@ -383,7 +383,7 @@ fn restore_random(
             }
 
             if let Some((item_i, rotate)) = history.item {
-                current_items.push(Placement::new(history.coord(), item_i, rotate));
+                current_items.push(Placement::new(history.coord(), item_i as usize, rotate));
             }
             let prev = history.prev_state();
 
@@ -423,7 +423,7 @@ struct History {
     col: u8,
     cnt: [u8; GameState::ITEM_GROUP_COUNT],
     w_bits: WBits,
-    item: Option<(usize, bool)>,
+    item: Option<(u8, bool)>,
     weight: u64,
 }
 
@@ -442,13 +442,14 @@ impl History {
         col: usize,
         cnt: [usize; 3],
         w_bits: WBits,
-        item: Option<(usize, bool)>,
+        item: Option<(u8, bool)>,
         weight: u64,
     ) -> Self {
         debug_assert!(u8::try_from(row).is_ok());
         debug_assert!(u8::try_from(col).is_ok());
         debug_assert!(cnt.iter().all(|&v| u8::try_from(v).is_ok()));
         debug_assert!((w_bits as usize) < W_STATE_COUNT);
+        debug_assert!(item.map(|(i, _)| i as usize).unwrap_or(0) < GameState::ITEM_GROUP_COUNT);
 
         Self {
             row: row as u8,
