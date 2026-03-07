@@ -64,7 +64,12 @@ pub fn calc_probabilities_all(state: &GameState, sample_count: u64) -> Result<Ve
 
     // 各アイテムについて、アイテムを置いた回数をカウントする
     for flag in 0..(1 << GameState::ITEM_GROUP_COUNT) {
-        let prob = calc_probabilities(state, flag, sampled.sampled_count, &sampled.sampled_item_counts);
+        let prob = calc_probabilities(
+            state,
+            flag,
+            sampled.sampled_count,
+            &sampled.sampled_item_counts,
+        );
         probabilities.push(prob);
     }
 
@@ -97,7 +102,11 @@ pub fn calc_probabilities(
         }
     }
 
-    for item_index in 0..GameState::ITEM_GROUP_COUNT {
+    for (item_index, item_counts) in sampled_item_counts
+        .iter()
+        .enumerate()
+        .take(GameState::ITEM_GROUP_COUNT)
+    {
         if flag & (1 << item_index) == 0 {
             continue;
         }
@@ -105,7 +114,7 @@ pub fn calc_probabilities(
         for row in 0..GameState::HEIGHT {
             for col in 0..GameState::WIDTH {
                 let coord = Coord::new(row, col);
-                counts[coord] += sampled_item_counts[item_index][coord];
+                counts[coord] += item_counts[coord];
             }
         }
     }
@@ -144,13 +153,18 @@ impl TopLeftCounts {
         self.counts[placement.item_index][rotate_idx][placement.coord] += weight;
     }
 
-    fn into_item_counts(&self, state: &GameState) -> Vec<Map2d<u64>> {
-        let mut sampled_item_counts = vec![
-            Map2d::new_with(0u64, GameState::WIDTH, GameState::HEIGHT);
-            GameState::ITEM_GROUP_COUNT
-        ];
+    fn to_item_counts(&self, state: &GameState) -> Vec<Map2d<u64>> {
+        let mut sampled_item_counts =
+            vec![
+                Map2d::new_with(0u64, GameState::WIDTH, GameState::HEIGHT);
+                GameState::ITEM_GROUP_COUNT
+            ];
 
-        for item_index in 0..GameState::ITEM_GROUP_COUNT {
+        for (item_index, item_counts) in sampled_item_counts
+            .iter_mut()
+            .enumerate()
+            .take(GameState::ITEM_GROUP_COUNT)
+        {
             for rotate_idx in 0..2 {
                 let item = state.remaining_items[item_index].item;
                 let item = if rotate_idx == 1 {
@@ -169,7 +183,6 @@ impl TopLeftCounts {
 
                         let r1 = row + item.height();
                         let c1 = col + item.width();
-                        let item_counts = &mut sampled_item_counts[item_index];
                         for r in row..r1 {
                             for c in col..c1 {
                                 item_counts[Coord::new(r, c)] += count;
@@ -283,7 +296,7 @@ pub fn sample_placements(
                 continue;
             }
 
-            let mut next_cnt = cnts.clone();
+            let mut next_cnt = cnts;
             next_cnt[i] += 1;
 
             transit(&next_cnt, state.remaining_items[i].item, i, false);
@@ -301,7 +314,7 @@ pub fn sample_placements(
             dp[col][row + 1][cnt0][cnt1][cnt2][new_w_bits as usize] += current_dp;
             from[col][row + 1][cnt0][cnt1][cnt2][new_w_bits as usize]
                 .push(History::new(row, col, cnts, w_bits, None, current_dp));
-        } else if col + 1 <= GameState::WIDTH {
+        } else if col < GameState::WIDTH {
             // 次の列に移動する
             let new_w_bits = dec_w(w_bits, row);
 
@@ -327,7 +340,7 @@ pub fn sample_placements(
         let top_left_counts = restore_random(state, &dp, &from, sample_count, rng);
         (sample_count, top_left_counts)
     };
-    let sampled_item_counts = top_left_counts.into_item_counts(state);
+    let sampled_item_counts = top_left_counts.to_item_counts(state);
 
     SamplePlacementsResult {
         all_count,
@@ -389,7 +402,7 @@ fn restore_random(
     from: &From,
     sample_count: u64,
     rng: &mut impl Rng,
-)-> TopLeftCounts {
+) -> TopLeftCounts {
     let mut top_left_counts = TopLeftCounts::new();
 
     if dp[GameState::WIDTH][0][state.remaining_items[0].count][state.remaining_items[1].count]
