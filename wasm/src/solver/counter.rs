@@ -146,6 +146,32 @@ fn add_placement_counts(
     }
 }
 
+fn add_placement_counts_weighted(
+    state: &GameState,
+    placement: &Placement,
+    sampled_item_counts: &mut [Map2d<u64>],
+    weight: u64,
+) {
+    let item = state.remaining_items[placement.item_index].item;
+    let item = if placement.is_rotated {
+        item.rotate().unwrap_or(item)
+    } else {
+        item
+    };
+
+    let r0 = placement.coord.row;
+    let c0 = placement.coord.col;
+    let r1 = r0 + item.height();
+    let c1 = c0 + item.width();
+
+    let item_counts = &mut sampled_item_counts[placement.item_index];
+    for row in r0..r1 {
+        for col in c0..c1 {
+            item_counts[Coord::new(row, col)] += weight;
+        }
+    }
+}
+
 pub fn sample_placements(
     state: &GameState,
     sample_count: usize,
@@ -284,8 +310,6 @@ pub fn sample_placements(
         [state.remaining_items[1].count][state.remaining_items[2].count][0];
 
     let sampled_count = if all_count <= sample_count as u64 {
-        let mut current_items = vec![];
-        let mut sampled_count = 0usize;
         let cnt = [
             state.remaining_items[0].count,
             state.remaining_items[1].count,
@@ -298,11 +322,8 @@ pub fn sample_placements(
             GameState::WIDTH,
             cnt,
             0,
-            &mut current_items,
             &mut sampled_item_counts,
-            &mut sampled_count,
-        );
-        sampled_count
+        ) as usize
     } else {
         restore_random(state, &dp, &from, sample_count, rng, &mut sampled_item_counts);
         sample_count
@@ -327,40 +348,34 @@ fn restore_dfs(
     col: usize,
     cnt: [usize; GameState::ITEM_GROUP_COUNT],
     w_bits: usize,
-    current_placements: &mut Vec<Placement>,
     sampled_item_counts: &mut [Map2d<u64>],
-    sampled_count: &mut usize,
-) {
+)-> u64 {
     if col == 0 && row == 0 {
-        *sampled_count += 1;
-        for placement in current_placements.iter() {
-            add_placement_counts(state, placement, sampled_item_counts);
-        }
-        return;
+        return 1;
     }
 
+    let mut sampled_count = 0u64;
     for history in from[col][row][cnt[0]][cnt[1]][cnt[2]][w_bits].iter() {
-        if let Some((item_i, rotate)) = history.item {
-            current_placements.push(Placement::new(history.coord(), item_i as usize, rotate));
-        }
         let prev = history.prev_state();
 
-        restore_dfs(
+        let child_count = restore_dfs(
             state,
             from,
             prev.row,
             prev.col,
             prev.cnt,
             prev.w_bits,
-            current_placements,
             sampled_item_counts,
-            sampled_count,
         );
 
-        if history.item.is_some() {
-            current_placements.pop();
+        sampled_count += child_count;
+
+        if let Some((item_i, rotate)) = history.item {
+            let placement = Placement::new(history.coord(), item_i as usize, rotate);
+            add_placement_counts_weighted(state, &placement, sampled_item_counts, child_count);
         }
     }
+    sampled_count
 }
 
 /// ランダムサンプリングで解を復元する
