@@ -24,7 +24,7 @@ pub fn simulate(
         })
         .collect_into_vec(&mut counts);
 
-    let mut probs_int = vec![0; GameState::HEIGHT * GameState::WIDTH + 1];
+    let mut probs_int = [0; GameState::HEIGHT * GameState::WIDTH + 1];
 
     for &count in &counts {
         probs_int[count] += 1;

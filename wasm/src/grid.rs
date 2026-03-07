@@ -25,7 +25,7 @@ impl Coord {
     }
 
     const fn dist_1d(x0: usize, x1: usize) -> usize {
-        (x0 as i64 - x1 as i64).abs() as usize
+        (x0 as isize - x1 as isize).unsigned_abs()
     }
 }
 
