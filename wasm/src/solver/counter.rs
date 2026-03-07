@@ -315,19 +315,16 @@ fn restore_dfs(
 
     for history in from[col][row][cnt[0]][cnt[1]][cnt[2]][w[0]][w[1]][w[2]][w[3]][w[4]].iter() {
         if let Some((item_i, rotate)) = history.item {
-            current_placements.push(Placement::new(
-                Coord::new(history.row, history.col),
-                item_i,
-                rotate,
-            ));
+            current_placements.push(Placement::new(history.coord(), item_i, rotate));
         }
+        let prev = history.prev_state();
 
         restore_dfs(
             from,
-            history.row,
-            history.col,
-            history.cnt,
-            history.w,
+            prev.row,
+            prev.col,
+            prev.cnt,
+            prev.w,
             current_placements,
             all_placements,
         );
@@ -382,17 +379,14 @@ fn restore_random(
             }
 
             if let Some((item_i, rotate)) = history.item {
-                current_items.push(Placement::new(
-                    Coord::new(history.row, history.col),
-                    item_i,
-                    rotate,
-                ));
+                current_items.push(Placement::new(history.coord(), item_i, rotate));
             }
+            let prev = history.prev_state();
 
-            row = history.row;
-            col = history.col;
-            cnt = history.cnt;
-            w = history.w;
+            row = prev.row;
+            col = prev.col;
+            cnt = prev.cnt;
+            w = prev.w;
         }
 
         all_items.push(current_items);
@@ -419,13 +413,23 @@ impl Placement {
 }
 
 #[derive(Debug, Clone, Copy)]
+// DP復元用の逆遷移1本分。メモリ削減のため状態はu8で圧縮して保持する。
 struct History {
-    row: usize,
-    col: usize,
-    cnt: [usize; 3],
-    w: [usize; 5],
+    row: u8,
+    col: u8,
+    cnt: [u8; GameState::ITEM_GROUP_COUNT],
+    w: [u8; GameState::HEIGHT],
     item: Option<(usize, bool)>,
     weight: u64,
+}
+
+#[derive(Debug, Clone, Copy)]
+// 復元処理で扱いやすいusize表現の直前状態。
+struct RestoreState {
+    row: usize,
+    col: usize,
+    cnt: [usize; GameState::ITEM_GROUP_COUNT],
+    w: [usize; GameState::HEIGHT],
 }
 
 impl History {
@@ -437,13 +441,33 @@ impl History {
         item: Option<(usize, bool)>,
         weight: u64,
     ) -> Self {
+        debug_assert!(u8::try_from(row).is_ok());
+        debug_assert!(u8::try_from(col).is_ok());
+        debug_assert!(cnt.iter().all(|&v| u8::try_from(v).is_ok()));
+        debug_assert!(w.iter().all(|&v| u8::try_from(v).is_ok()));
+
         Self {
-            row,
-            col,
-            cnt,
-            w,
+            row: row as u8,
+            col: col as u8,
+            cnt: cnt.map(|v| v as u8),
+            w: w.map(|v| v as u8),
             item,
             weight,
+        }
+    }
+
+    #[inline]
+    fn coord(&self) -> Coord {
+        Coord::new(self.row as usize, self.col as usize)
+    }
+
+    #[inline]
+    fn prev_state(&self) -> RestoreState {
+        RestoreState {
+            row: self.row as usize,
+            col: self.col as usize,
+            cnt: self.cnt.map(|v| v as usize),
+            w: self.w.map(|v| v as usize),
         }
     }
 }
