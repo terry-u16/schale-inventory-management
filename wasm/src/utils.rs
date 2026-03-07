@@ -6,6 +6,7 @@ macro_rules! mat {
 	($e:expr; $d:expr $(; $ds:expr)+) => { Vec::from(vec![mat![$e $(; $ds)*]; $d]) };
 }
 
+#[allow(dead_code)]
 pub trait ChangeMinMax {
     fn change_min(&mut self, v: Self) -> bool;
     fn change_max(&mut self, v: Self) -> bool;
