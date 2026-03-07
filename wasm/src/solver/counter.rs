@@ -79,6 +79,12 @@ pub fn calc_probabilities_all(state: &GameState, sample_count: u64) -> Result<Ve
     Ok(probabilities)
 }
 
+pub fn sample_one_placement(state: &GameState, rng: &mut impl Rng) -> Result<Vec<Placement>> {
+    let sampled = sample_top_left_counts(state, 1, rng);
+    ensure!(sampled.all_count > 0, "no_valid_configuration");
+    Ok(sampled.top_left_counts.to_placements())
+}
+
 pub fn calc_probabilities(
     state: &GameState,
     flag: u32,
@@ -198,6 +204,27 @@ impl TopLeftCounts {
 
         sampled_item_counts
     }
+
+    fn to_placements(&self) -> Vec<Placement> {
+        let mut placements = vec![];
+
+        for item_index in 0..GameState::ITEM_GROUP_COUNT {
+            for rotate_idx in 0..2 {
+                let is_rotated = rotate_idx == 1;
+                for row in 0..GameState::HEIGHT {
+                    for col in 0..GameState::WIDTH {
+                        let coord = Coord::new(row, col);
+                        let count = self.counts[item_index][rotate_idx][coord];
+                        for _ in 0..count {
+                            placements.push(Placement::new(coord, item_index, is_rotated));
+                        }
+                    }
+                }
+            }
+        }
+
+        placements
+    }
 }
 
 pub fn sample_placements(
@@ -205,6 +232,27 @@ pub fn sample_placements(
     sample_count: u64,
     rng: &mut impl Rng,
 ) -> SamplePlacementsResult {
+    let sampled = sample_top_left_counts(state, sample_count, rng);
+    let sampled_item_counts = sampled.top_left_counts.to_item_counts(state);
+
+    SamplePlacementsResult {
+        all_count: sampled.all_count,
+        sampled_count: sampled.sampled_count,
+        sampled_item_counts,
+    }
+}
+
+struct TopLeftSampleResult {
+    all_count: u64,
+    sampled_count: u64,
+    top_left_counts: TopLeftCounts,
+}
+
+fn sample_top_left_counts(
+    state: &GameState,
+    sample_count: u64,
+    rng: &mut impl Rng,
+) -> TopLeftSampleResult {
     // DPにより候補数を計算する。
     //
     // 元の定義は次の10次元状態:
@@ -344,12 +392,10 @@ pub fn sample_placements(
         let top_left_counts = restore_random(state, &dp, &from, sample_count, rng);
         (sample_count, top_left_counts)
     };
-    let sampled_item_counts = top_left_counts.to_item_counts(state);
-
-    SamplePlacementsResult {
+    TopLeftSampleResult {
         all_count,
         sampled_count,
-        sampled_item_counts,
+        top_left_counts,
     }
 }
 

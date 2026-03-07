@@ -3,7 +3,7 @@ use rand::Rng;
 use wasm_solver::{
     grid::{Coord, Map2d},
     problem::{GameState, Item, ItemGroup, PlacedItem},
-    solver::counter::{calc_probabilities, sample_placements},
+    solver::counter::{calc_probabilities, sample_one_placement, sample_placements},
 };
 
 #[derive(Debug, Clone)]
@@ -23,8 +23,8 @@ impl SimulationState {
             vec![],
         );
 
-        let (_, sampled) = sample_placements(&game_state, 1, rng);
-        let answer = sampled[0]
+        let sampled = sample_one_placement(&game_state, rng).expect("no valid placement");
+        let answer = sampled
             .iter()
             .map(|placement| {
                 let mut item = game_state.remaining_items[placement.item_index].item;
@@ -76,9 +76,7 @@ impl SimulationState {
             if !self.found[index] {
                 self.found[index] = true;
                 self.game_state.remaining_items[self.answer[index].item.item_index()].count -= 1;
-                self.game_state
-                    .placed_items
-                    .push(self.answer[index].clone());
+                self.game_state.placed_items.push(self.answer[index]);
             }
         }
 
@@ -93,8 +91,13 @@ impl SimulationState {
     }
 
     pub fn get_probs(&self, flag: u32, sample_count: usize, rng: &mut impl Rng) -> Map2d<f64> {
-        let (_, placements) = sample_placements(&self.game_state, sample_count, rng);
-        calc_probabilities(&self.game_state, flag, &placements)
+        let sampled = sample_placements(&self.game_state, sample_count as u64, rng);
+        calc_probabilities(
+            &self.game_state,
+            flag,
+            sampled.sampled_count,
+            &sampled.sampled_item_counts,
+        )
     }
 
     fn get_items(board_type: usize) -> [ItemGroup; GameState::ITEM_GROUP_COUNT] {
