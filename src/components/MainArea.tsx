@@ -23,6 +23,7 @@ const clampPosition = (value: number, size: number, boardSize: number) => {
 };
 
 // 在庫管理のアイテム
+/*
 const shoppingBag = { width: 3, height: 2 } as const;
 const receipt = { width: 1, height: 3 } as const;
 const fountainPen = { width: 2, height: 1 } as const;
@@ -30,6 +31,7 @@ const toyBox = { width: 4, height: 2 } as const;
 const potatoChips = { width: 2, height: 2 } as const;
 const gameMagazine = { width: 3, height: 3 } as const;
 const ambrella = { width: 1, height: 4 } as const;
+*/
 
 // 五塵来降のアイテム
 /*
@@ -51,10 +53,9 @@ const boardGame = { width: 4, height: 2 } as const; // ボードゲーム「KIVO
 const hairband = { width: 2, height: 2 } as const; // ヘアバンド
 const characterPillow = { width: 3, height: 3 } as const; // キャラものクッション
 const bodyPillow = { width: 1, height: 4 } as const; // 抱き枕
-/*
+*/
 
 // 百ヨリ出ズル一輪ノ 〜いざ尋常に、水上勝負〜 のアイテム
-/*
 const waterGun = { width: 3, height: 2 } as const; // 水鉄砲
 const smartphoneCase = { width: 3, height: 1 } as const; // スマホケース
 const sunscreen = { width: 1, height: 2 } as const; // 日焼け止め
@@ -62,33 +63,42 @@ const surfboard = { width: 4, height: 2 } as const; // サーフボード
 const parasol = { width: 1, height: 4 } as const; // 日傘
 const swimRing = { width: 3, height: 3 } as const; // 浮き輪
 const bandana = { width: 2, height: 2 } as const; // バンダナ
-*/
 
 const predefinedItems: ItemSet[][] = [
   [
-    { item: { ...potatoChips, index: 1 }, count: 3 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
-    { item: { ...toyBox, index: 3 }, count: 1 },
+    { item: { ...waterGun, index: 1 }, count: 2 },
+    { item: { ...smartphoneCase, index: 2 }, count: 5 },
+    { item: { ...sunscreen, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 7 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...ambrella, index: 3 }, count: 2 },
+    { item: { ...surfboard, index: 1 }, count: 1 },
+    { item: { ...parasol, index: 2 }, count: 2 },
+    { item: { ...smartphoneCase, index: 3 }, count: 5 },
   ],
   [
-    { item: { ...potatoChips, index: 1 }, count: 3 },
-    { item: { ...shoppingBag, index: 2 }, count: 2 },
-    { item: { ...toyBox, index: 3 }, count: 1 },
+    { item: { ...swimRing, index: 1 }, count: 1 },
+    { item: { ...bandana, index: 2 }, count: 4 },
+    { item: { ...sunscreen, index: 3 }, count: 3 },
   ],
   [
-    { item: { ...fountainPen, index: 1 }, count: 7 },
-    { item: { ...receipt, index: 2 }, count: 3 },
-    { item: { ...ambrella, index: 3 }, count: 2 },
+    { item: { ...waterGun, index: 1 }, count: 2 },
+    { item: { ...smartphoneCase, index: 2 }, count: 5 },
+    { item: { ...sunscreen, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...shoppingBag, index: 1 }, count: 2 },
-    { item: { ...toyBox, index: 2 }, count: 1 },
-    { item: { ...gameMagazine, index: 3 }, count: 1 },
+    { item: { ...surfboard, index: 1 }, count: 1 },
+    { item: { ...parasol, index: 2 }, count: 2 },
+    { item: { ...smartphoneCase, index: 3 }, count: 5 },
+  ],
+  [
+    { item: { ...swimRing, index: 1 }, count: 1 },
+    { item: { ...bandana, index: 2 }, count: 4 },
+    { item: { ...sunscreen, index: 3 }, count: 3 },
+  ],
+  [
+    { item: { ...surfboard, index: 1 }, count: 2 },
+    { item: { ...smartphoneCase, index: 2 }, count: 3 },
+    { item: { ...sunscreen, index: 3 }, count: 6 },
   ],
 ] as const;
 
