@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.5.4", features = ["derive"] }
 itertools = "0.12.1"
-rand = "0.8.5"
+rand = "0.9.3"
 rand_pcg = "0.3.1"
 rayon = "1.10.0"
 wasm-solver = { path = "../wasm" }
