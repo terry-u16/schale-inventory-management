@@ -3,5 +3,19 @@
   "height": "高さ",
   "width": "幅",
   "amount": "個数",
-  "add_button_tooltip": ["備品を配置する", "追加", "(縦)", "(横)"]
+  "add_button_tooltip": [
+    "備品を配置する",
+    "追加",
+    "(縦)",
+    "(横)"
+  ],
+  "height_input_tooltip": "高さを入力（1〜4）",
+  "width_input_tooltip": "幅を入力（1〜4）",
+  "amount_input_tooltip": "個数を入力（0〜7）",
+  "save_size_tooltip": "現在のサイズをお気に入りに追加",
+  "favorite_apply_tooltip": "サイズ {{size}} を適用",
+  "show_prob_toggle_tooltip": "クリックで確率表示のON/OFFを切り替え",
+  "spinbox_wheel_tooltip": "ホイール・↑↓キーで値を変更できます",
+  "show_prob_label": "確率表示",
+  "gesture_hint": "備品クリックで回転・右クリックで削除・ドラッグで移動（iOSはダブルタップで削除）"
 }

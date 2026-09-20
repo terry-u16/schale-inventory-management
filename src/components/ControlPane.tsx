@@ -1,5 +1,4 @@
 import { useState, type FC } from 'react';
-import { LoadingButton } from '@mui/lab';
 import {
   FormControl,
   InputLabel,
@@ -13,11 +12,8 @@ import {
   Button,
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import ExposureIcon from '@mui/icons-material/Exposure';
 import GradingIcon from '@mui/icons-material/Grading';
-import Looks3Icon from '@mui/icons-material/Looks3';
-import LooksOneIcon from '@mui/icons-material/LooksOne';
-import LooksTwoIcon from '@mui/icons-material/LooksTwo';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Box from '@mui/material/Box';
 import { type ItemAndPlacement } from './MainArea';
 import ShareButton from './ShareButton';
@@ -25,11 +21,8 @@ import ShareButton from './ShareButton';
 type Props = {
   itemAndPlacements: ItemAndPlacement[];
   openPanels: boolean[];
-  isRunning: boolean;
-  showProb: boolean[];
-  recommendToRun: boolean;
-  onExecute: () => void;
-  onToggleShowProb: (index: number) => void;
+  probScale: 'max' | 'minmax';
+  onToggleProbScale: () => void;
   onItemPresetApply: (preset: number) => void;
   onResetMap: () => void;
 };
@@ -38,11 +31,8 @@ const ControlPane: FC<Props> = (props) => {
   const {
     itemAndPlacements,
     openPanels,
-    isRunning,
-    showProb,
-    recommendToRun,
-    onExecute,
-    onToggleShowProb,
+    probScale,
+    onToggleProbScale,
     onItemPresetApply,
     onResetMap,
   } = props;
@@ -54,15 +44,13 @@ const ControlPane: FC<Props> = (props) => {
     setPredefinedChoice(event.target.value);
   };
 
-  const runButtonStyle = recommendToRun ? 'contained' : 'outlined';
-
   return (
     <>
       <Paper>
         <Box
           p={2}
           display="grid"
-          gridTemplateColumns="1fr 1fr 0.5fr 2.5fr 0.5fr 56px"
+          gridTemplateColumns="1.5fr 1fr 0.7fr 56px 56px"
           gap={2}
         >
           <FormControl>
@@ -75,6 +63,7 @@ const ControlPane: FC<Props> = (props) => {
               value={predefinedChoice}
               label={t('predefined_choice_label')}
               onChange={handlepredefinedChoiceChange}
+              MenuProps={{ disableScrollLock: true }}
             >
               <MenuItem value={0}>{t('predefined_choice_select.0')}</MenuItem>
               <MenuItem value={1}>{t('predefined_choice_select.1')}</MenuItem>
@@ -105,57 +94,17 @@ const ControlPane: FC<Props> = (props) => {
           <Button variant="outlined" onClick={onResetMap}>
             RESET
           </Button>
-          <Tooltip title={t('execute_button_tooltip')}>
-            <LoadingButton
-              onClick={onExecute}
-              loading={isRunning}
-              startIcon={<PlayArrowIcon />}
-              variant={runButtonStyle}
-              size="large"
-            >
-              <span>{t('execute_button')}</span>
-            </LoadingButton>
-          </Tooltip>
           <ToggleButtonGroup color="primary">
-            <Tooltip title={t('look_one_button_tooltip')}>
+            <Tooltip title={t('normalize_button_tooltip')}>
               <span>
                 <ToggleButton
-                  value="one"
-                  selected={showProb[0]}
-                  onClick={() => {
-                    onToggleShowProb(0);
-                  }}
+                  value="normalize"
+                  selected={probScale === 'minmax'}
+                  onClick={onToggleProbScale}
                   sx={{ height: '56px' }}
+                  aria-label={t('normalize_button')}
                 >
-                  <LooksOneIcon />
-                </ToggleButton>
-              </span>
-            </Tooltip>
-            <Tooltip title={t('look_two_button_tooltip')}>
-              <span>
-                <ToggleButton
-                  value="two"
-                  selected={showProb[1]}
-                  onClick={() => {
-                    onToggleShowProb(1);
-                  }}
-                  sx={{ height: '56px' }}
-                >
-                  <LooksTwoIcon />
-                </ToggleButton>
-              </span>
-            </Tooltip>
-            <Tooltip title={t('look_three_button_tooltip')}>
-              <span>
-                <ToggleButton
-                  value="three"
-                  selected={showProb[2]}
-                  onClick={() => {
-                    onToggleShowProb(2);
-                  }}
-                  sx={{ height: '56px' }}
-                >
-                  <Looks3Icon />
+                  <ExposureIcon />
                 </ToggleButton>
               </span>
             </Tooltip>

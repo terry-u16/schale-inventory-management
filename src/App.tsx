@@ -55,7 +55,7 @@ const App: FC = () => {
         <OverlayProvider>
           <PlaceSelectHelper>
             <Header />
-            <Box width={1200} mt={5} position="relative">
+            <Box mt={5} position="relative" sx={{ width: '100%', maxWidth: 1600, mx: 'auto', px: 1.5 }}>
               <Overlay />
               <NotificationPanel />
               <MainArea />

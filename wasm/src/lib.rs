@@ -12,7 +12,7 @@ use wasm_bindgen::prelude::*;
 use crate::{
     grid::Map2d,
     problem::{Item, ItemGroup},
-    solver::counter,
+    solver::exact,
 };
 
 #[derive(Deserialize, Clone)]
@@ -185,7 +185,8 @@ fn solve_inner(input: JsValue) -> anyhow::Result<Vec<Vec<f64>>> {
 
     let game_state = GameState::try_from(input)?;
 
-    let result = counter::calc_probabilities_all(&game_state, 100000)?;
+    // 前置DP × 後置DP による厳密確率（サンプリングを使わない）
+    let result = exact::calc_probabilities_exact(&game_state)?;
     let result = result
         .iter()
         .map(|prob| prob.iter().copied().collect())

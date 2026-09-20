@@ -17,9 +17,6 @@
   ],
   "item_preset_apply_button_tooltip": "应用道具预设",
   "item_preset_apply_button": "应用",
-  "execute_button_tooltip": "计算每个格子出现道具的概率",
-  "execute_button": "运行",
-  "look_one_button_tooltip": "显示/隐藏道具1的概率",
-  "look_two_button_tooltip": "显示/隐藏道具1的概率",
-  "look_three_button_tooltip": "显示/隐藏道具1的概率"
+  "normalize_button_tooltip": "概率配色按最小~最大归一化",
+  "normalize_button": "归一化"
 }

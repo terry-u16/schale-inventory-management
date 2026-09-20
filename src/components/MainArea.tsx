@@ -1,11 +1,14 @@
 import { type FC, useState, useRef, useEffect, useCallback } from 'react';
 import { Alert, Box, Snackbar } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import Grid from '@mui/material/Grid';
 import Board from './Board';
 import ControlPane from './ControlPane';
 import ItemPane, { type PlacedItem, type ItemSet } from './ItemPane';
-import { getRotatedHeight, getRotatedWidth } from './ItemPane';
+import {
+  getRotatedHeight,
+  getRotatedWidth,
+  findSmartPlacement,
+} from './ItemPane';
 import Worker from './workers/ProbCalcWorker?worker';
 
 export class ItemAndPlacement {
@@ -294,9 +297,9 @@ const MainArea: FC = () => {
     isValidStoredItems,
   );
   const [probs, setProbs] = useState<number[][] | null>(null);
-  const [isMaxProbs, setIsMaxProbs] = useState<boolean[][] | null>(null);
+  // 自動再計算が「成立する配置なし」で失敗したときの表示用
+  const [noValidConfig, setNoValidConfig] = useState(false);
   const [showProbs, setShowProbs] = useState([true, true, true]);
-  const [isRunning, setIsRunning] = useState(false);
   const [presetAppliedToast, setPresetAppliedToast] = useState<{
     id: string;
     message: string;
@@ -307,14 +310,12 @@ const MainArea: FC = () => {
     Array(45).fill(false) as boolean[],
     isValidOpenMap,
   );
+  const [probScale, setProbScale] = useLocalStorage<'max' | 'minmax'>(
+    'probScale',
+    'max',
+    (v): v is 'max' | 'minmax' => v === 'max' || v === 'minmax',
+  );
   const [workerResetCnt, setWorkerResetCnt] = useState(0);
-
-  // runUuid: 確率計算実行時に発行されたUUID
-  // opUuid: 確率計算実行時または直近の入力変更時に発行されたUUID
-  // runUuid === opUuidのとき、確率計算が実行されたばかりなので再度の確率計算を推奨しない
-  // runUuid !== opUuidのとき、入力が変更されているので確率計算を推奨する
-  const [runUuid, setRunUuid] = useState<string>(crypto.randomUUID());
-  const [opUuid, setOpUuid] = useState<string>(crypto.randomUUID());
 
   if (items.some((item) => item.placements.length > item.item.count)) {
     const newItems = items.map((item) => {
@@ -366,37 +367,61 @@ const MainArea: FC = () => {
     });
 
     setItems(newItems);
-    setOpUuid(crypto.randomUUID());
   };
 
   const onAddPlacedItem = (item: PlacedItem) => {
+    // スマート配置（BAAS版と同じ）:
+    // クリックしたセルが必ず備品に覆われるよう、重ならない合法アンカーを
+    // 近い順に探索する。なければ盤面全体の最寄り、どこにも置けなければ何もしない。
+    const placed = items.map((entry) => entry.placements).flat();
+    const anchor = findSmartPlacement(item, item.row, item.col, placed, openMap);
+
+    if (anchor === null) return;
+
     const newItems = [...items];
-    newItems[item.item.index - 1].placements.push(item);
+    newItems[item.item.index - 1].placements.push({
+      ...item,
+      row: anchor.row,
+      col: anchor.col,
+    });
     setItems(newItems);
-
-    // アイテムがある場所のマス目を自動で開ける
-    const newOpenMap = [...openMap];
-    for (let i = item.row; i < item.row + getRotatedHeight(item); i++) {
-      for (let j = item.col; j < item.col + getRotatedWidth(item); j++) {
-        newOpenMap[(i - 1) * 9 + (j - 1)] = true;
-      }
-    }
-
-    setOpenMap(newOpenMap);
-    setOpUuid(crypto.randomUUID());
   };
 
-  const onModifyPlacedItem = (item: PlacedItem) => {
+  // 備品の移動・回転を反映する（マス目の開閉状態は変更しない。
+  // 開閉はユーザーが明示的にクリックして行うものであり、
+  // ドラッグに自動開閉は連動させない）
+  const applyPlacementChange = (moved: PlacedItem) => {
     const newItems = [...items];
+    const target = newItems[moved.item.index - 1];
 
-    for (let i = 0; i < newItems[item.item.index - 1].placements.length; i++) {
-      if (newItems[item.item.index - 1].placements[i].id === item.id) {
-        newItems[item.item.index - 1].placements[i] = item;
-      }
-    }
+    target.placements = target.placements.map((pl) =>
+      pl.id === moved.id ? moved : pl,
+    );
 
     setItems(newItems);
-    setOpUuid(crypto.randomUUID());
+  };
+
+  const onMovePlacedItem = (item: PlacedItem, row: number, col: number) => {
+    applyPlacementChange({ ...item, row, col });
+  };
+
+  const onRotatePlacedItem = (item: PlacedItem) => {
+    const rotated = { ...item, rotated: !item.rotated };
+    // 回転後の形状を、元の位置を覆う最寄りの合法アンカーに置く。
+    // そのまま回転できるなら元の位置（距離0）が選ばれる。
+    // どこにも置けない場合は何もしない。
+    const placed = items.map((entry) => entry.placements).flat();
+    const anchor = findSmartPlacement(
+      rotated,
+      item.row,
+      item.col,
+      placed,
+      openMap,
+    );
+
+    if (anchor === null) return;
+
+    applyPlacementChange({ ...rotated, row: anchor.row, col: anchor.col });
   };
 
   const onRemovePlacedItem = (item: PlacedItem) => {
@@ -406,13 +431,32 @@ const MainArea: FC = () => {
       item.item.index - 1
     ].placements.filter((it) => it.id !== item.id);
 
+    // 開けたマス目は開いたままにする
     setItems(newItems);
-    setOpUuid(crypto.randomUUID());
   };
 
   // 確率計算worker周り
   const probCalcWorkerRef = useRef<Worker | null>(null);
   const errorTRef = useRef(errorT);
+
+  // Workerを常駐させ、openMapはref経由で常に最新値を参照する
+  // （Workerの再生成はWASMの再初期化を伴い、開閉のたびに数百msかかるため）
+  const openMapRef = useRef(openMap);
+
+  useEffect(() => {
+    openMapRef.current = openMap;
+  }, [openMap]);
+
+  // 直近で確率計算に渡した入力のキーと、計算の世代（run_id）
+  const lastRunKeyRef = useRef<string | null>(null);
+  const lastRunItemsKeyRef = useRef<string | null>(null);
+  const runIdRef = useRef(0);
+  const inputKey = JSON.stringify({ items, openMap });
+  // 備品配置のみのキー。マスの開閉は配置分布を変えないため、
+  // 開閉のたびに青枠を消す必要はない（消すと点滅して見える）。
+  // 備品の移動・追加・削除のときだけ確率が古くなるので枠を消す。
+  const inputItemsKey = JSON.stringify(items);
+  const probsFresh = lastRunItemsKeyRef.current === inputItemsKey && probs !== null;
 
   useEffect(() => {
     errorTRef.current = errorT;
@@ -422,74 +466,61 @@ const MainArea: FC = () => {
     probCalcWorkerRef.current = new Worker();
 
     probCalcWorkerRef.current.onmessage = (e) => {
-      const { probs, error } = e.data as { probs: number[][]; error: string };
+      const { probs, error, run_id: runId } = e.data as {
+        probs: number[][] | null;
+        error: string;
+        run_id: number;
+      };
+
+      // 計算中に投げた古い入力の結果は破棄する（last-write-wins）
+      if (runId !== runIdRef.current) return;
 
       if (error !== '') {
-        const errors = error.split(' ');
-        alert(errorTRef.current(errors[0], { error: errors.slice(1) }));
-        setProbs(null);
-        setIsMaxProbs(null);
-      } else {
-        // アイテムの組合せフラグごとに、各マスの確率を小数点第一位まで見て、
-        // 最大値に一致するものにフラグを付けたい
-        // 3種類のアイテムについてオンオフの組合せは8通り
-        const roundProb = (prob: number) => Math.round(prob * 1000) / 1000;
-        const isMaxProbs = Array.from(
-          new Array(1 << 3),
-          () => new Array(45).fill(false) as boolean[],
-        );
-
-        for (let itemFlag = 0; itemFlag < 1 << 3; itemFlag++) {
-          let roundedMax = 0;
-          const currentProbs = probs[itemFlag];
-          const currentIsMaxProbs = isMaxProbs[itemFlag];
-
-          // 開いているマスの中から一番確率が高いものを探す
-          for (let i = 0; i < currentProbs.length; i++) {
-            const rounded = roundProb(currentProbs[i]);
-            if (!openMap[i] && rounded > roundedMax) {
-              roundedMax = rounded;
-            }
-          }
-
-          // 一番確率の高いものと一致していたらフラグをセット
-          // ただし、確率が0のものは除外
-          for (let i = 0; i < currentProbs.length; i++) {
-            const rounded = roundProb(currentProbs[i]);
-            if (rounded === roundedMax && rounded > 0) {
-              currentIsMaxProbs[i] = true;
-            }
-          }
+        const errorKey = error.split(' ')[0];
+        // no_valid_configuration は想定内：インライン警告で示す。
+        // それ以外のエラーはバグ調査の手がかりとしてalertする
+        if (errorKey !== 'no_valid_configuration') {
+          const errors = error.split(' ');
+          alert(errorTRef.current(errors[0], { error: errors.slice(1) }));
         }
 
+        setProbs(null);
+        setNoValidConfig(errorKey === 'no_valid_configuration');
+      } else {
         setProbs(probs);
-        setIsMaxProbs(isMaxProbs);
+        setNoValidConfig(false);
       }
-
-      setIsRunning(false);
-
-      const uuid = crypto.randomUUID();
-      setRunUuid(uuid);
-      setOpUuid(uuid);
     };
 
     return () => {
       probCalcWorkerRef.current?.terminate();
     };
-    // countが変化したらWorkerを再生成
-  }, [openMap, workerResetCnt]);
+    // プリセット適用・リセット時のみWorkerを再生成する
+  }, [workerResetCnt]);
 
-  const onExecute = () => {
-    setIsRunning(true);
+  // 入力が変化したら50ms後に自動で再計算する。
+  // 計算中でも新しい入力を続けて投げ、結果にはrun_idを付けて返してもらう。
+  // 古い結果はonmessageで破棄するため、最後に入力した内容だけが画面に残る。
+  useEffect(() => {
+    if (lastRunKeyRef.current === inputKey) {
+      return;
+    }
 
-    if (probCalcWorkerRef.current != null) {
-      const data = {
+    const timer = window.setTimeout(() => {
+      lastRunKeyRef.current = inputKey;
+      lastRunItemsKeyRef.current = inputItemsKey;
+      runIdRef.current += 1;
+      probCalcWorkerRef.current?.postMessage({
         item_and_placement: items,
         open_map: openMap,
-      };
-      probCalcWorkerRef.current.postMessage(data);
-    }
-  };
+        run_id: runIdRef.current,
+      });
+    }, 50);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [inputKey, inputItemsKey, items, openMap]);
 
   const onToggleShowProb = (index: number) => {
     const newShowProbs = [...showProbs];
@@ -501,7 +532,6 @@ const MainArea: FC = () => {
     const newOpenMap = [...openMap];
     newOpenMap[index] = !newOpenMap[index];
     setOpenMap(newOpenMap);
-    setOpUuid(crypto.randomUUID());
   };
 
   const onItemPresetApply = (preset: number) => {
@@ -510,10 +540,7 @@ const MainArea: FC = () => {
 
     setItems(createItemsFromPreset(presetItems));
     setProbs(null);
-    setIsMaxProbs(null);
     setOpenMap(Array(45).fill(false));
-    setOpUuid(crypto.randomUUID());
-    setIsRunning(false);
     setWorkerResetCnt((prev) => prev + 1);
     const presetLabel = controlPaneT(`predefined_choice_select.${preset}`);
     setPresetAppliedToast({
@@ -535,53 +562,66 @@ const MainArea: FC = () => {
 
     setItems(items.map((item) => new ItemAndPlacement(item.item, [])));
     setProbs(null);
-    setIsMaxProbs(null);
     setOpenMap(Array(45).fill(false));
-    setOpUuid(crypto.randomUUID());
-    setIsRunning(false);
     setWorkerResetCnt((prev) => prev + 1);
   };
 
   return (
     <Box mb={2}>
-      <Box my={2}>
-        <Board
-          placedItems={items.map((item) => item.placements).flat()}
-          probs={probs}
-          isMaxProbs={isMaxProbs}
-          openMap={openMap}
-          showProb={showProbs}
-          onToggleOpen={onToggleOpen}
-        ></Board>
-      </Box>
-      <Box my={2}>
-        <ControlPane
-          itemAndPlacements={items}
-          openPanels={openMap}
-          isRunning={isRunning}
-          showProb={showProbs}
-          recommendToRun={runUuid !== opUuid}
-          onExecute={onExecute}
-          onToggleShowProb={onToggleShowProb}
-          onItemPresetApply={onItemPresetApply}
-          onResetMap={onResetMap}
-        ></ControlPane>
-      </Box>
-      <Grid container spacing={2}>
-        {items.map((item, index) => (
-          <Grid item xs={4} key={`item-pane-grid-${index}`}>
+      <Box
+        my={2}
+        display="grid"
+        gridTemplateColumns={{ xs: 'minmax(0, 1fr)', md: 'minmax(520px, 1fr) auto' }}
+        gap={2}
+        alignItems="start"
+      >
+        <Box>
+          <Board
+            placedItems={items.map((item) => item.placements).flat()}
+            probs={probs}
+            openMap={openMap}
+            showProb={showProbs}
+            probScale={probScale}
+            probsFresh={probsFresh}
+            onToggleOpen={onToggleOpen}
+            onMovePlacedItem={onMovePlacedItem}
+            onRotatePlacedItem={onRotatePlacedItem}
+            onRemovePlacedItem={onRemovePlacedItem}
+          ></Board>
+        </Box>
+        <Box display="flex" flexDirection="column" gap={2}>
+          {items.map((item, index) => (
             <ItemPane
               key={`item-pane-${index}`}
               itemSet={item.item}
               placedItems={item.placements}
+              showProb={showProbs[index]}
+              onToggleShowProb={() => {
+                onToggleShowProb(index);
+              }}
               onModifyItem={onModifyItem}
               onAddPlacedItem={onAddPlacedItem}
-              onModifyPlacedItem={onModifyPlacedItem}
-              onRemovePlacedItem={onRemovePlacedItem}
             ></ItemPane>
-          </Grid>
-        ))}
-      </Grid>
+          ))}
+        </Box>
+      </Box>
+      {noValidConfig && (
+        <Alert severity="warning" sx={{ my: 1 }}>
+          {t('no_valid_configuration_auto')}
+        </Alert>
+      )}
+      <Box my={2}>
+        <ControlPane
+          itemAndPlacements={items}
+          openPanels={openMap}
+          probScale={probScale}
+          onToggleProbScale={() =>
+            { setProbScale(probScale === 'max' ? 'minmax' : 'max'); }
+          }
+          onItemPresetApply={onItemPresetApply}
+          onResetMap={onResetMap}
+        ></ControlPane>
+      </Box>
       <Snackbar
         key={presetAppliedToast?.id}
         open={presetAppliedToast !== null}

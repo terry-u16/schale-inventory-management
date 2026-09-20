@@ -1,3 +1,8 @@
+html {
+  /* 常にスクロールバーの領域を確保しておく（出たり消えたりするのを防ぐ） */
+  overflow-y: scroll;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -22,10 +27,7 @@ a:hover {
 }
 
 body {
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
   margin: 0;
 }
 
@@ -48,11 +50,6 @@ button {
 
 button:hover {
   border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

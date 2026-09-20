@@ -3,5 +3,19 @@
   "height": "高度（格）",
   "width": "宽度（格）",
   "amount": "数量（个）",
-  "add_button_tooltip": ["放置道具", "添加", "（纵向）", "（横向）"]
+  "add_button_tooltip": [
+    "放置道具",
+    "添加",
+    "（纵向）",
+    "（横向）"
+  ],
+  "height_input_tooltip": "输入高度（1~4）",
+  "width_input_tooltip": "输入宽度（1~4）",
+  "amount_input_tooltip": "输入数量（0~7）",
+  "save_size_tooltip": "收藏当前尺寸",
+  "favorite_apply_tooltip": "应用尺寸 {{size}}",
+  "show_prob_toggle_tooltip": "点击切换概率显示",
+  "spinbox_wheel_tooltip": "可用滚轮或↑↓键调整数值",
+  "show_prob_label": "显示概率",
+  "gesture_hint": "点击备品旋转，右键删除，可拖动备品（iOS 双击删除）"
 }

@@ -99,7 +99,14 @@ const Header: FC = () => {
 
             {Array.isArray(i18n.options.supportedLngs) && (
               <>
-                <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  disableScrollLock
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
                   {supportedLngs.map((lang: string, idx) => (
                     <MenuItem
                       key={idx}

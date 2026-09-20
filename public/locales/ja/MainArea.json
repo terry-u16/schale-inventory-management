@@ -1,5 +1,7 @@
 {
   "reset_confirm": "現在の入力内容はリセットされます。よろしいですか？",
   "item_preset_applied_toast": "{{presetLabel}}の備品プリセットを適用しました",
-  "item_preset_applied_with_unknown_quantity_toast": "{{presetLabel}}の備品プリセットを適用しました。数量は未反映のため、手動入力してください"
+  "item_preset_applied_with_unknown_quantity_toast": "{{presetLabel}}の備品プリセットを適用しました。数量は未反映のため、手動入力してください",
+  "no_valid_configuration_auto": "現在の入力では備品を置ける場所がありません（確率を計算できません）。開けたマスや備品の位置を見直してください",
+  "opened_cell": "空"
 }

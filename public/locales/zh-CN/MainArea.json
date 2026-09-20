@@ -1,5 +1,7 @@
 {
   "reset_confirm": "板面的所有内容将全部丢失。确定要重置吗？",
   "item_preset_applied_toast": "已应用 {{presetLabel}} 的道具预设",
-  "item_preset_applied_with_unknown_quantity_toast": "已应用 {{presetLabel}} 的道具预设。数量尚未反映，请手动输入。"
+  "item_preset_applied_with_unknown_quantity_toast": "已应用 {{presetLabel}} 的道具预设。数量尚未反映，请手动输入。",
+  "no_valid_configuration_auto": "当前输入下备品没有可放的位置（无法计算概率）。请检查已开的格子和备品位置",
+  "opened_cell": "空"
 }

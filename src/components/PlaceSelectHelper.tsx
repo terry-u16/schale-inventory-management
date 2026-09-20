@@ -35,18 +35,6 @@ export const usePlaceSelectHelper = (): PlaceSelectHelperContext =>
 
 let selecting = false;
 
-const isValidPlaceItem = ({
-  row,
-  col,
-  rotated,
-  item: { width, height },
-}: PlacedItem) => {
-  const rowEnd = row + (rotated ? width : height);
-  const colEnd = col + (rotated ? height : width);
-
-  return row >= 1 && col >= 1 && rowEnd <= 5 + 1 && colEnd <= 9 + 1;
-};
-
 const PlaceSelectHelper: FC<{ children: ReactNode }> = (props) => {
   const { setVisible: setOverlayVisible } = useOverlayContext();
   const [placedItem, setPlacedItem] = useState<PlacedItem | null>(null);
@@ -67,9 +55,13 @@ const PlaceSelectHelper: FC<{ children: ReactNode }> = (props) => {
           if (e === baseEvent) return;
           selecting = false;
           setOverlayVisible(false);
+          // クリックが盤面上のセルなら、境界プレチェックを通さずに
+          // 呼び出し元へ渡す（スマート配置のアンカー探索で判定する）。
+          // 盤面外クリックはキャンセル扱い。
           if (
             refPlacedItem.current !== null &&
-            isValidPlaceItem(refPlacedItem.current)
+            refPlacedItem.current.row >= 1 &&
+            refPlacedItem.current.col >= 1
           ) {
             const onSelect = refOnSelect.current;
             if (onSelect !== null) {
@@ -98,8 +90,13 @@ const PlaceSelectHelper: FC<{ children: ReactNode }> = (props) => {
   const value = useMemo(
     () => ({
       placeSelecting: placedItem !== null,
+      // ホバー先が盤面内なら常に渡す（境界チェックはしない）。
+      // 落下地点の計算（スマート配置）は Board 側で行い、
+      // 角・隅でも虚影が実際の配置先を示すようにする。
       selectingPlacedItem:
-        placedItem !== null && isValidPlaceItem(placedItem) ? placedItem : null,
+        placedItem !== null && placedItem.row >= 1 && placedItem.col >= 1
+          ? placedItem
+          : null,
       startPlaceSelect,
       setSelectingPlace,
     }),
