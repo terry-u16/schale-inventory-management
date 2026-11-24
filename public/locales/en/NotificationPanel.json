@@ -3,5 +3,6 @@
     "Support for the event DIVE into OCEAN!, which began on 2026/08/26, is complete. If you notice any issues, please report them through a ",
     "github issue",
     "."
-  ]
+  ],
+  "algorithmUpdate": "[Update] In November 2026, we updated the algorithm to calculate exact probabilities faster!"
 }
