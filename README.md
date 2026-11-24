@@ -21,7 +21,7 @@ https://schale-inventory-management.terry-u16.net/
 以下の環境で動作確認しています。
 
 - Node.js v23.9.0
-- pnpm v10.11.0
+- pnpm v12.11.2
 - Rust（Cargo 1.85.0）
 - wasm-pack 0.13.1
 
@@ -40,7 +40,7 @@ wasm-pack build --target web --out-dir ../public/wasm
 また初回実行時は、プロジェクトのルートディレクトリで以下のコマンドを実行して依存パッケージをインストールしてください。
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile --ignore-scripts
 ```
 
 その後、プロジェクトルートで以下のコマンドを実行するとローカルでサーバが立ち上がります。
@@ -48,6 +48,12 @@ pnpm install
 ```sh
 pnpm dev
 ```
+
+## PRルール
+
+`main` へのPRでは、GitHub Actions の `Pull Request Checks` が Prettier、ESLint、Stylelint を実行します。マージ前にすべての検査を通してください。fork からのPRも対象です。初回の外部コントリビューターによる実行には、メンテナーの承認が必要です。
+
+手元では `pnpm format:check` と `pnpm lint` で同じ検査を実行できます。Prettier の指摘は `pnpm format` で修正できます。
 
 ## 確率計算方法について
 
@@ -92,7 +98,7 @@ https://schale-inventory-management.terry-u16.net/
 Tested with the following environment:
 
 - Node.js v23.9.0
-- pnpm v10.11.0
+- pnpm v12.11.2
 - Rust (Cargo 1.85.0)
 - wasm-pack 0.13.1
 
@@ -111,7 +117,7 @@ wasm-pack build --target web --out-dir ../public/wasm
 For the first run, install dependencies in the project root:
 
 ```sh
-pnpm install
+pnpm install --frozen-lockfile --ignore-scripts
 ```
 
 Then, start the local server from the project root:
@@ -119,6 +125,12 @@ Then, start the local server from the project root:
 ```sh
 pnpm dev
 ```
+
+## Pull Request Rules
+
+For pull requests targeting `main`, the `Pull Request Checks` job runs Prettier, ESLint, and Stylelint. All checks should pass before merging. Pull requests from forks are included. A maintainer must approve workflow runs from first-time external contributors.
+
+Run `pnpm format:check` and `pnpm lint` to run the same checks locally. To fix Prettier issues, run `pnpm format`.
 
 ## About the Probability Calculation
 

@@ -16,45 +16,78 @@ permissions:
   contents: read
   pull-requests: write
 
+env:
+  PNPM_VERSION: '12.11.2'
+
 jobs:
+  check_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    name: Pull Request Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Install pnpm
+        run: |
+          npm install --global --prefix "$RUNNER_TEMP/pnpm" --ignore-scripts "pnpm@$PNPM_VERSION"
+          echo "$RUNNER_TEMP/pnpm/bin" >> "$GITHUB_PATH"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Check formatting
+        run: pnpm format:check
+      - name: Run lint
+        run: pnpm lint
+
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.fork == false ) || ( github.event_name == 'pull_request_target' && contains(github.event.pull_request.labels.*.name, 'deploy_staging'))
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           submodules: true
           lfs: false
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
+      - name: Install pnpm
+        run: |
+          npm install --global --prefix "$RUNNER_TEMP/pnpm" --ignore-scripts "pnpm@$PNPM_VERSION"
+          echo "$RUNNER_TEMP/pnpm/bin" >> "$GITHUB_PATH"
       - name: Cache cargo registry
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cargo/registry
           key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache cargo index
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.cargo/git
           key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
       - name: Cache cargo build
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-      - name: install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-      - run: wasm-pack build --target web --out-dir ../public/wasm
+      - name: Install wasm-pack
+        run: |
+          release=wasm-pack-v0.13.1-x86_64-unknown-linux-musl
+          archive="$RUNNER_TEMP/$release.tar.gz"
+          curl --fail --silent --show-error --location \
+            "https://github.com/wasm-bindgen/wasm-pack/releases/download/v0.13.1/$release.tar.gz" \
+            --output "$archive"
+          echo "c539d91ccab2591a7e975bcf82c82e1911b03335c80aa83d67ad25ed2ad06539  $archive" | sha256sum --check
+          tar --extract --gzip --file "$archive" --directory "$RUNNER_TEMP" "$release/wasm-pack"
+          echo "$RUNNER_TEMP/$release" >> "$GITHUB_PATH"
+      - run: wasm-pack build --target web --out-dir ../public/wasm -- --locked
         working-directory: ./wasm
       - name: Pnpm install
-        run: pnpm install
+        run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build
         run: pnpm build
       - name: Deploy
         id: deploy
-        uses: Azure/static-web-apps-deploy@v1
+        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_SEA_05AA22700 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
@@ -73,7 +106,7 @@ jobs:
     steps:
       - name: Close Pull Request
         id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9 # v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_MANGO_SEA_05AA22700 }}
           action: 'close'
