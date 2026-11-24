@@ -188,6 +188,8 @@ struct PlacementDp {
     initial: Frontier,
     candidates: Vec<Vec<(Placement, Item)>>,
     // suffix[pos][frontier]: この状態から全備品を置き切る配置数。
+    // 配置数は u64 の範囲を超える場合があるが、issue #14 の方針に従いオーバーフローを許容する。
+    // https://github.com/terry-u16/schale-inventory-management/issues/14
     suffix: Vec<HashMap<Frontier, u64>>,
 }
 

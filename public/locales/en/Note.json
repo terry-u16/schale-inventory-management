@@ -51,7 +51,7 @@
     ],
     "7": [
       "Are the displayed probabilities always correct?",
-      "The displayed probabilities depend on the following assumptions about how the game places supplies:",
+      "Not necessarily. The following assumptions are made during calculations:",
       "Supply placements are drawn uniformly at random from all possible configurations. (Depending on the game's internal mechanics, ",
       "some configurations may not have equal probability",
       ").",

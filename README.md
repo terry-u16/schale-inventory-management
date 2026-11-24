@@ -61,9 +61,9 @@ pnpm dev
 
 ### 計算方法
 
-盤面を列ごとに上から走査します。DPの状態には、現在のマス、各備品の残り個数、各行が先の何列まで埋まっているかを持ちます。備品の幅は最大4なので、各行の埋まり具合は0〜3の2ビット、5行で計10ビットに収まります。
+開いたマスと発見済みの備品の位置をもとに、残りの備品を配置するパターンが何通りあるかを前後から動的計画法（DP）で数えます。
 
-各状態から全備品を置き切る方法を後ろ向きDPで数えます。次に先頭から走査し、備品を置く遷移ごとに「遷移元に到達する方法の数 × 遷移先から置き切る方法の数」を集計します。各マスを対象の備品が覆う配置数を全配置数で割ると、そのマスの確率が得られます。配置数の計算には `u64` を使用しており、オーバーフローする場合は正しい確率を保証できません。
+ある位置に備品を置くとき、その直前の状態に至るまでの配置数と、そこから残りの備品を置き切る方法の数を掛けると、その置き方を含む配置パターンの数が分かります。各マスについて、そのマスを対象の備品が覆う配置パターンの数を合計し、全配置パターンの数で割って確率を求めます。
 
 処理の詳細は `/wasm/src/solver/counter.rs` をご参照ください。
 
@@ -132,9 +132,9 @@ The probability calculation is based on the following assumptions:
 
 ### Calculation Method
 
-The solver scans each column from top to bottom. A DP state records the current cell, the number of items left in each group, and how many columns ahead are already occupied in each row. Since items are at most four cells wide, two bits per row encode the occupied width, for a total of ten bits.
+Given the opened cells and the locations of supplies already found, the solver uses dynamic programming to count the possible arrangements of the remaining supplies.
 
-A backward pass counts the ways to complete each state. For each transition that places an item, a forward pass multiplies the number of ways to reach its source by the number of ways to complete its destination. Summing these counts for placements covering a cell and dividing by the total number of configurations gives its occupancy probability. Counts use `u64`, so overflow can affect the result.
+For each placement, the solver multiplies the number of ways to reach the state just before placing the supply by the number of ways to finish the board afterward. This gives the number of arrangements that include that placement. For each cell, the solver adds up the counts for placements where a selected supply covers that cell, then divides by the total number of arrangements to get the probability.
 
 For details, see `/wasm/src/solver/counter.rs`.
 
