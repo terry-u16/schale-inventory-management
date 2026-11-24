@@ -49,14 +49,9 @@
       "Pressing the Execute button doesn’t show probabilities!",
       "Depending on your device or browser, the probability calculations may take time. Also, some browsers may not support the feature (tested on Google Chrome). Ensure that at least one probability display button is ON."
     ],
-    "6": [
-      "The probabilities change every time I press Execute!",
-      "To reduce computation time, only a subset of possible configurations is randomly sampled. As a result, the displayed probabilities may vary.",
-      "If the number of possible configurations is 100,000 or less, all configurations are calculated for precise probabilities."
-    ],
     "7": [
       "Are the displayed probabilities always correct?",
-      "Not necessarily. Since probabilities are estimated using random sampling, discrepancies may occur. The following assumptions are made during calculations:",
+      "Not necessarily. The following assumptions are made during calculations:",
       "Supply placements are drawn uniformly at random from all possible configurations. (Depending on the game's internal mechanics, ",
       "some configurations may not have equal probability",
       ").",

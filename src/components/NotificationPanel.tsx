@@ -20,6 +20,9 @@ const NotificationPanel: FC = () => {
             </a>
             {t('alert.2')}
           </Alert>
+          <Alert severity="info" sx={{ mt: 1 }}>
+            {t('algorithmUpdate')}
+          </Alert>
         </Box>
       </Paper>
     </>
