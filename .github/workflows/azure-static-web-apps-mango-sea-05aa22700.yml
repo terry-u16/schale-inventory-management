@@ -38,6 +38,8 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Check formatting
         run: pnpm format:check
+      - name: Build Wasm
+        uses: ./.github/actions/build-wasm
       - name: Run lint
         run: pnpm lint
 
@@ -69,18 +71,8 @@ jobs:
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
-      - name: Install wasm-pack
-        run: |
-          release=wasm-pack-v0.13.1-x86_64-unknown-linux-musl
-          archive="$RUNNER_TEMP/$release.tar.gz"
-          curl --fail --silent --show-error --location \
-            "https://github.com/wasm-bindgen/wasm-pack/releases/download/v0.13.1/$release.tar.gz" \
-            --output "$archive"
-          echo "c539d91ccab2591a7e975bcf82c82e1911b03335c80aa83d67ad25ed2ad06539  $archive" | sha256sum --check
-          tar --extract --gzip --file "$archive" --directory "$RUNNER_TEMP" "$release/wasm-pack"
-          echo "$RUNNER_TEMP/$release" >> "$GITHUB_PATH"
-      - run: wasm-pack build --target web --out-dir ../public/wasm -- --locked
-        working-directory: ./wasm
+      - name: Build Wasm
+        uses: ./.github/actions/build-wasm
       - name: Pnpm install
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Build
