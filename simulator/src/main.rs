@@ -8,9 +8,6 @@ mod simulator;
 struct Config {
     #[arg(short, long = "game")]
     game_sample_count: usize,
-
-    #[arg(short, long = "prob", default_value_t = 10000)]
-    prob_sample_count: usize,
 }
 
 fn main() {
@@ -19,7 +16,6 @@ fn main() {
 
     println!("[Configuration]");
     println!("game_sample_count: {}", config.game_sample_count);
-    println!("prob_sample_count: {}", config.prob_sample_count);
     println!();
 
     let mut probs = vec![];
@@ -30,12 +26,7 @@ fn main() {
         let mut p = vec![];
 
         for target_item in 0..3 {
-            let result = simulate(
-                board_type,
-                target_item,
-                config.game_sample_count,
-                config.prob_sample_count,
-            );
+            let result = simulate(board_type, target_item, config.game_sample_count);
             println!(
                 "board {} / target {}: {:?}",
                 board_type, target_item, result

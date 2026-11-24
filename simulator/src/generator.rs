@@ -3,7 +3,7 @@ use rand::Rng;
 use wasm_solver::{
     grid::{Coord, Map2d},
     problem::{GameState, Item, ItemGroup, PlacedItem},
-    solver::counter::{calc_probabilities, sample_one_placement, sample_placements},
+    solver::counter::{calc_probabilities, count_placements, sample_one_placement},
 };
 
 #[derive(Debug, Clone)]
@@ -90,14 +90,9 @@ impl SimulationState {
         index
     }
 
-    pub fn get_probs(&self, flag: u32, sample_count: usize, rng: &mut impl Rng) -> Map2d<f64> {
-        let sampled = sample_placements(&self.game_state, sample_count as u64, rng);
-        calc_probabilities(
-            &self.game_state,
-            flag,
-            sampled.sampled_count,
-            &sampled.sampled_item_counts,
-        )
+    pub fn get_probs(&self, flag: u32) -> Map2d<f64> {
+        let (total, counts) = count_placements(&self.game_state).expect("no valid placement");
+        calc_probabilities(&self.game_state, flag, total, &counts)
     }
 
     fn get_items(board_type: usize) -> [ItemGroup; GameState::ITEM_GROUP_COUNT] {

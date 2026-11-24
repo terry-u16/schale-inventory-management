@@ -1,13 +1,10 @@
 use crate::{
     grid::{Coord, Map2d},
-    mat,
     problem::{GameState, Item},
 };
 use anyhow::{ensure, Result};
-use itertools::iproduct;
 use rand::prelude::*;
-use rand_pcg::Pcg64Mcg;
-use std::array;
+use std::collections::HashMap;
 
 /// 各行の「先に何マス埋まっているか(wi: 0..=3)」を2bitずつ詰めた状態。
 /// 5行ぶんで合計10bitを使うので、格納型はu16で十分。
@@ -16,9 +13,6 @@ type WBits = u16;
 const W_BITS_PER_ROW: usize = 2;
 /// 1行ぶんの値を取り出すためのマスク(0b11)。
 const W_MASK: WBits = (1 << W_BITS_PER_ROW) - 1;
-/// w_bits の全状態数。2bit x 5行 = 10bit なので 2^10 = 1024。
-const W_STATE_COUNT: usize = 1 << (GameState::HEIGHT * W_BITS_PER_ROW);
-
 /// w_bits から row 行目の wi(0..=3) を取り出す。
 fn get_w(w_bits: WBits, row: usize) -> usize {
     ((w_bits >> (row * W_BITS_PER_ROW)) & W_MASK) as usize
@@ -54,39 +48,18 @@ fn fill_w_if_placeable(w_bits: WBits, row: usize, item: Item) -> Option<WBits> {
 }
 
 /// 3アイテムについて、各マスにアイテムが置かれる確率を計算する。
-pub fn calc_probabilities_all(state: &GameState, sample_count: u64) -> Result<Vec<Map2d<f64>>> {
-    let mut rng = Pcg64Mcg::from_entropy();
-    let sampled = sample_placements(state, sample_count, &mut rng);
-
-    ensure!(sampled.all_count > 0, "no_valid_configuration");
-
-    let mut probabilities = vec![];
-
-    // 各アイテムについて、アイテムを置いた回数をカウントする
-    for flag in 0..(1 << GameState::ITEM_GROUP_COUNT) {
-        let prob = calc_probabilities(
-            state,
-            flag,
-            sampled.sampled_count,
-            &sampled.sampled_item_counts,
-        );
-        probabilities.push(prob);
-    }
-
-    Ok(probabilities)
-}
-
-pub fn sample_one_placement(state: &GameState, rng: &mut impl Rng) -> Result<Vec<Placement>> {
-    let sampled = sample_top_left_counts(state, 1, rng);
-    ensure!(sampled.all_count > 0, "no_valid_configuration");
-    Ok(sampled.top_left_counts.to_placements())
+pub fn calc_probabilities_all(state: &GameState) -> Result<Vec<Map2d<f64>>> {
+    let (total, item_counts) = count_placements(state)?;
+    Ok((0..1 << GameState::ITEM_GROUP_COUNT)
+        .map(|flag| calc_probabilities(state, flag, total, &item_counts))
+        .collect())
 }
 
 pub fn calc_probabilities(
     state: &GameState,
     flag: u32,
-    sampled_count: u64,
-    sampled_item_counts: &[Map2d<u64>],
+    total: u64,
+    occupancy_counts: &[Map2d<u64>],
 ) -> Map2d<f64> {
     let mut counts = Map2d::new_with(0u64, GameState::WIDTH, GameState::HEIGHT);
 
@@ -103,12 +76,12 @@ pub fn calc_probabilities(
 
         for row in r0..r1 {
             for col in c0..c1 {
-                counts[Coord::new(row, col)] += sampled_count;
+                counts[Coord::new(row, col)] += total;
             }
         }
     }
 
-    for (item_index, item_counts) in sampled_item_counts
+    for (item_index, item_counts) in occupancy_counts
         .iter()
         .enumerate()
         .take(GameState::ITEM_GROUP_COUNT)
@@ -129,14 +102,14 @@ pub fn calc_probabilities(
 
     for row in 0..GameState::HEIGHT {
         for col in 0..GameState::WIDTH {
-            prob[Coord::new(row, col)] = counts[Coord::new(row, col)] as f64 / sampled_count as f64;
+            prob[Coord::new(row, col)] = counts[Coord::new(row, col)] as f64 / total as f64;
         }
     }
     prob
 }
 
 /// `item_index x rotated(0/1) x (row, col)` の左上配置出現回数。
-/// 復元中はこの頻度だけを集計し、最後に盤面セル占有カウントへ一括展開する。
+/// 配置遷移ごとに集計し、最後に各備品が占めるマスへ展開する。
 struct TopLeftCounts {
     counts: Vec<[Map2d<u64>; 2]>,
 }
@@ -160,13 +133,12 @@ impl TopLeftCounts {
     }
 
     fn to_item_counts(&self, state: &GameState) -> Vec<Map2d<u64>> {
-        let mut sampled_item_counts =
-            vec![
-                Map2d::new_with(0u64, GameState::WIDTH, GameState::HEIGHT);
-                GameState::ITEM_GROUP_COUNT
-            ];
+        let mut occupancy_counts = vec![
+            Map2d::new_with(0u64, GameState::WIDTH, GameState::HEIGHT);
+            GameState::ITEM_GROUP_COUNT
+        ];
 
-        for (item_index, item_counts) in sampled_item_counts
+        for (item_index, item_counts) in occupancy_counts
             .iter_mut()
             .enumerate()
             .take(GameState::ITEM_GROUP_COUNT)
@@ -199,304 +171,161 @@ impl TopLeftCounts {
             }
         }
 
-        sampled_item_counts
+        occupancy_counts
     }
+}
 
-    fn to_placements(&self) -> Vec<Placement> {
-        let mut placements = vec![];
+const CELL_COUNT: usize = GameState::HEIGHT * GameState::WIDTH;
 
-        for item_index in 0..GameState::ITEM_GROUP_COUNT {
-            for rotate_idx in 0..2 {
-                let is_rotated = rotate_idx == 1;
-                for row in 0..GameState::HEIGHT {
-                    for col in 0..GameState::WIDTH {
-                        let coord = Coord::new(row, col);
-                        let count = self.counts[item_index][rotate_idx][coord];
-                        for _ in 0..count {
-                            placements.push(Placement::new(coord, item_index, is_rotated));
-                        }
+// pos = col * HEIGHT + row の順に走査する。備品を置くと高さぶん進む。
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+struct Frontier {
+    remaining: [usize; GameState::ITEM_GROUP_COUNT],
+    w_bits: WBits,
+}
+
+struct PlacementDp {
+    initial: Frontier,
+    candidates: Vec<Vec<(Placement, Item)>>,
+    // suffix[pos][frontier]: この状態から全備品を置き切る配置数。
+    suffix: Vec<HashMap<Frontier, u64>>,
+}
+
+impl PlacementDp {
+    fn new(state: &GameState) -> Self {
+        let mut candidates = vec![Vec::new(); CELL_COUNT];
+        for (pos, options) in candidates.iter_mut().enumerate() {
+            let coord = Coord::new(pos % GameState::HEIGHT, pos / GameState::HEIGHT);
+            for (index, group) in state.remaining_items.iter().enumerate() {
+                for (rotated, item) in [(false, Some(group.item)), (true, group.item.rotate())] {
+                    let Some(item) = item else { continue };
+                    let end = item.bottom_right(coord);
+                    if end.row <= GameState::HEIGHT
+                        && end.col <= GameState::WIDTH
+                        && !state.has_occupied(coord, end)
+                        && !state.has_vacant(coord, end)
+                    {
+                        options.push((Placement::new(coord, index, rotated), item));
                     }
                 }
             }
         }
-
-        placements
-    }
-}
-
-pub fn sample_placements(
-    state: &GameState,
-    sample_count: u64,
-    rng: &mut impl Rng,
-) -> SamplePlacementsResult {
-    let sampled = sample_top_left_counts(state, sample_count, rng);
-    let sampled_item_counts = sampled.top_left_counts.to_item_counts(state);
-
-    SamplePlacementsResult {
-        all_count: sampled.all_count,
-        sampled_count: sampled.sampled_count,
-        sampled_item_counts,
-    }
-}
-
-struct TopLeftSampleResult {
-    all_count: u64,
-    sampled_count: u64,
-    top_left_counts: TopLeftCounts,
-}
-
-fn sample_top_left_counts(
-    state: &GameState,
-    sample_count: u64,
-    rng: &mut impl Rng,
-) -> TopLeftSampleResult {
-    // DPにより候補数を計算する。
-    //
-    // 元の定義は次の10次元状態:
-    //   dp[col][row][cnt0][cnt1][cnt2][w0][w1][w2][w3][w4]
-    // ここで wi は「i 行目がこの先何列ぶん埋まっているか(0..=3)」を表す。
-    //
-    // GameState::MAX_ITEM_SIZE=4 固定のため wi は2bitで表せるので、
-    // [w0..w4] を 2bit x 5行 = 10bit の w_bits にパックして次に畳み込んでいる:
-    //   dp[col][row][cnt0][cnt1][cnt2][w_bits]
-    //   w_bits = (w0 << 0) | (w1 << 2) | (w2 << 4) | (w3 << 6) | (w4 << 8)
-    //
-    // これにより状態数は 4^5 (= 1024) の1軸となり、配列次元を削減できる。
-    // 最終的な答えは dp[WIDTH][0][C0][C1][C2][0]。
-    let dp_cell = [0; W_STATE_COUNT];
-    let mut dp = mat![dp_cell;
-        GameState::WIDTH + 1;
-        GameState::HEIGHT + 1;
-        state.remaining_items[0].count + 1;
-        state.remaining_items[1].count + 1;
-        state.remaining_items[2].count + 1
-    ];
-    let from_cell: [Vec<_>; W_STATE_COUNT] = array::from_fn(|_| Vec::new());
-    let mut from = mat![from_cell;
-        GameState::WIDTH + 1;
-        GameState::HEIGHT + 1;
-        state.remaining_items[0].count + 1;
-        state.remaining_items[1].count + 1;
-        state.remaining_items[2].count + 1
-    ];
-    dp[0][0][0][0][0][0] = 1;
-
-    // 6次元DP
-    let product = iproduct!(
-        0..GameState::WIDTH,
-        0..GameState::HEIGHT,
-        0..=state.remaining_items[0].count,
-        0..=state.remaining_items[1].count,
-        0..=state.remaining_items[2].count,
-        0..W_STATE_COUNT
-    );
-
-    for (col, row, cnt0, cnt1, cnt2, w_bits_idx) in product {
-        let cnts = [cnt0, cnt1, cnt2];
-        let w_bits = w_bits_idx as WBits;
-        let current_dp = dp[col][row][cnt0][cnt1][cnt2][w_bits_idx];
-
-        if current_dp == 0 {
-            continue;
-        }
-
-        // 次の状態への遷移関数
-        let mut transit = |new_cnts: &[usize; 3], item: Item, item_i: usize, rotate: bool| {
-            let coord = Coord::new(row, col);
-
-            // 置けるかどうかチェック
-            let bottom_right = item.bottom_right(coord);
-
-            if bottom_right.row > GameState::HEIGHT || bottom_right.col > GameState::WIDTH {
-                return;
-            }
-
-            if state.has_occupied(coord, bottom_right) || state.has_vacant(coord, bottom_right) {
-                return;
-            }
-
-            let Some(new_w_bits) = fill_w_if_placeable(w_bits, row, item) else {
-                return;
-            };
-
-            let (new_row, new_col) = if row + item.height() == GameState::HEIGHT {
-                (0, col + 1)
-            } else {
-                (row + item.height(), col)
-            };
-
-            dp[new_col][new_row][new_cnts[0]][new_cnts[1]][new_cnts[2]][new_w_bits as usize] +=
-                current_dp;
-            from[new_col][new_row][new_cnts[0]][new_cnts[1]][new_cnts[2]][new_w_bits as usize]
-                .push(History::new(
-                    row,
-                    col,
-                    cnts,
-                    w_bits,
-                    Some((item_i as u8, rotate)),
-                    current_dp,
-                ));
+        let initial = Frontier {
+            remaining: state.remaining_items.map(|group| group.count),
+            w_bits: 0,
         };
-
-        // 新たにアイテムを置く遷移
-        for i in 0..GameState::ITEM_GROUP_COUNT {
-            if cnts[i] + 1 > state.remaining_items[i].count {
-                continue;
-            }
-
-            let mut next_cnt = cnts;
-            next_cnt[i] += 1;
-
-            transit(&next_cnt, state.remaining_items[i].item, i, false);
-
-            if let Some(rotated_item) = state.remaining_items[i].item.rotate() {
-                transit(&next_cnt, rotated_item, i, true);
-            }
-        }
-
-        // アイテムを置かずに着目するマスを次の位置に移動する遷移
-        if row + 1 < GameState::HEIGHT {
-            // 次の行に移動する
-            let new_w_bits = dec_w(w_bits, row);
-
-            dp[col][row + 1][cnt0][cnt1][cnt2][new_w_bits as usize] += current_dp;
-            from[col][row + 1][cnt0][cnt1][cnt2][new_w_bits as usize]
-                .push(History::new(row, col, cnts, w_bits, None, current_dp));
-        } else if col < GameState::WIDTH {
-            // 次の列に移動する
-            let new_w_bits = dec_w(w_bits, row);
-
-            dp[col + 1][0][cnt0][cnt1][cnt2][new_w_bits as usize] += current_dp;
-            from[col + 1][0][cnt0][cnt1][cnt2][new_w_bits as usize]
-                .push(History::new(row, col, cnts, w_bits, None, current_dp));
+        let mut suffix = vec![HashMap::new(); CELL_COUNT + 1];
+        Self::count_suffix(&candidates, &mut suffix, 0, initial);
+        Self {
+            initial,
+            candidates,
+            suffix,
         }
     }
 
-    let all_count = dp[GameState::WIDTH][0][state.remaining_items[0].count]
-        [state.remaining_items[1].count][state.remaining_items[2].count][0];
-
-    let (sampled_count, top_left_counts) = if all_count <= sample_count {
-        let mut top_left_counts = TopLeftCounts::new();
-        let cnt = [
-            state.remaining_items[0].count,
-            state.remaining_items[1].count,
-            state.remaining_items[2].count,
-        ];
-        let sampled_count = restore_dfs(&from, 0, GameState::WIDTH, cnt, 0, &mut top_left_counts);
-        (sampled_count, top_left_counts)
-    } else {
-        let top_left_counts = restore_random(state, &dp, &from, sample_count, rng);
-        (sample_count, top_left_counts)
-    };
-    TopLeftSampleResult {
-        all_count,
-        sampled_count,
-        top_left_counts,
-    }
-}
-
-pub struct SamplePlacementsResult {
-    pub all_count: u64,
-    pub sampled_count: u64,
-    pub sampled_item_counts: Vec<Map2d<u64>>,
-}
-
-type DP = Vec<Vec<Vec<Vec<Vec<[u64; W_STATE_COUNT]>>>>>;
-
-type From = Vec<Vec<Vec<Vec<Vec<[Vec<History>; W_STATE_COUNT]>>>>>;
-
-/// DFSで全ての解を復元する
-fn restore_dfs(
-    from: &From,
-    row: usize,
-    col: usize,
-    cnt: [usize; GameState::ITEM_GROUP_COUNT],
-    w_bits: usize,
-    top_left_counts: &mut TopLeftCounts,
-) -> u64 {
-    if col == 0 && row == 0 {
-        return 1;
+    fn transitions(
+        options: &[(Placement, Item)],
+        pos: usize,
+        frontier: Frontier,
+    ) -> impl Iterator<Item = (usize, Frontier, Option<Placement>)> + '_ {
+        std::iter::once((pos + 1, frontier.skip(pos), None)).chain(options.iter().filter_map(
+            move |&(placement, item)| {
+                let next = frontier.place(placement, item)?;
+                Some((pos + item.height(), next, Some(placement)))
+            },
+        ))
     }
 
-    let mut sampled_count = 0u64;
-    for history in from[col][row][cnt[0]][cnt[1]][cnt[2]][w_bits].iter() {
-        let prev = history.prev_state();
-
-        let child_count = restore_dfs(
-            from,
-            prev.row,
-            prev.col,
-            prev.cnt,
-            prev.w_bits,
-            top_left_counts,
-        );
-
-        sampled_count += child_count;
-
-        if let Some((item_i, rotate)) = history.item {
-            let placement = Placement::new(history.coord(), item_i as usize, rotate);
-            top_left_counts.add(&placement, child_count);
+    // 初期状態から到達する状態だけをメモ化する。
+    fn count_suffix(
+        candidates: &[Vec<(Placement, Item)>],
+        suffix: &mut [HashMap<Frontier, u64>],
+        pos: usize,
+        frontier: Frontier,
+    ) -> u64 {
+        if let Some(&count) = suffix[pos].get(&frontier) {
+            return count;
         }
+        let count = if pos == CELL_COUNT {
+            u64::from(
+                frontier.remaining == [0; GameState::ITEM_GROUP_COUNT] && frontier.w_bits == 0,
+            )
+        } else {
+            Self::transitions(&candidates[pos], pos, frontier)
+                .map(|(end, next, _)| Self::count_suffix(candidates, suffix, end, next))
+                .sum()
+        };
+        suffix[pos].insert(frontier, count);
+        count
     }
-    sampled_count
 }
 
-/// ランダムサンプリングで解を復元する
-fn restore_random(
-    state: &GameState,
-    dp: &DP,
-    from: &From,
-    sample_count: u64,
-    rng: &mut impl Rng,
-) -> TopLeftCounts {
-    let mut top_left_counts = TopLeftCounts::new();
-
-    if dp[GameState::WIDTH][0][state.remaining_items[0].count][state.remaining_items[1].count]
-        [state.remaining_items[2].count][0]
-        == 0
-    {
-        return top_left_counts;
+impl Frontier {
+    fn skip(mut self, pos: usize) -> Self {
+        self.w_bits = dec_w(self.w_bits, pos % GameState::HEIGHT);
+        self
     }
 
-    for _ in 0..sample_count {
-        let mut row = 0;
-        let mut col = GameState::WIDTH;
-        let mut cnt = [
-            state.remaining_items[0].count,
-            state.remaining_items[1].count,
-            state.remaining_items[2].count,
-        ];
-        let mut w_bits = 0;
+    fn place(mut self, placement: Placement, item: Item) -> Option<Self> {
+        self.remaining[placement.item_index] =
+            self.remaining[placement.item_index].checked_sub(1)?;
+        self.w_bits = fill_w_if_placeable(self.w_bits, placement.coord.row, item)?;
+        Some(self)
+    }
+}
 
-        while row > 0 || col > 0 {
-            // 場合の数に比例した確率で次の状態を選択
-            let histories = &from[col][row][cnt[0]][cnt[1]][cnt[2]][w_bits];
-            let total = dp[col][row][cnt[0]][cnt[1]][cnt[2]][w_bits];
-            let mut pick = rng.gen_range(0..total);
-            let mut history = &histories[0];
+pub fn count_placements(state: &GameState) -> Result<(u64, Vec<Map2d<u64>>)> {
+    let dp = PlacementDp::new(state);
+    let total = dp.suffix[0][&dp.initial];
+    ensure!(total > 0, "no_valid_configuration");
 
-            for h in histories.iter() {
-                if pick < h.weight {
-                    history = h;
-                    break;
+    let mut prefix = vec![HashMap::new(); CELL_COUNT + 1];
+    prefix[0].insert(dp.initial, 1u64);
+    let mut top_left = TopLeftCounts::new();
+    for pos in 0..CELL_COUNT {
+        for (frontier, ways) in std::mem::take(&mut prefix[pos]) {
+            for (end, next, placement) in
+                PlacementDp::transitions(&dp.candidates[pos], pos, frontier)
+            {
+                let completions = dp.suffix[end][&next];
+                if completions == 0 {
+                    continue;
                 }
-                pick -= h.weight;
+                *prefix[end].entry(next).or_default() += ways;
+                if let Some(placement) = placement {
+                    // 遷移を通る全配置は、遷移前の配置と遷移後の完成方法の組に一対一対応する。
+                    top_left.add(&placement, ways * completions);
+                }
             }
-
-            if let Some((item_i, rotate)) = history.item {
-                let placement = Placement::new(history.coord(), item_i as usize, rotate);
-                top_left_counts.add(&placement, 1);
-            }
-            let prev = history.prev_state();
-
-            row = prev.row;
-            col = prev.col;
-            cnt = prev.cnt;
-            w_bits = prev.w_bits;
         }
     }
+    Ok((total, top_left.to_item_counts(state)))
+}
 
-    top_left_counts
+pub fn sample_one_placement(state: &GameState, rng: &mut impl Rng) -> Result<Vec<Placement>> {
+    let dp = PlacementDp::new(state);
+    let mut frontier = dp.initial;
+    let total = dp.suffix[0][&frontier];
+    ensure!(total > 0, "no_valid_configuration");
+    let mut rank = rng.gen_range(0..total);
+    let mut placements = Vec::new();
+    let mut pos = 0;
+    while pos < CELL_COUNT {
+        let (end, next, placement) = PlacementDp::transitions(&dp.candidates[pos], pos, frontier)
+            .find(|&(end, next, _)| {
+                let count = dp.suffix[end][&next];
+                if rank < count {
+                    return true;
+                }
+                rank -= count;
+                false
+            })
+            .expect("rank lies within the completion count");
+        placements.extend(placement);
+        pos = end;
+        frontier = next;
+    }
+    Ok(placements)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -516,65 +345,6 @@ impl Placement {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
-// DP復元用の逆遷移1本分。メモリ削減のため状態はu8で圧縮して保持する。
-struct History {
-    row: u8,
-    col: u8,
-    cnt: [u8; GameState::ITEM_GROUP_COUNT],
-    w_bits: WBits,
-    item: Option<(u8, bool)>,
-    weight: u64,
-}
-
-#[derive(Debug, Clone, Copy)]
-// 復元処理で扱いやすいusize表現の直前状態。
-struct RestoreState {
-    row: usize,
-    col: usize,
-    cnt: [usize; GameState::ITEM_GROUP_COUNT],
-    w_bits: usize,
-}
-
-impl History {
-    fn new(
-        row: usize,
-        col: usize,
-        cnt: [usize; 3],
-        w_bits: WBits,
-        item: Option<(u8, bool)>,
-        weight: u64,
-    ) -> Self {
-        debug_assert!(u8::try_from(row).is_ok());
-        debug_assert!(u8::try_from(col).is_ok());
-        debug_assert!(cnt.iter().all(|&v| u8::try_from(v).is_ok()));
-        debug_assert!((w_bits as usize) < W_STATE_COUNT);
-        debug_assert!(item.map(|(i, _)| i as usize).unwrap_or(0) < GameState::ITEM_GROUP_COUNT);
-
-        Self {
-            row: row as u8,
-            col: col as u8,
-            cnt: cnt.map(|v| v as u8),
-            w_bits,
-            item,
-            weight,
-        }
-    }
-
-    fn coord(&self) -> Coord {
-        Coord::new(self.row as usize, self.col as usize)
-    }
-
-    fn prev_state(&self) -> RestoreState {
-        RestoreState {
-            row: self.row as usize,
-            col: self.col as usize,
-            cnt: self.cnt.map(|v| v as usize),
-            w_bits: self.w_bits as usize,
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -584,8 +354,51 @@ mod tests {
     };
 
     fn calc_count(state: &GameState) -> u64 {
-        let mut rng = Pcg64Mcg::from_entropy();
-        sample_placements(state, 10000, &mut rng).all_count
+        count_placements(state).unwrap().0
+    }
+
+    #[test]
+    fn exact_cell_counts_above_old_sampling_limit() {
+        let state = GameState::new(
+            Map2d::new_with(false, GameState::WIDTH, GameState::HEIGHT),
+            [
+                ItemGroup::new(Item::new(1, 1, 0), 4),
+                ItemGroup::new(Item::new(1, 1, 1), 0),
+                ItemGroup::new(Item::new(1, 1, 2), 0),
+            ],
+            vec![],
+        );
+        let (total, counts) = count_placements(&state).unwrap();
+        // C(45, 4) 通りのうち、指定したマスを含むのは C(44, 3) 通り。
+        assert_eq!(total, 148_995);
+        assert!(counts[0].iter().all(|&n| n == 13_244));
+    }
+
+    #[test]
+    fn exact_probabilities_with_rotation_and_placed_item() {
+        use crate::problem::PlacedItem;
+
+        let mut open = Map2d::new_with(true, GameState::WIDTH, GameState::HEIGHT);
+        for coord in [Coord::new(0, 0), Coord::new(0, 1), Coord::new(1, 0)] {
+            open[coord] = false;
+        }
+        let fixed = Item::new(1, 1, 1);
+        let state = GameState::new(
+            open,
+            [
+                ItemGroup::new(Item::new(1, 2, 0), 1),
+                ItemGroup::new(fixed, 0),
+                ItemGroup::new(Item::new(1, 1, 2), 0),
+            ],
+            vec![PlacedItem::new(fixed, Coord::new(1, 1))],
+        );
+        let probs = calc_probabilities_all(&state).unwrap();
+        assert_eq!(probs[1][Coord::new(0, 0)], 1.0);
+        assert_eq!(probs[1][Coord::new(0, 1)], 0.5);
+        assert_eq!(probs[1][Coord::new(1, 0)], 0.5);
+        assert_eq!(probs[1][Coord::new(1, 1)], 0.0);
+        assert_eq!(probs[3][Coord::new(1, 1)], 1.0);
+        assert_eq!(probs[3][Coord::new(2, 2)], 0.0);
     }
 
     #[test]

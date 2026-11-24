@@ -7,12 +7,7 @@ use wasm_solver::{grid::Coord, problem::GameState};
 
 use crate::generator::SimulationState;
 
-pub fn simulate(
-    board_type: usize,
-    target_item: usize,
-    game_sample_count: usize,
-    prob_sample_count: usize,
-) -> Vec<f64> {
+pub fn simulate(board_type: usize, target_item: usize, game_sample_count: usize) -> Vec<f64> {
     assert!(target_item < GameState::ITEM_GROUP_COUNT);
     let mut counts = vec![];
 
@@ -20,7 +15,7 @@ pub fn simulate(
         .into_par_iter()
         .map(|_| {
             let mut rng = Pcg64Mcg::from_entropy();
-            simulate_once(board_type, target_item, prob_sample_count, &mut rng)
+            simulate_once(board_type, target_item, &mut rng)
         })
         .collect_into_vec(&mut counts);
 
@@ -36,12 +31,7 @@ pub fn simulate(
         .collect()
 }
 
-fn simulate_once(
-    board_type: usize,
-    target_item: usize,
-    prob_sample_count: usize,
-    rng: &mut impl Rng,
-) -> usize {
+fn simulate_once(board_type: usize, target_item: usize, rng: &mut impl Rng) -> usize {
     let mut state = SimulationState::generate(board_type, rng);
     let target_items = (0..=target_item).collect_vec();
     let flag = (0..=target_item).fold(0, |acc, i| acc | 1 << i);
@@ -50,7 +40,7 @@ fn simulate_once(
         .iter()
         .any(|&i| state.game_state.remaining_items[i].count > 0)
     {
-        let probs = state.get_probs(flag, prob_sample_count, rng);
+        let probs = state.get_probs(flag);
 
         let mut best_prob = 0.0;
         let mut best_pos = vec![];

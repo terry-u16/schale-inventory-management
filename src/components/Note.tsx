@@ -93,14 +93,6 @@ const Note: FC = () => {
                 </Stack>
 
                 <Stack spacing={1}>
-                  <Typography variant="h5">{t('faq.6.0')}</Typography>
-                  <Typography variant="body1">{t('faq.6.1')}</Typography>
-                  <Typography variant="body1">
-                    <Trans i18nKey="Note:faq.6.2" components={{ s: <s /> }} />
-                  </Typography>
-                </Stack>
-
-                <Stack spacing={1}>
                   <Typography variant="h5">{t('faq.7.0')}</Typography>
                   <Typography variant="body1">{t('faq.7.1')}</Typography>
                   <ul>
