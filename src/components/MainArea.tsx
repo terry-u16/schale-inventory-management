@@ -101,17 +101,17 @@ const predefinedItems: PresetItemSet[][] = [
   ],
   [
     { item: { ...quill, index: 1 }, count: 3 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 4 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 4 },
     { item: { ...ceramics, index: 3 }, count: 1 },
   ],
   [
     { item: { ...brooch, index: 1 }, count: 3 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
     { item: { ...marbleBust, index: 3 }, count: 1 },
   ],
   [
     { item: { ...brooch, index: 1 }, count: 2 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
     { item: { ...painting, index: 3 }, count: 2 },
   ],
   [
@@ -121,17 +121,17 @@ const predefinedItems: PresetItemSet[][] = [
   ],
   [
     { item: { ...quill, index: 1 }, count: 3 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 4 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 4 },
     { item: { ...ceramics, index: 3 }, count: 1 },
   ],
   [
     { item: { ...brooch, index: 1 }, count: 3 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
     { item: { ...marbleBust, index: 3 }, count: 1 },
   ],
   [
     { item: { ...brooch, index: 1 }, count: 2 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
     { item: { ...painting, index: 3 }, count: 2 },
   ],
   [
@@ -141,17 +141,17 @@ const predefinedItems: PresetItemSet[][] = [
   ],
   [
     { item: { ...quill, index: 1 }, count: 3 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 4 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 4 },
     { item: { ...ceramics, index: 3 }, count: 1 },
   ],
   [
     { item: { ...brooch, index: 1 }, count: 3 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
     { item: { ...marbleBust, index: 3 }, count: 1 },
   ],
   [
     { item: { ...brooch, index: 1 }, count: 2 },
-    { item: { ...antiquePocketWarch, index: 2 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
     { item: { ...painting, index: 3 }, count: 2 },
   ],
   [
