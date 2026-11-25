@@ -74,6 +74,7 @@ const bandana = { width: 2, height: 2 } as const; // バンダナ
 */
 
 // DIVE into OCEAN! のアイテム
+/*
 const seahorse = { width: 3, height: 1 } as const; // タツノオトシゴ
 const seaweed = { width: 1, height: 4 } as const; // 海藻
 const seaUrchin = { width: 3, height: 2 } as const; // ウニ
@@ -81,72 +82,82 @@ const nudibranch = { width: 1, height: 2 } as const; // ウミウシ
 const starfish = { width: 2, height: 2 } as const; // ヒトデ
 const spiralShell = { width: 4, height: 2 } as const; // 巻貝
 const turtleShell = { width: 3, height: 3 } as const; // 亀の甲羅
+*/
+
+// 踊らされし芸術 ～象牙の塔と招かれざる客～ のアイテム
+const brooch = { width: 3, height: 1 } as const; // ブローチ
+const ceremonialRapier = { width: 1, height: 4 } as const; // 儀礼用レイピア
+const painting = { width: 3, height: 2 } as const; // 絵画
+const quill = { width: 1, height: 2 } as const; // 羽ペン
+const antiquePocketWatch = { width: 2, height: 2 } as const; // 古びた懐中時計
+const ceramics = { width: 4, height: 2 } as const; // 陶磁器
+const marbleBust = { width: 3, height: 3 } as const; // 大理石の胸像
 
 const predefinedItems: PresetItemSet[][] = [
   [
-    { item: { ...seahorse, index: 1 }, count: 4 },
-    { item: { ...seaweed, index: 2 }, count: 3 },
-    { item: { ...seaUrchin, index: 3 }, count: 1 },
+    { item: { ...brooch, index: 1 }, count: 4 },
+    { item: { ...ceremonialRapier, index: 2 }, count: 3 },
+    { item: { ...painting, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...nudibranch, index: 1 }, count: 3 },
-    { item: { ...starfish, index: 2 }, count: 4 },
-    { item: { ...spiralShell, index: 3 }, count: 1 },
+    { item: { ...quill, index: 1 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 4 },
+    { item: { ...ceramics, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 3 },
-    { item: { ...starfish, index: 2 }, count: 3 },
-    { item: { ...turtleShell, index: 3 }, count: 1 },
+    { item: { ...brooch, index: 1 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
+    { item: { ...marbleBust, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 2 },
-    { item: { ...starfish, index: 2 }, count: 3 },
-    { item: { ...seaUrchin, index: 3 }, count: 2 },
+    { item: { ...brooch, index: 1 }, count: 2 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
+    { item: { ...painting, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 4 },
-    { item: { ...seaweed, index: 2 }, count: 3 },
-    { item: { ...seaUrchin, index: 3 }, count: 1 },
+    { item: { ...brooch, index: 1 }, count: 4 },
+    { item: { ...ceremonialRapier, index: 2 }, count: 3 },
+    { item: { ...painting, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...nudibranch, index: 1 }, count: 3 },
-    { item: { ...starfish, index: 2 }, count: 4 },
-    { item: { ...spiralShell, index: 3 }, count: 1 },
+    { item: { ...quill, index: 1 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 4 },
+    { item: { ...ceramics, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 3 },
-    { item: { ...starfish, index: 2 }, count: 3 },
-    { item: { ...turtleShell, index: 3 }, count: 1 },
+    { item: { ...brooch, index: 1 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
+    { item: { ...marbleBust, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 2 },
-    { item: { ...starfish, index: 2 }, count: 3 },
-    { item: { ...seaUrchin, index: 3 }, count: 2 },
+    { item: { ...brooch, index: 1 }, count: 2 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
+    { item: { ...painting, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 4 },
-    { item: { ...seaweed, index: 2 }, count: 3 },
-    { item: { ...seaUrchin, index: 3 }, count: 1 },
+    { item: { ...brooch, index: 1 }, count: 4 },
+    { item: { ...ceremonialRapier, index: 2 }, count: 3 },
+    { item: { ...painting, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...nudibranch, index: 1 }, count: 3 },
-    { item: { ...starfish, index: 2 }, count: 4 },
-    { item: { ...spiralShell, index: 3 }, count: 1 },
+    { item: { ...quill, index: 1 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 4 },
+    { item: { ...ceramics, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 3 },
-    { item: { ...starfish, index: 2 }, count: 3 },
-    { item: { ...turtleShell, index: 3 }, count: 1 },
+    { item: { ...brooch, index: 1 }, count: 3 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
+    { item: { ...marbleBust, index: 3 }, count: 1 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 2 },
-    { item: { ...starfish, index: 2 }, count: 3 },
-    { item: { ...seaUrchin, index: 3 }, count: 2 },
+    { item: { ...brooch, index: 1 }, count: 2 },
+    { item: { ...antiquePocketWatch, index: 2 }, count: 3 },
+    { item: { ...painting, index: 3 }, count: 2 },
   ],
   [
-    { item: { ...seahorse, index: 1 }, count: 2 },
-    { item: { ...seaweed, index: 2 }, count: 2 },
-    { item: { ...spiralShell, index: 3 }, count: 2 },
+    { item: { ...brooch, index: 1 }, count: 2 },
+    { item: { ...ceremonialRapier, index: 2 }, count: 2 },
+    { item: { ...ceramics, index: 3 }, count: 2 },
   ],
 ] as const;
 
